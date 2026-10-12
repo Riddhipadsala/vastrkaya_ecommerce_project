@@ -6,6 +6,1523 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 }
+
+/* ==========================================================================
+   Vastrkaya E-Commerce - Main Application Stylesheet (app.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GLOBAL & BASE STYLES
+   -------------------------------------------------------------------------- */
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.site-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   2. NAVBAR STYLES
+   -------------------------------------------------------------------------- */
+.vk-header {
+    border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+    background: #ffffff;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+    transition: all 0.25s ease-in-out;
+    z-index: 1020;
+}
+
+/* Brand & Logo */
+.vk-brand {
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.vk-brand:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.vk-logo-img {
+    height: 48px;
+    max-height: 52px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    display: block;
+}
+
+.vk-brand-fallback {
+    font-size: 1.45rem;
+    letter-spacing: 0.12em;
+    font-family: inherit;
+}
+
+.vk-brand-accent {
+    color: #e11d48;
+}
+
+/* Search Bar (Desktop & Tablet) */
+.vk-search-container {
+    max-width: 600px;
+}
+
+.vk-search-form {
+    width: 100%;
+}
+
+.vk-search-icon {
+    left: 14px;
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.vk-search-input {
+    height: 44px;
+    background-color: #f1f5f9;
+    border: 1.5px solid transparent;
+    border-radius: 9999px;
+    padding-left: 42px;
+    padding-right: 88px;
+    font-size: 0.92rem;
+    color: #1e293b;
+    transition: all 0.2s ease-in-out;
+}
+
+.vk-search-input:focus {
+    background-color: #ffffff;
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+    outline: none;
+}
+
+.vk-search-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.vk-search-btn {
+    right: 5px;
+    height: 34px;
+    padding: 0 16px;
+    border-radius: 9999px;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.vk-search-btn:hover {
+    background-color: #27272a;
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.03);
+}
+
+/* Action Links (Profile, Wishlist, Bag) */
+.vk-action-link {
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: #334155;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.vk-action-link:hover {
+    color: #0f172a;
+    background-color: #f8fafc;
+}
+
+.vk-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 30px;
+    font-size: 1.45rem;
+    color: inherit;
+    transition: transform 0.15s ease;
+}
+
+.vk-action-link:hover .vk-icon-wrapper {
+    transform: translateY(-2px);
+}
+
+.vk-action-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin-top: 2px;
+    color: inherit;
+}
+
+/* Badges */
+.vk-badge {
+    top: 3px;
+    left: 85%;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2.5px 5.5px;
+    min-width: 17px;
+    line-height: 1;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Dropdown Menu */
+.vk-profile-menu {
+    width: 260px;
+    margin-top: 10px !important;
+    border-radius: 12px;
+    overflow: hidden;
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.vk-profile-menu .dropdown-item {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #334155;
+    transition: background-color 0.15s ease, padding-left 0.15s ease;
+}
+
+.vk-profile-menu .dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    padding-left: 1.1rem;
+}
+
+.font-13 {
+    font-size: 0.81rem;
+}
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}
+
+/* Mobile Search Tweaks */
+@media (max-width: 767.98px) {
+    .vk-logo-img {
+        height: 40px;
+    }
+
+    .vk-action-link {
+        padding: 5px 8px;
+    }
+
+    .vk-icon-wrapper {
+        font-size: 1.35rem;
+    }
+
+    .vk-search-input {
+        height: 40px;
+        padding-right: 16px;
+        font-size: 0.88rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. FOOTER STYLES
+   -------------------------------------------------------------------------- */
+.vk-footer {
+    background-color: #0f172a;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Pre-Footer Features (Trust Badges) */
+.vk-footer-features {
+    background-color: #0b1120;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vk-feature-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.vk-feature-card:hover {
+    transform: translateY(-2px);
+}
+
+.vk-feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.vk-feature-card:hover .vk-feature-icon {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+}
+
+.vk-feature-title {
+    color: #f8fafc;
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.vk-feature-subtitle {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
+
+/* Newsletter Section */
+.vk-footer-newsletter {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.vk-newsletter-heading {
+    color: #f8fafc;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.vk-newsletter-desc {
+    color: #94a3b8;
+    font-size: 0.88rem;
+}
+
+.vk-newsletter-input-group {
+    max-width: 460px;
+}
+
+.vk-newsletter-input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px 0 0 9999px;
+    color: #f8fafc;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.vk-newsletter-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #f8fafc;
+    color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    outline: none;
+}
+
+.vk-newsletter-input::placeholder {
+    color: #64748b;
+}
+
+.vk-newsletter-btn {
+    background-color: #ffffff;
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 0.88rem;
+    border-radius: 0 9999px 9999px 0;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.vk-newsletter-btn:hover {
+    background-color: #e2e8f0;
+    color: #020617;
+    transform: none;
+}
+
+/* Main Footer Columns */
+.vk-footer-logo-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+    transition: opacity 0.2s ease;
+}
+
+.vk-footer-logo-img:hover {
+    opacity: 1;
+}
+
+.vk-footer-about {
+    color: #94a3b8;
+    font-size: 0.86rem;
+    line-height: 1.6;
+}
+
+.vk-footer-col-title {
+    color: #f8fafc;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.vk-footer-col-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 28px;
+    height: 2px;
+    background-color: #e11d48;
+    border-radius: 2px;
+}
+
+.vk-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.vk-footer-links li {
+    margin-bottom: 0.65rem;
+}
+
+.vk-footer-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.88rem;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.vk-footer-link:hover {
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+/* Contact Info */
+.vk-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.86rem;
+    margin-bottom: 0.85rem;
+}
+
+.vk-contact-item i {
+    color: #e11d48;
+    font-size: 1rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* Social Media Links */
+.vk-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.vk-social-link:hover {
+    background: #ffffff;
+    color: #0f172a;
+    transform: translateY(-3px);
+}
+
+/* Bottom Bar */
+.vk-footer-bottom {
+    background-color: #080c16;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+.vk-payment-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    letter-spacing: 0.02em;
+    user-select: none;
+}
+
+/* Footer Responsive Tweaks */
+@media (max-width: 991.98px) {
+    .vk-footer-features {
+        text-align: left;
+    }
+    .vk-newsletter-input-group {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .vk-newsletter-input-group {
+        flex-direction: column;
+    }
+    .vk-newsletter-input {
+        border-radius: 9999px;
+        margin-bottom: 0.5rem;
+    }
+    .vk-newsletter-btn {
+        border-radius: 9999px;
+        width: 100%;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. HERO SLIDER / CAROUSEL STYLES
+   -------------------------------------------------------------------------- */
+.vk-hero-slider-section {
+    width: 100%;
+}
+
+.vk-hero-carousel {
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    background-color: #0f172a;
+    width: 100%;
+}
+
+.vk-slider-img {
+    height: auto;
+    width: 100%;
+    max-height: 560px;
+    min-height: 260px;
+    object-position: center;
+    transition: transform 10s ease;
+}
+
+/* Value Badges Strip */
+.vk-value-strip {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    padding: 1.15rem 0;
+}
+
+.vk-value-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+.vk-value-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: #e11d48;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.vk-value-item:hover .vk-value-icon {
+    background: #e11d48;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+.vk-value-title {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #0f172a;
+    margin-bottom: 1px;
+}
+
+.vk-value-subtitle {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+/* Luxury Editorial Spotlight Banners (Clean, Aesthetic, Light Design) */
+.vk-editorial-card {
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+}
+
+.vk-editorial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.09);
+    border-color: #cbd5e1;
+}
+
+.vk-editorial-content {
+    padding: 2.5rem 2.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.vk-editorial-badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 9999px;
+    background: #fff1f2;
+    color: #e11d48;
+    margin-bottom: 0.75rem;
+}
+
+.vk-badge-gold {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.vk-editorial-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.6rem;
+}
+
+.vk-editorial-desc {
+    color: #64748b;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1.1rem;
+}
+
+.vk-editorial-offer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #059669;
+    margin-bottom: 1.25rem;
+}
+
+.vk-editorial-btn {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 9999px;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.vk-editorial-btn:hover {
+    background-color: #e11d48;
+    color: #ffffff;
+    transform: translateX(3px);
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.25);
+}
+
+.vk-editorial-img-box {
+    position: relative;
+    height: 100%;
+    min-height: 300px;
+    overflow: hidden;
+    background-color: #f8fafc;
+}
+
+.vk-editorial-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vk-editorial-card:hover .vk-editorial-img {
+    transform: scale(1.05);
+}
+
+@media (max-width: 991.98px) {
+    .vk-editorial-img-box {
+        min-height: 240px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .vk-editorial-img-box {
+        min-height: 220px;
+    }
+    .vk-editorial-content {
+        padding: 1.6rem;
+    }
+    .vk-editorial-title {
+        font-size: 1.35rem;
+    }
+}
+
+.vk-carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.vk-carousel-indicators button.active {
+    width: 28px;
+    border-radius: 999px;
+    background-color: #ffffff;
+}
+
+.vk-carousel-control {
+    width: 50px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.vk-hero-carousel:hover .vk-carousel-control {
+    opacity: 1;
+}
+
+.vk-control-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+.vk-control-icon:hover {
+    background: #ffffff;
+    color: #e11d48;
+    transform: scale(1.1);
+}
+
+@media (max-width: 991.98px) {
+    .vk-slider-img {
+        height: 360px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .vk-slider-img {
+        height: 240px;
+    }
+    .vk-hero-carousel {
+        border-radius: 12px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   5. SECTION HEADERS
+   -------------------------------------------------------------------------- */
+.vk-section-header {
+    margin-bottom: 2rem;
+}
+
+.vk-section-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background-color: #ffe4e6;
+    color: #e11d48;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+}
+
+.vk-section-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    margin-bottom: 0.35rem;
+}
+
+.vk-section-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. CATEGORY BOXES STYLES
+   -------------------------------------------------------------------------- */
+.vk-category-card {
+    display: block;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    text-decoration: none;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vk-category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+    border-color: #cbd5e1;
+}
+
+.vk-cat-img-box {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f1f5f9;
+}
+
+.vk-cat-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vk-category-card:hover .vk-cat-img {
+    transform: scale(1.08);
+}
+
+.vk-cat-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0) 35%, rgba(15, 23, 42, 0.82) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.6rem;
+    color: #ffffff;
+    transition: background 0.3s ease;
+}
+
+.vk-category-card:hover .vk-cat-overlay {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 20%, rgba(15, 23, 42, 0.92) 100%);
+}
+
+.vk-cat-badge {
+    align-self: flex-start;
+    padding: 3px 12px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: 9999px;
+    margin-bottom: 0.5rem;
+}
+
+.vk-cat-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.vk-cat-count {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vk-cat-count i {
+    transition: transform 0.2s ease;
+}
+
+.vk-category-card:hover .vk-cat-count i {
+    transform: translateX(4px);
+}
+
+@media (max-width: 991.98px) {
+    .vk-cat-img-box {
+        height: 280px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .vk-cat-img-box {
+        height: 210px;
+    }
+    .vk-cat-overlay {
+        padding: 1.15rem;
+    }
+    .vk-cat-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. PRODUCT BOXES / CARDS STYLES (Compact 5-Column Design)
+   -------------------------------------------------------------------------- */
+.vk-product-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.vk-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    border-color: #cbd5e1;
+}
+
+.vk-product-thumb {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background-color: #f8fafc;
+    overflow: hidden;
+}
+
+.vk-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.5s ease;
+}
+
+.vk-product-card:hover .vk-product-img {
+    transform: scale(1.06);
+}
+
+.vk-product-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 8px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.vk-tag-new {
+    background-color: #0f172a;
+    color: #ffffff;
+}
+
+.vk-tag-hot {
+    background-color: #e11d48;
+    color: #ffffff;
+}
+
+.vk-tag-discount {
+    background-color: #059669;
+    color: #ffffff;
+}
+
+.vk-wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #64748b;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.vk-wishlist-btn:hover {
+    background: #ffffff;
+    color: #e11d48;
+    transform: scale(1.1);
+}
+
+.vk-wishlist-btn.active {
+    color: #e11d48;
+}
+
+.vk-product-body {
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.vk-product-category {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 2px;
+}
+
+.vk-product-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+    line-height: 1.35;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+}
+
+.vk-product-title:hover {
+    color: #e11d48;
+}
+
+.vk-product-rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.75rem;
+    color: #f59e0b;
+    margin-bottom: 6px;
+}
+
+.vk-rating-count {
+    color: #94a3b8;
+    font-size: 0.74rem;
+    margin-left: 2px;
+}
+
+.vk-product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.vk-price-current {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.vk-price-mrp {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.vk-price-discount {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.vk-add-cart-btn {
+    margin-top: auto;
+    width: 100%;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background-color: #0f172a;
+    color: #ffffff;
+    border: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.vk-add-cart-btn:hover {
+    background-color: #e11d48;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+}
+
+/* 5 Columns per Row Support */
+@media (min-width: 992px) {
+    .row-cols-lg-5 > * {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .vk-product-thumb {
+        height: 180px;
+    }
+    .vk-product-body {
+        padding: 0.65rem;
+    }
+    .vk-product-title {
+        font-size: 0.82rem;
+    }
+    .vk-price-current {
+        font-size: 0.95rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8. AUTHENTICATION PAGES (LOGIN & REGISTER)
+   -------------------------------------------------------------------------- */
+.vk-auth-section {
+    min-height: calc(100vh - 120px);
+    background: radial-gradient(circle at 10% 20%, rgba(255, 228, 230, 0.45) 0%, rgba(248, 250, 252, 1) 90%);
+    display: flex;
+    align-items: center;
+    padding: 3.5rem 0;
+}
+
+.vk-auth-card {
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.09), 0 0 0 1px rgba(226, 232, 240, 0.85);
+    overflow: hidden;
+}
+
+/* Left Showcase Banner */
+.vk-auth-side-banner {
+    position: relative;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(225, 29, 72, 0.82) 100%), 
+                url('https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=900&q=80') center/cover no-repeat;
+    color: #ffffff;
+    padding: 3.5rem 2.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 600px;
+    height: 100%;
+}
+
+.vk-auth-side-banner.register-banner {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(190, 18, 60, 0.85) 100%), 
+                url('https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=80') center/cover no-repeat;
+}
+
+.vk-auth-banner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.vk-auth-banner-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.vk-auth-banner-desc {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.vk-auth-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.vk-auth-perk-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.85rem;
+}
+
+.vk-auth-perk-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fef08a;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.vk-auth-glass-box {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 18px;
+    padding: 1.15rem 1.4rem;
+}
+
+/* Right Form Wrapper */
+.vk-auth-form-wrap {
+    padding: 3.5rem 3rem;
+}
+
+@media (max-width: 991.98px) {
+    .vk-auth-form-wrap {
+        padding: 2.5rem 1.75rem;
+    }
+}
+
+.vk-auth-header {
+    margin-bottom: 1.75rem;
+}
+
+.vk-auth-header-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    margin-bottom: 0.35rem;
+}
+
+.vk-auth-header-subtitle {
+    color: #64748b;
+    font-size: 0.92rem;
+    margin-bottom: 0;
+}
+
+/* Social Login Buttons */
+.vk-social-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.vk-btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0.68rem 1rem;
+    border-radius: 14px;
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.vk-btn-social:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.vk-btn-social svg,
+.vk-btn-social i {
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+
+/* Auth Divider */
+.vk-auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.4rem 0 1.6rem 0;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.vk-auth-divider::before,
+.vk-auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.vk-auth-divider span {
+    padding: 0 1rem;
+}
+
+/* Form Groups & Inputs */
+.vk-form-group {
+    margin-bottom: 1.25rem;
+}
+
+.vk-form-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.45rem;
+}
+
+.vk-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.vk-input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #94a3b8;
+    font-size: 1.05rem;
+    pointer-events: none;
+    z-index: 2;
+    transition: color 0.2s ease;
+}
+
+.vk-form-input {
+    width: 100%;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0.75rem 1.1rem 0.75rem 2.85rem;
+    font-size: 0.92rem;
+    color: #0f172a;
+    background: #ffffff;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.vk-form-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.vk-form-input:focus {
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3.5px rgba(225, 29, 72, 0.12);
+    outline: none;
+    background: #ffffff;
+}
+
+.vk-form-input:focus + .vk-input-icon,
+.vk-input-group:focus-within .vk-input-icon {
+    color: #e11d48;
+}
+
+.vk-toggle-password {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: color 0.2s;
+    z-index: 3;
+}
+
+.vk-toggle-password:hover {
+    color: #0f172a;
+}
+
+/* Custom Checkbox */
+.vk-form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #475569;
+    user-select: none;
+    cursor: pointer;
+}
+
+.vk-form-check input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    border-radius: 5px;
+    border: 1.5px solid #cbd5e1;
+    accent-color: #e11d48;
+    cursor: pointer;
+}
+
+.vk-forgot-link {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #e11d48;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.vk-forgot-link:hover {
+    color: #be123c;
+    text-decoration: underline;
+}
+
+/* Submit Button */
+.vk-btn-auth-submit {
+    width: 100%;
+    padding: 0.85rem 1.5rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    margin-top: 1.25rem;
+}
+
+.vk-btn-auth-submit:hover {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(225, 29, 72, 0.3);
+}
+
+.vk-auth-switch {
+    text-align: center;
+    margin-top: 1.6rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.vk-auth-switch a {
+    color: #e11d48;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.vk-auth-switch a:hover {
+    color: #be123c;
+    text-decoration: underline;
+}
+
+.vk-auth-terms {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 1.5rem;
+    line-height: 1.5;
+}
+
+.vk-auth-terms a {
+    color: #64748b;
+    text-decoration: underline;
+}
+
