@@ -86,6 +86,14 @@
                         </li>
                         <li><hr class="dropdown-divider my-1"></li>
                         @auth
+                            @if(auth()->user()->hasRole('admin'))
+                                <li>
+                                    <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-danger fw-bold" href="{{ route('admin.dashboard') }}">
+                                        <i class="bi bi-speedometer2 text-danger"></i>
+                                        <span>Admin Dashboard</span>
+                                    </a>
+                                </li>
+                            @endif
                             <li class="pb-1">
                                 <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-danger" href="{{ route('logout') }}">
                                     <i class="bi bi-box-arrow-right"></i>

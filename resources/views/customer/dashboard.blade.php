@@ -108,92 +108,28 @@
                 <p class="vk-section-subtitle mb-0">Discover handcrafted ethnic charm and modern luxury styles</p>
             </div>
 
-            <!-- Category Grid (Expanded Larger Size) -->
-            <div class="row g-3 g-lg-4">
+            <!-- Category Grid (5 Boxes in 1 Row on Desktop) -->
+            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 g-lg-4">
                 
-                <!-- Category 1: Women's Ethnic -->
-                <div class="col-6 col-md-4 col-lg-4">
-                    <a href="{{ url('/products?category=womens-ethnic') }}" class="vk-category-card">
-                        <div class="vk-cat-img-box">
-                            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80" alt="Women's Ethnic" class="vk-cat-img" loading="lazy">
-                            <div class="vk-cat-overlay">
-                                <span class="vk-cat-badge">Popular</span>
-                                <h5 class="vk-cat-title">Women Ethnic</h5>
-                                <p class="vk-cat-count">140+ Styles <i class="bi bi-arrow-right"></i></p>
+                @foreach ($categories as $category)
+                
+                    <div class="col">
+                        <div class="vk-category-card h-100">
+                            <a href="{{ url('/products?category='.$category->id) }}" class="vk-cat-img-box">
+                                <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" class="vk-cat-img" loading="lazy">
+                            </a>
+                            <div class="vk-cat-body">
+                                <h5 class="vk-cat-title">
+                                    <a href="{{ url('/products?category='.$category->id) }}" class="text-decoration-none text-dark">{{ $category->name }}</a>
+                                </h5>
+                                <a href="{{ url('/products?category='.$category->id) }}" class="vk-cat-explore-btn">
+                                    Explore <i class="bi bi-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
-                    </a>
-                </div>
+                    </div>
 
-                <!-- Category 2: Men's Kurtas -->
-                <div class="col-6 col-md-4 col-lg-4">
-                    <a href="{{ url('/products?category=mens-kurtas') }}" class="vk-category-card">
-                        <div class="vk-cat-img-box">
-                            <img src="https://images.unsplash.com/photo-1597983073493-88cd35cf93b0?auto=format&fit=crop&w=600&q=80" alt="Men's Traditional" class="vk-cat-img" loading="lazy">
-                            <div class="vk-cat-overlay">
-                                <span class="vk-cat-badge">Trending</span>
-                                <h5 class="vk-cat-title">Men's Kurtas</h5>
-                                <p class="vk-cat-count">90+ Styles <i class="bi bi-arrow-right"></i></p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Category 3: Designer Sarees -->
-                <div class="col-6 col-md-4 col-lg-4">
-                    <a href="{{ url('/products?category=sarees') }}" class="vk-category-card">
-                        <div class="vk-cat-img-box">
-                            <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80" alt="Designer Sarees" class="vk-cat-img" loading="lazy">
-                            <div class="vk-cat-overlay">
-                                <span class="vk-cat-badge">Silk & Pure</span>
-                                <h5 class="vk-cat-title">Silk Sarees</h5>
-                                <p class="vk-cat-count">110+ Styles <i class="bi bi-arrow-right"></i></p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Category 4: Festive Lehengas -->
-                <div class="col-6 col-md-4 col-lg-4">
-                    <a href="{{ url('/products?category=lehengas') }}" class="vk-category-card">
-                        <div class="vk-cat-img-box">
-                            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80" alt="Festive Lehengas" class="vk-cat-img" loading="lazy">
-                            <div class="vk-cat-overlay">
-                                <span class="vk-cat-badge">Festive</span>
-                                <h5 class="vk-cat-title">Lehengas</h5>
-                                <p class="vk-cat-count">75+ Styles <i class="bi bi-arrow-right"></i></p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Category 5: Indo-Western Fusion -->
-                <div class="col-6 col-md-4 col-lg-4">
-                    <a href="{{ url('/products?category=indo-western') }}" class="vk-category-card">
-                        <div class="vk-cat-img-box">
-                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80" alt="Indo-Western" class="vk-cat-img" loading="lazy">
-                            <div class="vk-cat-overlay">
-                                <span class="vk-cat-badge">Modern</span>
-                                <h5 class="vk-cat-title">Fusion Wear</h5>
-                                <p class="vk-cat-count">60+ Styles <i class="bi bi-arrow-right"></i></p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Category 6: Dupattas & Stoles -->
-                <div class="col-6 col-md-4 col-lg-4">
-                    <a href="{{ url('/products?category=accessories') }}" class="vk-category-card">
-                        <div class="vk-cat-img-box">
-                            <img src="https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=600&q=80" alt="Dupattas & Stoles" class="vk-cat-img" loading="lazy">
-                            <div class="vk-cat-overlay">
-                                <span class="vk-cat-badge">Handloom</span>
-                                <h5 class="vk-cat-title">Dupattas</h5>
-                                <p class="vk-cat-count">85+ Styles <i class="bi bi-arrow-right"></i></p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                @endforeach
 
             </div>
         </div>
@@ -555,4 +491,16 @@
         </div>
     </section>
 
+@endsection
+
+@section('script')
+
+    <script>
+        document.addEventListener('DOMContentLoaded',function() {
+            
+        })
+
+       
+    </script>
+    
 @endsection
