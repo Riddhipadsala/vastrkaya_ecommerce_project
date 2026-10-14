@@ -221,7 +221,7 @@
                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editCategoryModal" onclick="editCategory(${e.id})">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteCategory(${e.id})">
+                                <button class="btn btn-sm btn-danger" onclick="confirmDeleteOption(${e.id})">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>
@@ -270,6 +270,7 @@
 
                     if(res.data.success) {
                         fetchData();
+                        window.showToast('Category updated successfully','success');
                     }
                     else {
                         window.showToast('Failed to update category','error');
@@ -281,16 +282,33 @@
                 })
         }
 
-        function deleteCategory(id) {
-            axios.delete(`/admin/categories/${id}`)
+        // Open Delete Confirmation Modal
+        function confirmDeleteOption(id) {
+            optionIdToDelete = id;
+            const modalEl = document.getElementById('deleteConfirmModal');
+            const deleteModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            deleteModal.show();
+        }
+
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', function() {
+            if (!optionIdToDelete) return;
+                        axios.delete(`/admin/categories/${optionIdToDelete}`)
                 .then((res) => {
-                    fetchData();
-                    window.showToast('Delete category','success');
+                    if (res.data.success) {
+                        const modalEl = document.getElementById('deleteConfirmModal');
+                        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        fetchData();
+                        window.showToast?.(res.data.message || 'Category deleted successfully', 'success');
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
                     window.showToast('Failed to delete category','error');
                 })
-        }
+        });
+        
     </script>
 @endsection

@@ -118,7 +118,7 @@
                             <a href="{{ url('/products?category='.$category->id) }}" class="vk-cat-img-box">
                                 <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" class="vk-cat-img" loading="lazy">
                             </a>
-                            <div class="vk-cat-body">
+                            <div class="flex flex-col items-center justify-center text-center pt-3.5 pb-4.5 px-3 sm:pt-4.5 sm:pb-5.5 sm:px-4 bg-white gap-2.5 sm:gap-3 flex-1">
                                 <h5 class="vk-cat-title">
                                     <a href="{{ url('/products?category='.$category->id) }}" class="text-decoration-none text-dark">{{ $category->name }}</a>
                                 </h5>

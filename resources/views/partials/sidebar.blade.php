@@ -38,6 +38,13 @@
         </li>
 
         <li class="vk-nav-item">
+            <a href="{{ route('admin.options.index') }}" class="vk-nav-link {{ request()->routeIs('admin.options.*') ? 'active' : '' }}">
+                <i class="bi bi-sliders2 vk-nav-icon"></i>
+                <span>Option Module</span>
+            </a>
+        </li>
+
+        <li class="vk-nav-item">
             <a href="{{ route('admin.stock.index') }}" class="vk-nav-link {{ request()->routeIs('admin.stock.*') ? 'active' : '' }}">
                 <i class="bi bi-stack vk-nav-icon"></i>
                 <span>Current Stock Available</span>
