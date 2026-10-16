@@ -10,7 +10,6 @@
             <div class="d-flex align-items-center gap-3">
                 <div>
                     <h4 class="h5 fw-bold mb-0 text-heading">Edit Option & Values</h4>
-                    <p class="font-13 text-muted mb-0">Update option details and manage selectable values with images</p>
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -88,95 +87,93 @@
             </div>
         </div>
 
-        <!-- 2. Option Values List Card -->
         <div class="vk-card p-4 mb-4" id="option-value">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-2 border-bottom border-light">
-                <div>
-                    <h5 class="fw-bold text-heading font-15 mb-0">
-                        <i class="bi bi-list-check text-primary me-2"></i>Option Values List
-                    </h5>
-                    <small class="text-muted">Manage existing values and add new values with optional swatch pictures</small>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-2 border-bottom border-light">
+                    <div>
+                        <h5 class="fw-bold text-heading font-15 mb-0">
+                            <i class="bi bi-list-check text-primary me-2"></i>Option Values List
+                        </h5>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="addOptionValueRow()">
+                        <i class="bi bi-plus-lg"></i> Add Value Row
+                    </button>
                 </div>
-                <button type="button" class="vk-btn vk-btn-sm vk-btn-primary" onclick="addOptionValueRow()">
-                    <i class="bi bi-plus-lg"></i> Add Value Row
-                </button>
-            </div>
 
-            <!-- Values Table -->
-            <div class="vk-table-responsive">
-                <table class="vk-table" id="optionValuesTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 60px;">#</th>
-                            <th style="min-width: 200px;">Value Name <span class="text-danger">*</span></th>
-                            <th style="min-width: 220px;">Option Picture / Swatch</th>
-                            <th style="width: 140px;">Sort Order</th>
-                            <th class="text-end" style="width: 90px;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="optionValuesTbody">
-                        @forelse($option->optionValues as $idx => $val)
-                            <tr class="option-value-row" id="row-{{ $idx + 1 }}">
-                                <td class="align-middle text-muted fw-bold row-number">
-                                    {{ $idx + 1 }}
-                                    <!-- Hidden value ID for existing record -->
-                                    <input type="hidden" name="option_values[{{ $idx + 1 }}][id]" value="{{ $val->id }}">
-                                </td>
-                                <td class="align-middle">
-                                    <input type="text" 
-                                           name="option_values[{{ $idx + 1 }}][name]" 
-                                           class="vk-form-control form-control-sm value-name-input" 
-                                           value="{{ $val->name }}" 
-                                           placeholder="e.g. Red, XL, Pure Silk" 
-                                           required>
-                                </td>
-                                <td class="align-middle">
-                                    <div class="d-flex align-items-center gap-2">
-                                        @php
-                                            $imgSrc = $val->option_image ? asset('storage/' . $val->option_image) : 'https://via.placeholder.com/40x40?text=Img';
-                                        @endphp
-                                        <img id="preview-{{ $idx + 1 }}" 
-                                             src="{{ $imgSrc }}" 
-                                             alt="{{ $val->name }}" 
-                                             style="width: 36px; height: 36px; object-fit: cover; border-radius: 8px; border: 1px solid var(--vk-border); flex-shrink: 0;">
-                                        <input type="file" 
-                                               name="option_values[{{ $idx + 1 }}][option_image]" 
-                                               class="form-control vk-form-control form-control-sm" 
-                                               accept="image/*"
-                                               onchange="previewRowImage(this, 'preview-{{ $idx + 1 }}')">
-                                    </div>
-                                </td>
-                                <td class="align-middle">
-                                    <input type="number" 
-                                           name="option_values[{{ $idx + 1 }}][sort_order]" 
-                                           class="vk-form-control form-control-sm" 
-                                           value="{{ $val->sort_order ?? ($idx + 1) }}" 
-                                           min="0">
-                                </td>
-                                <td class="align-middle text-end">
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-danger p-1 rounded-2" 
-                                            title="Remove Value" 
-                                            onclick="removeOptionValueRow('{{ $idx + 1 }}')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
+                <!-- Values Table -->
+                <div class="vk-table-responsive">
+                    <table class="vk-table" id="optionValuesTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th style="min-width: 200px;">Value Name <span class="text-danger">*</span></th>
+                                <th style="min-width: 220px;">Option Picture / Swatch</th>
+                                <th style="width: 140px;">Sort Order</th>
+                                <th class="text-end" style="width: 90px;">Action</th>
                             </tr>
-                        @empty
-                            <!-- Empty row will be inserted if no values -->
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody id="optionValuesTbody">
+                            @forelse($option->optionValues as $idx => $val)
+                                <tr class="option-value-row" id="row-{{ $idx + 1 }}">
+                                    <td class="align-middle text-muted fw-bold row-number">
+                                        {{ $idx + 1 }}
+                                        <!-- Hidden value ID for existing record -->
+                                        <input type="hidden" name="option_values[{{ $idx + 1 }}][id]" value="{{ $val->id }}">
+                                    </td>
+                                    <td class="align-middle">
+                                        <input type="text" 
+                                            name="option_values[{{ $idx + 1 }}][name]" 
+                                            class="vk-form-control form-control-sm value-name-{{ $idx + 1 }}" 
+                                            value="{{ $val->name }}" 
+                                            placeholder="e.g. Red, XL, Pure Silk" 
+                                            required>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex align-items-center gap-2">
+                                            @php
+                                                $imgSrc = $val->option_image ? asset('storage/' . $val->option_image) : 'https://via.placeholder.com/40x40?text=Img';
+                                            @endphp
+                                            <img id="preview-{{ $idx + 1 }}" 
+                                                src="{{ $imgSrc }}" 
+                                                alt="{{ $val->name }}" 
+                                                style="width: 36px; height: 36px; object-fit: cover; border-radius: 8px; border: 1px solid var(--vk-border); flex-shrink: 0;">
+                                            <input type="file" 
+                                                name="option_values[{{ $idx + 1 }}][option_image]" 
+                                                class="form-control vk-form-control form-control-sm" 
+                                                accept="image/*"
+                                                onchange="previewRowImage(this, 'preview-{{ $idx + 1 }}')">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <input type="number" 
+                                            name="option_values[{{ $idx + 1 }}][sort_order]" 
+                                            class="vk-form-control form-control-sm" 
+                                            value="{{ $val->sort_order ?? ($idx + 1) }}" 
+                                            min="0">
+                                    </td>
+                                    <td class="align-middle text-end">
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger p-1 rounded-2" 
+                                                title="Remove Value" 
+                                                onclick="removeOptionValueRow('{{ $idx + 1 }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <!-- Empty row will be inserted if no values -->
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Empty State -->
-            <div id="noValuesAlert" class="p-4 text-center bg-surface-subtle rounded-3 border border-dashed border-secondary border-opacity-25 mt-2 {{ count($option->optionValues) > 0 ? 'd-none' : '' }}">
-                <i class="bi bi-inbox fs-2 text-muted"></i>
-                <p class="text-muted font-13 mt-2 mb-2">No option values added yet.</p>
-                <button type="button" class="vk-btn vk-btn-sm vk-btn-primary" onclick="addOptionValueRow()">
-                    <i class="bi bi-plus-lg"></i> Add First Value Row
-                </button>
-            </div>
+                <!-- Empty State -->
+                <div id="noValuesAlert" class="p-4 text-center bg-surface-subtle rounded-3 border border-dashed border-secondary border-opacity-25 mt-2 {{ count($option->optionValues) > 0 ? 'd-none' : '' }}">
+                    <i class="bi bi-inbox fs-2 text-muted"></i>
+                    <p class="text-muted font-13 mt-2 mb-2">No option values added yet.</p>
+                    <button type="button" class="vk-btn vk-btn-sm vk-btn-primary" onclick="addOptionValueRow()">
+                        <i class="bi bi-plus-lg"></i> Add First Value Row
+                    </button>
+                </div>
         </div>
 
         <!-- Bottom Actions -->
@@ -184,7 +181,7 @@
             <a href="{{ route('admin.options.index') }}" class="vk-btn vk-btn-secondary">
                 Cancel
             </a>
-            <button type="submit" class="vk-btn vk-btn-primary" onclick="return validateOptionForm()">
+            <button type="submit" class="btn btn-sm btn-primary" onclick="return validateOptionForm()">
                 <i class="bi bi-check-lg"></i> Update Option & All Values
             </button>
         </div>
@@ -198,24 +195,39 @@
 
     // Toggle values list visibility depending on selected type
     const inputTypeSelect = document.getElementById('input-type');
-    if (inputTypeSelect) {
-        inputTypeSelect.addEventListener('change', function() {
-            let val = this.value;
-            const valuesCard = document.getElementById('option-value');
-            if (val !== 'radio' && val !== 'checkbox' && val !== 'select') {
-                valuesCard.style.display = 'none';
-            } else {
-                valuesCard.style.display = 'block';
-            }
-        });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        showOrHideValueCard();
+    });
+
+    function showOrHideValueCard() {   
+        let val = inputTypeSelect.value;
+        const valuesCard = document.getElementById('option-value');
+        if (val !== 'radio' && val !== 'checkbox' && val !== 'select') {
+            valuesCard.style.display = 'none';
+        } else {
+            valuesCard.style.display = 'block';
+        }
     }
+
+    inputTypeSelect.addEventListener('change', showOrHideValueCard);
 
     // Add a new row to the table
     function addOptionValueRow(name = '', sortOrder = null) {
+        
+        if(rowIndex != 0) {
+            if($(`.value-name-${rowIndex}`).val().trim() == ''){
+                window.showToast('Please provide previous row value', 'error');
+                $(`.value-name-${rowIndex}`).focus();
+                return;
+            }
+        }
+
         rowIndex++;
+
         const tbody = document.getElementById('optionValuesTbody');
         const emptyAlert = document.getElementById('noValuesAlert');
-        
+
         if (emptyAlert) {
             emptyAlert.classList.add('d-none');
         }
@@ -233,7 +245,7 @@
             <td class="align-middle">
                 <input type="text" 
                        name="option_values[${rowIndex}][name]" 
-                       class="vk-form-control form-control-sm value-name-input" 
+                       class="vk-form-control form-control-sm value-name-${rowIndex}" 
                        value="${name}" 
                        placeholder="e.g. Red, XL, Pure Silk" 
                        required>
@@ -343,24 +355,6 @@
                 window.showToast('Please add at least one Option Value', 'error');
             } else {
                 alert('Please add at least one Option Value');
-            }
-            return false;
-        }
-
-        let hasEmptyValue = false;
-        rows.forEach(row => {
-            const input = row.querySelector('.value-name-input');
-            if (input && !input.value.trim()) {
-                hasEmptyValue = true;
-                input.focus();
-            }
-        });
-
-        if (hasEmptyValue) {
-            if (window.showToast) {
-                window.showToast('Please provide a name for all option value rows', 'error');
-            } else {
-                alert('Please provide a name for all option value rows');
             }
             return false;
         }

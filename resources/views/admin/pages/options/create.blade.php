@@ -10,7 +10,6 @@
             <div class="d-flex align-items-center gap-3">
                 <div>
                     <h4 class="h5 fw-bold mb-0 text-heading">Create New Option & Add Values</h4>
-                    <p class="font-13 text-muted mb-0">Configure option details and add selectable option values with images</p>
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -21,9 +20,7 @@
         </div>
     </div>
 
-    <form action="{{ route('admin.options.store') }}" method="POST" enctype="multipart/form-data" id="createOptionForm">
-        @csrf
-
+    <form action="" method="POST" enctype="multipart/form-data" id="createOptionForm">
         <!-- 1. Option Information Card -->
         <div class="vk-card p-4 mb-4">
             <h5 class="fw-bold text-heading font-15 mb-3 pb-2 border-bottom border-light">
@@ -91,9 +88,8 @@
                     <h5 class="fw-bold text-heading font-15 mb-0">
                         <i class="bi bi-list-check text-primary me-2"></i>Option Values List
                     </h5>
-                    <small class="text-muted">Add values for this option with value name, sort order, and picture</small>
                 </div>
-                <button type="button" class="vk-btn vk-btn-sm vk-btn-primary" onclick="addOptionValueRow()">
+                <button type="button" class="btn btn-sm btn-primary add-btn" onclick="addOptionValueRow()">
                     <i class="bi bi-plus-lg"></i> Add Value Row
                 </button>
             </div>
@@ -105,7 +101,7 @@
                         <tr>
                             <th style="width: 60px;">#</th>
                             <th style="min-width: 200px;">Value Name <span class="text-danger">*</span></th>
-                            <th style="min-width: 220px;">Option Picture / Swatch</th>
+                            <th style="min-width: 220px;">Option Picture </th>
                             <th style="width: 140px;">Sort Order</th>
                             <th class="text-end" style="width: 90px;">Action</th>
                         </tr>
@@ -131,7 +127,7 @@
             <a href="{{ route('admin.options.index') }}" class="vk-btn vk-btn-secondary">
                 Cancel
             </a>
-            <button type="submit" class="vk-btn vk-btn-primary" onclick="submitOptionForm()">
+            <button type="button" class="btn btn-sm btn-primary" onclick="submitOptionForm(event)">
                 <i class="bi bi-check-lg"></i> Save Option & All Values
             </button>
         </div>
@@ -142,7 +138,6 @@
 @section('scripts')
 <script>
     let rowIndex = 0;
-
 
 document.getElementById('input-type').addEventListener('change', function() {
     let value = this.value;
@@ -159,6 +154,15 @@ document.getElementById('input-type').addEventListener('change', function() {
 
     // Add a new row to the table
     function addOptionValueRow(name = '', sortOrder = null) {
+        
+        if(rowIndex != 0) {
+            if($(`.value-name-${rowIndex}`).val().trim() == ''){
+                window.showToast('Please provide previous row value', 'error');
+                $(`.value-name-${rowIndex}`).focus();
+                return;
+            }
+        }
+
         rowIndex++;
         const tbody = document.getElementById('optionValuesTbody');
         const emptyAlert = document.getElementById('noValuesAlert');
@@ -178,7 +182,7 @@ document.getElementById('input-type').addEventListener('change', function() {
             <td class="align-middle">
                 <input type="text" 
                        name="option_values[${rowIndex}][name]" 
-                       class="vk-form-control form-control-sm value-name-input" 
+                       class="vk-form-control form-control-sm value-name-${rowIndex}" 
                        value="${name}" 
                        placeholder="e.g. Red, XL, Pure Silk" 
                        required>
@@ -261,7 +265,9 @@ document.getElementById('input-type').addEventListener('change', function() {
     }
 
     // Form submit validation & demonstration
-    function submitOptionForm() {
+    function submitOptionForm(e) {
+        e.preventDefault();
+        
         const optionName = (document.getElementById('optionName').value || '').trim();
         if (!optionName) {
             if (window.showToast) {
@@ -277,29 +283,23 @@ document.getElementById('input-type').addEventListener('change', function() {
         if (rows.length === 0) {
             if (window.showToast) {
                 window.showToast('Please add at least one Option Value', 'error');
+                return;
             } else {
                 alert('Please add at least one Option Value');
             }
             return;
         }
 
-        let hasEmptyValue = false;
-        rows.forEach(row => {
-            const input = row.querySelector('.value-name-input');
-            if (!input.value.trim()) {
-                hasEmptyValue = true;
-                input.focus();
-            }
-        });
+        let form = $('#createOptionForm');
+        let formData = new FormData(form[0]);
 
-        if (hasEmptyValue) {
-            if (window.showToast) {
-                window.showToast('Please provide a name for all option value rows', 'error');
-            } else {
-                alert('Please provide a name for all option value rows');
-            }
-            return;
-        }
+        axios.post(`/admin/options`,formData)
+            .then((res) => {
+                window.showToast(res.message,'success');
+                window.location.href = `{{ route('admin.options.index') }}`;
+            }).catch((err) => {
+                window.showToast(err.response.data.message,'error');
+            })
     }
 </script>
 @endsection

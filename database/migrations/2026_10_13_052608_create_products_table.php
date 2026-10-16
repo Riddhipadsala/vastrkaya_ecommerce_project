@@ -19,8 +19,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->enum('status',['active','inactive'])->default('inactive');
-            $table->integer('stock');
-            $table->decimal('price');
+            $table->integer('stock')->default(0);
+            $table->integer('descrese_stock')->default(0);
+            $table->decimal('price')->default(0);
             $table->decimal('discount_price')->nullable();
             $table->decimal('discount_percentage')->nullable();
             $table->softDeletes();

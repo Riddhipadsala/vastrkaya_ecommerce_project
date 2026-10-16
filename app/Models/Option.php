@@ -13,6 +13,10 @@ class Option extends Model
     ]; 
 
     public function optionValues() {
-        return $this->hasMany(OptionValue::class);
+        return $this->hasMany(OptionValue::class)->orderBy('sort_order', 'asc');
+    }
+
+    public function productOptions() {
+        return $this->hasMany(ProductOption::class);
     }
 }

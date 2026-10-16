@@ -16,34 +16,41 @@ class OptionController extends Controller
     {
         $query = Option::query()->with('optionValues');
 
-        if($request->ajax()){
+        if ($request->filled('option_id')) {
+            $query->where('id', $request->option_id);
+        }
 
-            $search = $request->search;
+        if ($request->filled('option_name')) {
+            $query->where('name', 'like', '%' . $request->option_name . '%');
+        }
 
-            if($search) {
-                $query->where(function ($q) use ($search) {
+        $search = $request->search;
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                ->orWhere('id', 'like', "%$search%")
+                ->orWhere('type', 'like', "%$search%")
+                ->orWhere('sort_order', 'like', "%$search%")
+                ->orwhereHas('optionValues', function ($q) use ($search) {
                     $q->where('name', 'like', "%$search%")
-                    ->orWhere('type', 'like', "%$search%")
-                    ->orWhere('sort_order', 'like', "%$search%")
-                    ->orwhereHas('optionValues', function ($q) use ($search) {
-                        $q->where('name', 'like', "%$search%")
-                        ->orWhere('sort_order', 'like', "%$search%");
-                    });
+                    ->orWhere('sort_order', 'like', "%$search%");
                 });
-            }
+            });
+        }
 
-            $options = $query->orderby('sort_order', 'asc')->get();
+        $options = $query->orderby('sort_order', 'asc')->get();
 
+        if ($request->ajax()) {
             return response()->json([
-                'success'=> true,
-                'options' => $options
+                'success' => true,
+                'options' => $options,
+                'totalOptionsCount' => Option::count(),
+                'totalValuesCount' => OptionValue::count(),
             ]);
-        
         }
 
-            return view('admin.pages.options.index');
-        
-        }
+        return view('admin.pages.options.index', compact('options'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -60,31 +67,35 @@ class OptionController extends Controller
     {
         $optionValidate = $request->validate([
             'name' => 'required|string',
-            'type' => 'string',
+            'type' => 'string|in:select,radio,checkbox,text,textarea,json,file,date,time,datetime',
             'sort_order'=> 'integer'
         ]);
 
         $option = Option::create($optionValidate);
 
-        foreach($request->option_values as $value){
+        $type = $request->type;
 
-            $image = $value['option_image'] ?? null;
+        if(in_array($type, ['select', 'radio', 'checkbox'])) {
+            foreach($request->option_values as $value){
 
-            if($image){
-                $fileName = $image->getClientOriginalName();
-                
-                $value['option_image'] = $image->storeAs('option_value_images', $fileName, 'public');
+                $image = $value['option_image'] ?? null;
+
+                if($image){
+                    $fileName = $image->getClientOriginalName();
+                    
+                    $value['option_image'] = $image->storeAs('option_value_images', $fileName, 'public');
+                }
+
+                $optionValue = OptionValue::create([
+                    'option_id' => $option->id,
+                    'name' => $value['name'],
+                    'sort_order' => $value['sort_order'],
+                    'option_image' => $value['option_image'] ?? null
+                ]);
             }
-
-            $optionValue = OptionValue::create([
-                'option_id' => $option->id,
-                'name' => $value['name'],
-                'sort_order' => $value['sort_order'],
-                'option_image' => $value['option_image'] ?? null
-            ]);
         }
 
-        if( $option && $optionValue ){
+        if( $option ){
             return redirect()->route('admin.options.index')->with('success','Option & Values create successfully');
         }
 
@@ -104,7 +115,8 @@ class OptionController extends Controller
      */
     public function edit(Option $option)
     {
-        $option->load('optionValues');
+        $option = $option->load('optionValues');
+    
         return view('admin.pages.options.edit', compact('option'));
     }
 
@@ -123,8 +135,9 @@ class OptionController extends Controller
 
         $keptValueIds = [];
 
-        if ($request->has('option_values') && is_array($request->option_values)) {
+        if ($request->has('option_values') && is_array($request->option_values) && in_array($option->type, ['select', 'radio', 'checkbox'])) {
             foreach ($request->option_values as $key => $value) {
+              
                 if (empty($value['name'])) {
                     continue;
                 }
@@ -160,7 +173,6 @@ class OptionController extends Controller
                         $keptValueIds[] = $optionValue->id;
                     }
                 } else {
-                    // 2. CREATE NEW VALUE
                     $newValue = OptionValue::create([
                         'option_id' => $option->id,
                         'name' => $value['name'],
@@ -172,7 +184,6 @@ class OptionController extends Controller
             }
         }
 
-        // 3. DELETE REMOVED VALUES & THEIR IMAGES
         $deletedValues = $option->optionValues()->whereNotIn('id', $keptValueIds)->get();
         foreach ($deletedValues as $deletedVal) {
             if ($deletedVal->option_image) {

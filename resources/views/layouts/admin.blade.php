@@ -168,11 +168,6 @@
                 <div>
                     &copy; {{ date('Y') }} <strong class="text-heading">Vastrkaya E-Commerce</strong>. All rights reserved.
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="d-inline-flex align-items-center gap-1 text-success">
-                        <i class="bi bi-circle-fill" style="font-size: 8px;"></i> System Online
-                    </span>
-                </div>
             </footer>
         </div>
     </div>

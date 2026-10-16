@@ -66,7 +66,9 @@ class LoginController extends Controller
         if(Auth::attempt($validate)) {
             $user = Auth::user();
 
-            if($user->roles()->first()->name == 'admin') {
+            $role = $user->roles()->first();
+
+            if($role && $role->name == 'admin') {
                 return redirect()->route('admin.dashboard')->with('success', 'You are logged in successfully');
             }
             

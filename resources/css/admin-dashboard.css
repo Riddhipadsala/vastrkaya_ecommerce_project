@@ -654,6 +654,12 @@ body.vk-admin-body {
     border-color: var(--vk-border);
 }
 
+.vk-btn-info {
+    background: var(--vk-info);
+    color: #ffffff;
+    border-color: var(--vk-info);
+}
+
 .vk-btn-secondary:hover {
     background: var(--vk-border);
     color: var(--vk-text-heading);

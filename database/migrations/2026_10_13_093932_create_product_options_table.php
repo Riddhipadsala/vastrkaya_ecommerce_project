@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->foreignId('option_id')->constrained('options')->onDelete('cascade');
-            $table->enum('status',['active','inactive'])->default('inactive');
+            $table->tinyInteger('status')->default(0)->comment('0 for inactive, 1 for active');
             $table->timestamps();
         });
     }
