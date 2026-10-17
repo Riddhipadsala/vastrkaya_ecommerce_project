@@ -16,4 +16,9 @@ class OptionValue extends Model
     public function option(){
         return $this->belongsTo(Option::class);
     }   
+
+    public function productOptionValues()
+    {
+        return $this->hasMany(ProductOptionValue::class);
+    }
 }

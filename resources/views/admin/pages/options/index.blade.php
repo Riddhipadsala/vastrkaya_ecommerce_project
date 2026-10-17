@@ -98,7 +98,7 @@
                     $.each(res.options, function(index, o) {
                         data += `
                             <tr>
-                                <td class="ps-3 text-secondary">${o.id}</td>
+                                <td class="ps-3 text-secondary">${index + 1}</td>
                                 <td class="fw-medium text-dark">${o.name}</td>
                                 <td class="text-secondary">${o.type || 'select'}</td>
                                 <td class="text-secondary pl-2">${o.sort_order ?? 0}</td>

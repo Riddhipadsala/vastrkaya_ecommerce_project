@@ -16,13 +16,22 @@ class CategoryController extends Controller
         if($request->wantsJson() || $request->ajax()) {
             $query = Category::query();
 
-            $search = $request->search;
+            if($request->id){
+                $query->where('id', $request->id);
+            }
 
-            $query->where(function ($q) use ($search) {
-                $q->where('name','like',"%{$search}%")
-                    ->orWhere('description','like',"{%$search%}")
-                    ->orWhere('status','like',"%{$search}%");
-            });
+            if($request->name){
+                $query->where('name', 'like', '%' . $request->name . '%');
+            }
+
+            if ($request->search) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('name','like',"%{$search}%")
+                        ->orWhere('description','like',"%{$search}%")
+                        ->orWhere('status','like',"%{$search}%");
+                });
+            }
             
             $categories = $query->get();
             

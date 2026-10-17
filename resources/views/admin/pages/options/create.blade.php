@@ -111,15 +111,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Empty State -->
-            <div id="noValuesAlert" class="p-4 text-center bg-surface-subtle rounded-3 border border-dashed border-secondary border-opacity-25 mt-2 d-none">
-                <i class="bi bi-inbox fs-2 text-muted"></i>
-                <p class="text-muted font-13 mt-2 mb-2">No option values added yet.</p>
-                <button type="button" class="vk-btn vk-btn-sm vk-btn-primary" onclick="addOptionValueRow()">
-                    <i class="bi bi-plus-lg"></i> Add First Value Row
-                </button>
-            </div>
         </div>
 
         <!-- Bottom Actions -->
@@ -155,7 +146,7 @@ document.getElementById('input-type').addEventListener('change', function() {
     // Add a new row to the table
     function addOptionValueRow(name = '', sortOrder = null) {
         
-        if(rowIndex != 0) {
+        if(rowIndex != 0 && (type == 'radio' || type == 'checkbox' || type == 'select')) {
             if($(`.value-name-${rowIndex}`).val().trim() == ''){
                 window.showToast('Please provide previous row value', 'error');
                 $(`.value-name-${rowIndex}`).focus();
@@ -164,11 +155,9 @@ document.getElementById('input-type').addEventListener('change', function() {
         }
 
         rowIndex++;
-        const tbody = document.getElementById('optionValuesTbody');
-        const emptyAlert = document.getElementById('noValuesAlert');
-        
-        emptyAlert.classList.add('d-none');
 
+        const tbody = document.getElementById('optionValuesTbody');
+        
         const orderVal = sortOrder !== null ? sortOrder : rowIndex;
 
         const tr = document.createElement('tr');
@@ -229,13 +218,8 @@ document.getElementById('input-type').addEventListener('change', function() {
         }
 
         const tbody = document.getElementById('optionValuesTbody');
-        const emptyAlert = document.getElementById('noValuesAlert');
 
-        if (tbody.children.length === 0) {
-            emptyAlert.classList.remove('d-none');
-        } else {
-            updateRowNumbers();
-        }
+        updateRowNumbers();
     }
 
     // Update row numbers (#1, #2, #3...)
@@ -268,6 +252,8 @@ document.getElementById('input-type').addEventListener('change', function() {
     function submitOptionForm(e) {
         e.preventDefault();
         
+        let type = $('#input-type').val();
+        
         const optionName = (document.getElementById('optionName').value || '').trim();
         if (!optionName) {
             if (window.showToast) {
@@ -280,7 +266,7 @@ document.getElementById('input-type').addEventListener('change', function() {
         }
 
         const rows = document.querySelectorAll('.option-value-row');
-        if (rows.length === 0) {
+        if (rows.length === 0  && (type == 'radio' || type == 'checkbox' || type == 'select')) {
             if (window.showToast) {
                 window.showToast('Please add at least one Option Value', 'error');
                 return;
@@ -288,6 +274,14 @@ document.getElementById('input-type').addEventListener('change', function() {
                 alert('Please add at least one Option Value');
             }
             return;
+        }
+        
+        if(rowIndex != 0 && (type == 'radio' || type == 'checkbox' || type == 'select')) {
+            if($(`.value-name-${rowIndex}`).val().trim() == ''){
+                window.showToast('Please provide previous row value', 'error');
+                $(`.value-name-${rowIndex}`).focus();
+                return;
+            }
         }
 
         let form = $('#createOptionForm');

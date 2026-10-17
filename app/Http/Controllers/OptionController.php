@@ -6,6 +6,7 @@ use App\Models\Option;
 use App\Models\OptionValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class OptionController extends Controller
 {
@@ -38,7 +39,7 @@ class OptionController extends Controller
             });
         }
 
-        $options = $query->orderby('sort_order', 'asc')->get();
+        $options = $query->orderby('id', 'desc')->get();
 
         if ($request->ajax()) {
             return response()->json([
@@ -66,9 +67,9 @@ class OptionController extends Controller
     public function store(Request $request)
     {
         $optionValidate = $request->validate([
-            'name' => 'required|string',
+            'name' => ['required','string',Rule::unique('options','name')->where('type', $request->type)],
             'type' => 'string|in:select,radio,checkbox,text,textarea,json,file,date,time,datetime',
-            'sort_order'=> 'integer'
+            'sort_order'=> 'integer',
         ]);
 
         $option = Option::create($optionValidate);
@@ -76,11 +77,13 @@ class OptionController extends Controller
         $type = $request->type;
 
         if(in_array($type, ['select', 'radio', 'checkbox'])) {
-            foreach($request->option_values as $value){
+            $optionValues = $request->option_values;
+            if($optionValues && count($optionValues) > 0){
+                foreach($optionValues as $value){
 
-                $image = $value['option_image'] ?? null;
+                    $image = $value['option_image'] ?? null;
 
-                if($image){
+                    if($image){
                     $fileName = $image->getClientOriginalName();
                     
                     $value['option_image'] = $image->storeAs('option_value_images', $fileName, 'public');
@@ -93,6 +96,14 @@ class OptionController extends Controller
                     'option_image' => $value['option_image'] ?? null
                 ]);
             }
+        }
+    }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Option & Values created successfully',
+            ]);
         }
 
         if( $option ){
@@ -107,7 +118,12 @@ class OptionController extends Controller
      */
     public function show(Option $option)
     {
-        //
+        $option = $option->load('optionValues');
+        
+        return response()->json([
+            'success'=> true,
+            'option'=> $option
+        ]);
     }
 
     /**
@@ -126,8 +142,12 @@ class OptionController extends Controller
     public function update(Request $request, Option $option)
     {
         $optionValidate = $request->validate([
-            'name' => 'required|string',
-            'type' => 'nullable|string',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('options', 'name')->where('type', $request->type)->ignore($option->id),
+            ],
+            'type' => 'required|string|in:select,radio,checkbox,text,textarea,json,file,date,time,datetime',
             'sort_order' => 'nullable|integer',
         ]);
 
@@ -190,6 +210,13 @@ class OptionController extends Controller
                 Storage::disk('public')->delete($deletedVal->option_image);
             }
             $deletedVal->delete();
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Option & Values updated successfully',
+            ]);
         }
 
         return redirect()->route('admin.options.index')->with('success', 'Option & Values updated successfully');

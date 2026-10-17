@@ -112,7 +112,6 @@
             <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 g-lg-4">
                 
                 @foreach ($categories as $category)
-                
                     <div class="col">
                         <div class="vk-category-card h-100">
                             <a href="{{ url('/products?category='.$category->id) }}" class="vk-cat-img-box">
@@ -148,336 +147,41 @@
 
             <!-- Product Grid (5 items per row on desktop) -->
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
-                
-                <!-- Product 1 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-hot">Bestseller</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80" alt="Embroidered Chanderi Anarkali" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Women's Ethnic</span>
-                            <a href="{{ url('/products/1') }}" class="vk-product-title">Embroidered Chanderi Silk Anarkali Suit Set</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                                <span class="vk-rating-count">(4.8)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹2,499</span>
-                                <span class="vk-price-mrp">₹4,999</span>
-                                <span class="vk-price-discount">50% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @foreach ($products as $product)
 
-                <!-- Product 2 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-new">New</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1597983073493-88cd35cf93b0?auto=format&fit=crop&w=600&q=80" alt="Royal Jacquard Silk Kurta" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Men's Apparel</span>
-                            <a href="{{ url('/products/2') }}" class="vk-product-title">Royal Jacquard Silk Kurta with Churidar</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <span class="vk-rating-count">(5.0)</span>
+                    <div class="col">
+                        <div class="vk-product-card">
+                            <div class="vk-product-thumb">
+                                <span class="vk-product-tag vk-tag-hot">{{ round($product->discount_percentage) }}% OFF</span>
+                                <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+                                <img src="{{ asset('storage/'.$product->image) }}" alt="Embroidered Chanderi Anarkali" class="vk-product-img" loading="lazy">
                             </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹1,899</span>
-                                <span class="vk-price-mrp">₹3,499</span>
-                                <span class="vk-price-discount">45% OFF</span>
+                            <div class="vk-product-body">
+                                <span class="vk-product-category">{{ $product->category->name }}</span>
+                                <a href="{{ url('products/'.$product->slug) }}" class="vk-product-title">{{ $product->name }}</a>
+                                <div class="vk-product-rating">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                    <span class="vk-rating-count">(4.8)</span>
+                                </div>
+                                <div class="vk-product-price">
+                                    <span class="vk-price-current">₹{{ $product->price }}</span>
+                                    <span class="vk-price-mrp">₹{{ $product->discount_price }}</span>
+                                    <span class="vk-price-discount">{{ $product->discount_percentage }}% OFF</span>
+                                </div>
+                                <button type="button" class="vk-add-cart-btn">
+                                    <i class="bi bi-bag-plus"></i> Add to Bag
+                                </button>
                             </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-discount">Save 40%</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80" alt="Pure Kanjeevaram Silk Saree" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Silk Sarees</span>
-                            <a href="{{ url('/products/3') }}" class="vk-product-title">Pure Kanjeevaram Woven Gold Zari Silk Saree</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                                <span class="vk-rating-count">(4.9)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹3,999</span>
-                                <span class="vk-price-mrp">₹6,999</span>
-                                <span class="vk-price-discount">42% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
                         </div>
                     </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-hot">Trending</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80" alt="Pastel Georgette Crop Top & Skirt" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Fusion Wear</span>
-                            <a href="{{ url('/products/4') }}" class="vk-product-title">Pastel Floral Georgette Co-ord Set with Jacket</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star"></i>
-                                <span class="vk-rating-count">(4.4)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹1,599</span>
-                                <span class="vk-price-mrp">₹2,999</span>
-                                <span class="vk-price-discount">46% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 5 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-new">New</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80" alt="Festive Bandhani Silk Saree" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Festive Edit</span>
-                            <a href="{{ url('/products/5') }}" class="vk-product-title">Traditional Gujarati Bandhani Georgette Saree</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <span class="vk-rating-count">(4.9)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹2,199</span>
-                                <span class="vk-price-mrp">₹4,299</span>
-                                <span class="vk-price-discount">48% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 6 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-discount">Save 50%</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=600&q=80" alt="Banarasi Brocade Dupatta" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Accessories</span>
-                            <a href="{{ url('/products/6') }}" class="vk-product-title">Handwoven Banarasi Zari Silk Heavy Dupatta</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                                <span class="vk-rating-count">(4.7)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹999</span>
-                                <span class="vk-price-mrp">₹1,999</span>
-                                <span class="vk-price-discount">50% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 7 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-hot">Hot</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1597983073493-88cd35cf93b0?auto=format&fit=crop&w=600&q=80" alt="Linen Embroidered Nehru Jacket" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Men's Apparel</span>
-                            <a href="{{ url('/products/7') }}" class="vk-product-title">Classic Handcrafted Raw Silk Nehru Jacket</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                                <span class="vk-rating-count">(4.6)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹1,749</span>
-                                <span class="vk-price-mrp">₹3,299</span>
-                                <span class="vk-price-discount">47% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 8 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-hot">Bestseller</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80" alt="Bridal Velvet Embroidered Lehenga" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Lehengas</span>
-                            <a href="{{ url('/products/8') }}" class="vk-product-title">Bridal Velvet Zardosi Embroidered Semi-Stitched Lehenga</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <span class="vk-rating-count">(5.0)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹5,499</span>
-                                <span class="vk-price-mrp">₹9,999</span>
-                                <span class="vk-price-discount">45% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 9 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-new">New</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80" alt="Floral Printed Silk Anarkali" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Women's Ethnic</span>
-                            <a href="{{ url('/products/9') }}" class="vk-product-title">Organza Floral Printed Anarkali Kurta Set</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-half"></i>
-                                <span class="vk-rating-count">(4.8)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹1,999</span>
-                                <span class="vk-price-mrp">₹3,899</span>
-                                <span class="vk-price-discount">48% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 10 -->
-                <div class="col">
-                    <div class="vk-product-card">
-                        <div class="vk-product-thumb">
-                            <span class="vk-product-tag vk-tag-hot">Trending</span>
-                            <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80" alt="Mirror Work Chikankari Saree" class="vk-product-img" loading="lazy">
-                        </div>
-                        <div class="vk-product-body">
-                            <span class="vk-product-category">Silk Sarees</span>
-                            <a href="{{ url('/products/10') }}" class="vk-product-title">Mirror Work Chikankari Georgette Party Saree</a>
-                            <div class="vk-product-rating">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <span class="vk-rating-count">(4.9)</span>
-                            </div>
-                            <div class="vk-product-price">
-                                <span class="vk-price-current">₹2,799</span>
-                                <span class="vk-price-mrp">₹5,499</span>
-                                <span class="vk-price-discount">49% OFF</span>
-                            </div>
-                            <button type="button" class="vk-add-cart-btn">
-                                <i class="bi bi-bag-plus"></i> Add to Bag
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    
+                @endforeach
 
             </div>
 

@@ -125,10 +125,6 @@
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" data-module-target="module-stock">
-                                    <i class="bi bi-stack text-warning"></i>
-                                    <span>Stock Manager</span>
-                                </button>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
