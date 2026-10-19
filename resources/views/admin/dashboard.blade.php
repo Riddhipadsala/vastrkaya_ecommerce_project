@@ -3,344 +3,341 @@
 @section('title', 'Admin Dashboard - Vastrkaya Luxury E-Commerce')
 
 @section('content')
-
-<!-- ========================================================================
-     OVERVIEW DASHBOARD
-     ======================================================================== -->
-<section id="module-dashboard">
-    <!-- Welcome Banner -->
-    <div class="vk-card mb-4 p-4 border-0" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-            <div>
-                <h2 class="h3 fw-bold mb-1 text-white">Welcome back, <span class="text-danger dynamic-admin-name">{{ Auth::user()->name ?? 'Administrator' }}</span>!</h2>
-                <p class="mb-0 text-muted" style="color: #cbd5e1 !important;">
-                    Here is the real-time operational status of your Vastrkaya luxury catalog, inventory, and stock health.
-                </p>
-            </div>
-            <div class="d-flex flex-wrap gap-2">
-                <a href="{{ route('admin.products.index') }}" class="vk-btn vk-btn-primary">
-                    <i class="bi bi-box-seam"></i> Products Catalog
-                </a>
-                <a href="{{ route('admin.categories.index') }}" class="vk-btn vk-btn-secondary">
-                    <i class="bi bi-tag"></i> Categories
-                </a>
-                <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-outline-primary bg-white bg-opacity-10 text-white border-light">
-                    <i class="bi bi-stack"></i> Stock Manager
-                </a>
-            </div>
+<div class="container-fluid px-0">
+    <!-- Top Bar with Title and Quick Action Buttons (Matching other modules) -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+            <h4 class="h5 fw-bold mb-0 text-heading">Overview Dashboard</h4>
         </div>
-    </div>
-
-    <!-- 4 Core Metric KPI Cards -->
-    <div class="row g-4 mb-4">
-        <!-- Metric 1: Total Products -->
-        <div class="col-sm-6 col-xl-3">
-            <div class="vk-stat-card stat-indigo">
-                <div class="vk-stat-header">
-                    <div>
-                        <div class="vk-stat-label">Total Products</div>
-                        <div class="vk-stat-value">148</div>
-                    </div>
-                    <div class="vk-stat-icon-wrap">
-                        <i class="bi bi-box-seam-fill"></i>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between font-13">
-                    <span class="vk-stat-badge trend-up">
-                        <i class="bi bi-arrow-up-short"></i> +12% this month
-                    </span>
-                    <span class="text-muted">6 New added</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Metric 2: Categories -->
-        <div class="col-sm-6 col-xl-3">
-            <div class="vk-stat-card stat-rose">
-                <div class="vk-stat-header">
-                    <div>
-                        <div class="vk-stat-label">Active Categories</div>
-                        <div class="vk-stat-value">16</div>
-                    </div>
-                    <div class="vk-stat-icon-wrap">
-                        <i class="bi bi-tags-fill"></i>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between font-13">
-                    <span class="vk-stat-badge trend-up">
-                        <i class="bi bi-check2-circle"></i> All Active
-                    </span>
-                    <span class="text-muted">Ethnic & Festive</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Metric 3: Current Stock Available -->
-        <div class="col-sm-6 col-xl-3">
-            <div class="vk-stat-card stat-emerald">
-                <div class="vk-stat-header">
-                    <div>
-                        <div class="vk-stat-label">Available Stock</div>
-                        <div class="vk-stat-value">3,842</div>
-                    </div>
-                    <div class="vk-stat-icon-wrap">
-                        <i class="bi bi-stack"></i>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between font-13">
-                    <span class="vk-stat-badge trend-up">
-                        <i class="bi bi-shield-check"></i> 88% Healthy
-                    </span>
-                    <span class="text-muted">Total units</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Metric 4: Low Stock Warnings -->
-        <div class="col-sm-6 col-xl-3">
-            <div class="vk-stat-card stat-amber">
-                <div class="vk-stat-header">
-                    <div>
-                        <div class="vk-stat-label">Stock Alerts</div>
-                        <div class="vk-stat-value text-danger">8</div>
-                    </div>
-                    <div class="vk-stat-icon-wrap">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between font-13">
-                    <span class="vk-stat-badge trend-danger">
-                        <i class="bi bi-bell-fill"></i> Needs Restock
-                    </span>
-                    <span class="text-muted">3 Out of stock</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stock Health Summary & Quick Distribution Bar -->
-    <div class="vk-card mb-4 p-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-            <div>
-                <h5 class="fw-bold mb-1 text-heading">Warehouse Stock Distribution Health</h5>
-                <p class="text-muted font-13 mb-0">Overview of current inventory levels across active product catalogs</p>
-            </div>
-            <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-sm vk-btn-secondary">
-                <i class="bi bi-arrow-right"></i> Manage Inventory
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <a href="{{ route('admin.products.create') }}" class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1">
+                <i class="bi bi-plus-lg"></i> Add Product
+            </a>
+            <a href="{{ route('admin.options.create') }}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1">
+                <i class="bi bi-sliders2"></i> Add Option
+            </a>
+            <a href="{{ route('dashboard') }}" target="_blank" class="btn btn-sm btn-success d-inline-flex align-items-center gap-1">
+                <i class="bi bi-box-arrow-up-right"></i> Live Store
             </a>
         </div>
-        <!-- Multi-segment Progress Bar -->
-        <div class="progress rounded-pill mb-3" style="height: 12px; background-color: var(--vk-surface-subtle);">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 82%;" title="In Stock (82%)"></div>
-            <div class="progress-bar bg-warning" role="progressbar" style="width: 12%;" title="Low Stock (12%)"></div>
-            <div class="progress-bar bg-danger" role="progressbar" style="width: 6%;" title="Out of Stock (6%)"></div>
+    </div>
+
+    <!-- 4 Core Metric KPI Stat Cards (Matching Card Design of Other Modules) -->
+    <div class="row g-3 mb-4">
+        <!-- Metric 1: Total Products -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border rounded-2 bg-white shadow-none h-100 p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-secondary font-12 fw-bold text-uppercase tracking-wider">Total Products</span>
+                        <h3 class="h4 fw-bold text-heading mt-1 mb-0 product-count"></h3>
+                    </div>
+                </div>
+                <div class="mt-auto text-end font-12 pt-2 border-top border-light">
+                    <a href="{{ route('admin.products.index') }}" class="text-decoration-none text-muted">
+                        View all &rarr;
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="row text-center font-13 g-2">
-            <div class="col-4">
-                <span class="d-inline-block rounded-circle bg-success me-1" style="width: 8px; height: 8px;"></span>
-                <strong class="text-heading">122 Products</strong> In Stock (82%)
+
+        <!-- Metric 2: Active Categories -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border rounded-2 bg-white shadow-none h-100 p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-secondary font-12 fw-bold text-uppercase tracking-wider">Categories</span>
+                        <h3 class="h4 fw-bold text-heading mt-1 mb-0 category-count"></h3>
+                    </div>
+                </div>
+                <div class="mt-auto text-end font-12 pt-2 border-top border-light">
+                    <a href="{{ route('admin.categories.index') }}" class="text-decoration-none text-muted">
+                        Manage &rarr;
+                    </a>
+                </div>
             </div>
-            <div class="col-4">
-                <span class="d-inline-block rounded-circle bg-warning me-1" style="width: 8px; height: 8px;"></span>
-                <strong class="text-heading">18 Products</strong> Low Stock (&le; 5 units)
+        </div>
+
+       <!-- Metric 3: Option Attributes -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border rounded-2 bg-white shadow-none h-100 p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-secondary font-12 fw-bold text-uppercase tracking-wider">
+                            Option Attributes
+                        </span>
+                        <h3 class="h4 fw-bold text-heading mt-1 mb-0 option-count"></h3>
+                    </div>
+                </div>
+                <div class="mt-auto text-end font-12 pt-2 border-top border-light">
+                    <a href="{{ route('admin.options.index') }}"
+                    class="text-decoration-none text-muted">
+                        Manage &rarr;
+                    </a>
+                </div>
             </div>
-            <div class="col-4">
-                <span class="d-inline-block rounded-circle bg-danger me-1" style="width: 8px; height: 8px;"></span>
-                <strong class="text-heading">8 Products</strong> Out of Stock (0 units)
+        </div>
+
+        <!-- Metric 4: Available Stock -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border rounded-2 bg-white shadow-none h-100 p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-secondary font-12 fw-bold text-uppercase tracking-wider">Available Stock</span>
+                        <h3 class="h4 fw-bold text-heading mt-1 mb-0 stock-count"></h3>
+                    </div>
+                </div>
+                <div class="mt-auto text-end font-12 pt-2 border-top border-light">
+                    <a href="{{ route('admin.stock.index') }}" class="text-decoration-none text-muted">
+                        Stock Hub &rarr;
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Overview Tables Row: Recent Products & Low Stock Alerts -->
-    <div class="row g-4">
-        <!-- Left: Recent Products with Stock Status -->
+    <!-- Warehouse Stock Distribution Health Card -->
+    <div class="card border rounded-2 bg-white mb-4 shadow-none">
+        <div class="card-body p-3 p-md-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h5 class="h6 fw-bold mb-1 text-heading">Warehouse Stock Distribution Health</h5>
+                </div>
+                <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-right"></i> Manage Inventory
+                </a>
+            </div>
+
+            <!-- Multi-segment Progress Bar -->
+            <div class="progress rounded-pill mb-3" style="height: 10px; background-color: #f1f5f9;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 82%;" title="In Stock (82%)"></div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 12%;" title="Low Stock (12%)"></div>
+                <div class="progress-bar bg-danger" role="progressbar" style="width: 6%;" title="Out of Stock (6%)"></div>
+            </div>
+
+            <div class="row text-center font-12 g-2">
+                <div class="col-sm-4">
+                    <span class="d-inline-block rounded-circle bg-success me-1" style="width: 8px; height: 8px;"></span>
+                    <strong class="text-heading product-count"> Products</strong> In Stock (82%)
+                </div>
+                <div class="col-sm-4">
+                    <span class="d-inline-block rounded-circle bg-warning me-1" style="width: 8px; height: 8px;"></span>
+                    <strong class="text-heading product-count"> Products</strong> Low Stock (&le; 5 units)
+                </div>
+                <div class="col-sm-4">
+                    <span class="d-inline-block rounded-circle bg-danger me-1" style="width: 8px; height: 8px;"></span>
+                    <strong class="text-heading product-count"> Products</strong> Out of Stock (0 units)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Split Overview Row: Recent Products & Quick Attention Sidebar -->
+    <div class="row g-4 mb-4">
+        <!-- Left: Recent Products & Stock Status Table (Matching Product Module Table) -->
         <div class="col-lg-8">
-            <div class="vk-card h-100">
-                <div class="vk-card-header">
-                    <h5 class="vk-card-title">
-                        <i class="bi bi-box-seam text-danger"></i> Recent Products & Stock Status
+            <div class="card border rounded-2 bg-white shadow-none h-100">
+                <div class="card-header bg-white border-bottom p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <h5 class="h6 fw-bold mb-0 text-heading">
+                        <i class="bi bi-box-seam text-primary me-2"></i>Recent Products Overview
                     </h5>
-                    <a href="{{ route('admin.products.index') }}" class="vk-btn vk-btn-sm vk-btn-secondary">
-                        View All
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-sm btn-outline-secondary">
+                        View All Products
                     </a>
                 </div>
-                <div class="vk-table-responsive">
-                    <table class="vk-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Current Stock</th>
-                                <th>Status</th>
-                                <th class="text-end">Actions</th>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light border-bottom">
+                            <tr class="text-secondary font-13">
+                                <th style="width: 8%;" class="ps-3">#</th>
+                                <th style="width: 12%;">Image</th>
+                                <th style="width: 32%;">Product Name</th>
+                                <th style="width: 16%;">Category</th>
+                                <th style="width: 14%;">Price</th>
+                                <th style="width: 10%;">Stock</th>
+                                <th style="width: 8%;" class="text-end pe-3">Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="vk-product-thumb d-flex align-items-center justify-content-center bg-light text-secondary">
-                                            <i class="bi bi-bag-check fs-5"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-heading">Royal Banarasi Silk Saree</div>
-                                            <small class="text-muted">SKU: VK-SAREE-01</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-dark">Sarees</span></td>
-                                <td class="fw-bold">&#8377;4,999</td>
-                                <td>
-                                    <span class="fw-bold text-success">45 Units</span>
-                                    <div class="vk-stock-meter"><div class="vk-stock-bar healthy" style="width: 85%;"></div></div>
-                                </td>
-                                <td><span class="vk-badge-pill status-in-stock"><i class="bi bi-check-circle-fill"></i> In Stock</span></td>
-                                <td class="text-end">
-                                    <a href="{{ route('admin.products.index') }}" class="vk-btn vk-btn-icon vk-btn-secondary vk-btn-sm" title="View in Catalog">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="vk-product-thumb d-flex align-items-center justify-content-center bg-light text-secondary">
-                                            <i class="bi bi-gem fs-5"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-heading">Handcrafted Embroidered Lehenga</div>
-                                            <small class="text-muted">SKU: VK-LH-04</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-dark">Lehengas</span></td>
-                                <td class="fw-bold">&#8377;12,499</td>
-                                <td>
-                                    <span class="fw-bold text-warning">4 Units</span>
-                                    <div class="vk-stock-meter"><div class="vk-stock-bar warning" style="width: 25%;"></div></div>
-                                </td>
-                                <td><span class="vk-badge-pill status-low-stock"><i class="bi bi-exclamation-triangle-fill"></i> Low Stock</span></td>
-                                <td class="text-end">
-                                    <a href="{{ route('admin.products.index') }}" class="vk-btn vk-btn-icon vk-btn-secondary vk-btn-sm" title="View in Catalog">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="vk-product-thumb d-flex align-items-center justify-content-center bg-light text-secondary">
-                                            <i class="bi bi-flower1 fs-5"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-heading">Chikankari Georgette Kurti</div>
-                                            <small class="text-muted">SKU: VK-KURTI-09</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-dark">Kurtis</span></td>
-                                <td class="fw-bold">&#8377;1,899</td>
-                                <td>
-                                    <span class="fw-bold text-danger">0 Units</span>
-                                    <div class="vk-stock-meter"><div class="vk-stock-bar danger" style="width: 0%;"></div></div>
-                                </td>
-                                <td><span class="vk-badge-pill status-out-of-stock"><i class="bi bi-x-circle-fill"></i> Out of Stock</span></td>
-                                <td class="text-end">
-                                    <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-icon vk-btn-secondary vk-btn-sm" title="Restock in Stock Manager">
-                                        <i class="bi bi-stack"></i>
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="vk-product-thumb d-flex align-items-center justify-content-center bg-light text-secondary">
-                                            <i class="bi bi-stars fs-5"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-heading">Zari Work Velvet Sherwani</div>
-                                            <small class="text-muted">SKU: VK-MEN-02</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-dark">Men Ethnic</span></td>
-                                <td class="fw-bold">&#8377;8,750</td>
-                                <td>
-                                    <span class="fw-bold text-success">28 Units</span>
-                                    <div class="vk-stock-meter"><div class="vk-stock-bar healthy" style="width: 70%;"></div></div>
-                                </td>
-                                <td><span class="vk-badge-pill status-in-stock"><i class="bi bi-check-circle-fill"></i> In Stock</span></td>
-                                <td class="text-end">
-                                    <a href="{{ route('admin.products.index') }}" class="vk-btn vk-btn-icon vk-btn-secondary vk-btn-sm" title="View in Catalog">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                        <tbody class="producttbl">
+                          
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Right: Low Stock Alert Warning Box -->
+        <!-- Right: Urgent Attention & Quick Navigation Shortcuts -->
         <div class="col-lg-4">
-            <div class="vk-card h-100">
-                <div class="vk-card-header bg-warning bg-opacity-10">
-                    <h5 class="vk-card-title text-warning text-dark">
-                        <i class="bi bi-shield-exclamation text-danger"></i> Urgent Stock Attention
+            <!-- Card 1: Urgent Stock Warnings -->
+            <div class="card border rounded-2 bg-white shadow-none mb-4">
+                <div class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
+                    <h5 class="h6 fw-bold mb-0 text-heading">
+                        <i class="bi bi-shield-exclamation text-warning me-2"></i>Urgent Stock Attention
                     </h5>
-                    <span class="badge bg-danger rounded-pill">Immediate</span>
+                    <span class="badge bg-danger rounded-pill font-11">Action Needed</span>
                 </div>
-                <div class="vk-card-body">
-                    <p class="font-13 text-muted mb-3">
-                        These items have fallen below safety inventory limits (&le; 5 units) and risk losing customer orders.
+                <div class="card-body p-3">
+                    <p class="font-12 text-muted mb-3">
+                        These items have fallen below safety inventory limits (&le; 5 units):
                     </p>
 
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item px-0 py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
                             <div>
-                                <h6 class="mb-1 fw-bold text-heading font-14">Handcrafted Lehenga</h6>
-                                <div class="font-13 text-danger fw-semibold">Only 4 Units Left</div>
+                                <h6 class="mb-0 fw-bold text-heading font-13">Handcrafted Lehenga</h6>
+                                <small class="text-warning fw-semibold font-12">Only 4 Units Left</small>
                             </div>
-                            <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-sm vk-btn-primary">
+                            <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-primary py-1 px-2 font-12">
                                 Restock
                             </a>
                         </div>
 
-                        <div class="list-group-item px-0 py-3 border-bottom d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
                             <div>
-                                <h6 class="mb-1 fw-bold text-heading font-14">Chikankari Kurti</h6>
-                                <div class="font-13 text-danger fw-semibold">0 Units (Out of Stock)</div>
+                                <h6 class="mb-0 fw-bold text-heading font-13">Chikankari Kurti</h6>
+                                <small class="text-danger fw-semibold font-12">0 Units (Out of Stock)</small>
                             </div>
-                            <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-sm vk-btn-primary">
+                            <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-danger py-1 px-2 font-12">
                                 Restock
                             </a>
                         </div>
 
-                        <div class="list-group-item px-0 py-3 border-bottom d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
                             <div>
-                                <h6 class="mb-1 fw-bold text-heading font-14">Bandhani Silk Dupatta</h6>
-                                <div class="font-13 text-warning fw-semibold">3 Units Left</div>
+                                <h6 class="mb-0 fw-bold text-heading font-13">Bandhani Silk Dupatta</h6>
+                                <small class="text-warning fw-semibold font-12">3 Units Left</small>
                             </div>
-                            <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-sm vk-btn-primary">
+                            <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-primary py-1 px-2 font-12">
                                 Restock
                             </a>
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-2">
-                        <a href="{{ route('admin.stock.index') }}" class="vk-btn vk-btn-secondary w-100">
-                            <i class="bi bi-sliders"></i> Open Stock Management Hub
+                    <div class="mt-3 pt-2 border-top border-light">
+                        <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-outline-secondary w-100">
+                            <i class="bi bi-stack me-1"></i> Open Stock Management Hub
                         </a>
                     </div>
                 </div>
             </div>
+
+            <!-- Card 2: Quick Module Navigation -->
+            <div class="card border rounded-2 bg-white shadow-none">
+                <div class="card-header bg-white border-bottom p-3">
+                    <h5 class="h6 fw-bold mb-0 text-heading">
+                        <i class="bi bi-grid-fill text-primary me-2"></i>Module Shortcuts
+                    </h5>
+                </div>
+                <div class="list-group list-group-flush font-13">
+                    <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-tags-fill text-success"></i>
+                            <span class="fw-semibold text-heading">Category Module</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted font-11"></i>
+                    </a>
+
+                    <a href="{{ route('admin.products.index') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-box-seam-fill text-primary"></i>
+                            <span class="fw-semibold text-heading">Product Module</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted font-11"></i>
+                    </a>
+
+                    <a href="{{ route('admin.options.index') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-sliders2 text-info"></i>
+                            <span class="fw-semibold text-heading">Option Module</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted font-11"></i>
+                    </a>
+
+                    <a href="{{ route('admin.stock.index') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-stack text-warning"></i>
+                            <span class="fw-semibold text-heading">Stock Inventory Manager</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted font-11"></i>
+                    </a>
+
+                    <a href="{{ route('admin.profile.index') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between px-3 py-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-person-badge-fill text-secondary"></i>
+                            <span class="fw-semibold text-heading">Admin Profile</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted font-11"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+</div>
+@endsection
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+        });
 
+        function fetchData() {
+            axios.get('/admin/dashboard')
+            .then(response => {
+            
+                const productData = response.data.products;
+
+                let data = ''
+
+                $('.product-count').text(response.data.productCount);
+                $('.category-count').text(response.data.categoryCount);
+                $('.option-count').text(response.data.optionCount);
+                $('.stock-count').text(response.data.stock);
+                
+                productData.slice(0, 7).forEach((element, index) => {
+                    data += `
+                        <tr>
+                            <td class="ps-3 text-secondary fw-semibold font-13">
+                                ${index + 1}
+                            </td>
+                            <td>
+                                <img src="/storage/${element.image}" alt="${element.name}" class="d-flex align-items-center justify-content-center bg-light rounded"
+                                    style="width: 48px; height: 48px; border: 1px solid rgba(0,0,0,0.08);">
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-heading font-14">
+                                    ${element.name}
+                                </div>
+                                <small class="text-muted font-12">Vastrkaya Couture</small>
+                            </td>
+                            <td>
+                                <span class="text-secondary font-13">
+                                    ${element.category?.name ?? 'No Category'}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-heading">
+                                    &#8377;${element.price}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge text-dark px-2 py-1 font-12">
+                                    ${element.stock ?? 0} Units
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <span class="badge text-success border border-success border-opacity-25 rounded-pill px-2 py-1 font-12">
+                                    ${Number(element.status) === 1 ? 'Active' : 'Inactive'}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                    $('.producttbl').html(data);
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+
+
+        }
+    </script>
 @endsection

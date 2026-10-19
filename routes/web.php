@@ -11,6 +11,7 @@ use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[DashboardController::class,'index'])->name('dashboard');
+Route::get('/products/{id}', [ProductController::class, 'productDetail'])->name('customer.products.show');
 
 Route::post('/register', [LoginController::class, 'register'])->name('register');
 Route::resource('login',LoginController::class);

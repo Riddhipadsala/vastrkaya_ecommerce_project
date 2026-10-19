@@ -99,13 +99,6 @@ class OptionController extends Controller
         }
     }
 
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Option & Values created successfully',
-            ]);
-        }
-
         if( $option ){
             return redirect()->route('admin.options.index')->with('success','Option & Values create successfully');
         }
@@ -142,12 +135,8 @@ class OptionController extends Controller
     public function update(Request $request, Option $option)
     {
         $optionValidate = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                Rule::unique('options', 'name')->where('type', $request->type)->ignore($option->id),
-            ],
-            'type' => 'required|string|in:select,radio,checkbox,text,textarea,json,file,date,time,datetime',
+            'name' => 'required|string',
+            'type' => 'nullable|string',
             'sort_order' => 'nullable|integer',
         ]);
 
@@ -210,13 +199,6 @@ class OptionController extends Controller
                 Storage::disk('public')->delete($deletedVal->option_image);
             }
             $deletedVal->delete();
-        }
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Option & Values updated successfully',
-            ]);
         }
 
         return redirect()->route('admin.options.index')->with('success', 'Option & Values updated successfully');

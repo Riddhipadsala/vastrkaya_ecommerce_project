@@ -9,32 +9,39 @@
     <!-- 1. FULL WIDTH HERO POSTER SLIDER -->
     <section class="vk-hero-slider-section w-100 p-0 mb-0">
         <div class="container-fluid p-0">
-            <div id="heroPosterCarousel" class="carousel slide carousel-fade vk-hero-carousel w-100" data-bs-ride="carousel" data-bs-interval="4500">
-                
+            <div id="heroPosterCarousel" class="carousel slide carousel-fade vk-hero-carousel w-100" data-bs-ride="carousel"
+                data-bs-interval="4500">
+
                 <!-- Indicators -->
                 <div class="carousel-indicators vk-carousel-indicators mb-3">
-                    <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="0" class="active"
+                        aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
                 </div>
 
                 <!-- Carousel Slides (Full Edge-to-Edge Width) -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ asset('main-poster/main-poster1.png') }}" class="d-block w-100 vk-slider-img" alt="Vastrkaya Festive Collection">
+                        <img src="{{ asset('main-poster/main-poster1.png') }}" class="d-block w-100 vk-slider-img"
+                            alt="Vastrkaya Festive Collection">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('main-poster/main-poster2.png') }}" class="d-block w-100 vk-slider-img" alt="Vastrkaya Contemporary Apparel">
+                        <img src="{{ asset('main-poster/main-poster2.png') }}" class="d-block w-100 vk-slider-img"
+                            alt="Vastrkaya Contemporary Apparel">
                     </div>
                 </div>
 
                 <!-- Next / Previous Controls -->
-                <button class="carousel-control-prev vk-carousel-control" type="button" data-bs-target="#heroPosterCarousel" data-bs-slide="prev">
+                <button class="carousel-control-prev vk-carousel-control" type="button"
+                    data-bs-target="#heroPosterCarousel" data-bs-slide="prev">
                     <span class="vk-control-icon">
                         <i class="bi bi-chevron-left"></i>
                     </span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next vk-carousel-control" type="button" data-bs-target="#heroPosterCarousel" data-bs-slide="next">
+                <button class="carousel-control-next vk-carousel-control" type="button"
+                    data-bs-target="#heroPosterCarousel" data-bs-slide="next">
                     <span class="vk-control-icon">
                         <i class="bi bi-chevron-right"></i>
                     </span>
@@ -100,7 +107,7 @@
     <!-- 3. SHOP BY CATEGORY SECTION (Full Width Layout) -->
     <section class="vk-categories-section py-4 py-lg-5">
         <div class="container-fluid px-3 px-lg-5">
-            
+
             <!-- Section Header -->
             <div class="vk-section-header text-center mb-4 mb-lg-5">
                 <span class="vk-section-badge">Curated Collections</span>
@@ -110,24 +117,26 @@
 
             <!-- Category Grid (5 Boxes in 1 Row on Desktop) -->
             <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 g-lg-4">
-                
+
                 @foreach ($categories as $category)
                     <div class="col">
                         <div class="vk-category-card h-100">
-                            <a href="{{ url('/products?category='.$category->id) }}" class="vk-cat-img-box">
-                                <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" class="vk-cat-img" loading="lazy">
+                            <a href="{{ url('/products?category=' . $category->id) }}" class="vk-cat-img-box">
+                                <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
+                                    class="vk-cat-img" loading="lazy">
                             </a>
-                            <div class="flex flex-col items-center justify-center text-center pt-3.5 pb-4.5 px-3 sm:pt-4.5 sm:pb-5.5 sm:px-4 bg-white gap-2.5 sm:gap-3 flex-1">
+                            <div
+                                class="flex flex-col items-center justify-center text-center pt-3.5 pb-4.5 px-3 sm:pt-4.5 sm:pb-5.5 sm:px-4 bg-white gap-2.5 sm:gap-3 flex-1">
                                 <h5 class="vk-cat-title">
-                                    <a href="{{ url('/products?category='.$category->id) }}" class="text-decoration-none text-dark">{{ $category->name }}</a>
+                                    <a href="{{ url('/products?category=' . $category->id) }}"
+                                        class="text-decoration-none text-dark">{{ $category->name }}</a>
                                 </h5>
-                                <a href="{{ url('/products?category='.$category->id) }}" class="vk-cat-explore-btn">
+                                <a href="{{ url('/products?category=' . $category->id) }}" class="vk-cat-explore-btn">
                                     Explore <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
-
                 @endforeach
 
             </div>
@@ -137,7 +146,7 @@
     <!-- 5. FEATURED & TRENDING PRODUCTS (Full Width 4-Column Grid) -->
     <section class="vk-products-section py-4 py-lg-5 bg-white border-top border-bottom">
         <div class="container-fluid px-3 px-lg-5">
-            
+
             <!-- Section Header (Centered like Shop By Category) -->
             <div class="vk-section-header text-center mb-4 mb-lg-5">
                 <span class="vk-section-badge">Handcrafted Elegance</span>
@@ -148,19 +157,22 @@
             <!-- Product Grid (5 items per row on desktop) -->
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
                 @foreach ($products as $product)
-
                     <div class="col">
                         <div class="vk-product-card">
-                            <div class="vk-product-thumb">
-                                <span class="vk-product-tag vk-tag-hot">{{ round($product->discount_percentage) }}% OFF</span>
-                                <button type="button" class="vk-wishlist-btn" title="Add to Wishlist" aria-label="Add to Wishlist">
+                            <a href="{{ url('products/' . $product->id) }}" class="vk-product-thumb d-block text-decoration-none">
+                                <span class="vk-product-tag vk-tag-hot">{{ round($product->discount_percentage) }}%
+                                    OFF</span>
+                                <button type="button" class="vk-wishlist-btn" title="Add to Wishlist"
+                                    aria-label="Add to Wishlist" onclick="event.preventDefault(); event.stopPropagation();">
                                     <i class="bi bi-heart"></i>
                                 </button>
-                                <img src="{{ asset('storage/'.$product->image) }}" alt="Embroidered Chanderi Anarkali" class="vk-product-img" loading="lazy">
-                            </div>
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                    class="vk-product-img" loading="lazy">
+                            </a>
                             <div class="vk-product-body">
-                                <span class="vk-product-category">{{ $product->category->name }}</span>
-                                <a href="{{ url('products/'.$product->slug) }}" class="vk-product-title">{{ $product->name }}</a>
+                                <span class="vk-product-category">{{ $product->category->name ?? 'Collection' }}</span>
+                                <a href="{{ url('products/' . $product->id) }}"
+                                    class="vk-product-title">{{ $product->name }}</a>
                                 <div class="vk-product-rating">
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-fill"></i>
@@ -180,14 +192,14 @@
                             </div>
                         </div>
                     </div>
-                    
                 @endforeach
 
             </div>
 
             <!-- Centered View All Button -->
             <div class="text-center mt-4 mt-lg-5">
-                <a href="{{ url('/products') }}" class="btn btn-outline-dark rounded-pill px-5 py-2 fw-semibold shadow-sm">
+                <a href="{{ url('/products') }}"
+                    class="btn btn-outline-dark rounded-pill px-5 py-2 fw-semibold shadow-sm">
                     View All Products <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
@@ -200,11 +212,9 @@
 @section('script')
 
     <script>
-        document.addEventListener('DOMContentLoaded',function() {
-            
-        })
+        document.addEventListener('DOMContentLoaded', function() {
 
-       
+        })
     </script>
-    
+
 @endsection

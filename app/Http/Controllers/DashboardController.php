@@ -25,4 +25,5 @@ class DashboardController extends Controller
 
         return view('customer.dashboard', compact('categories', 'products'));
     }
-}
+
+    }

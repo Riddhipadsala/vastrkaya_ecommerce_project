@@ -109,11 +109,31 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $product->load(['productOptions.option.optionValues', 'productOptionValues.optionValue', 'category']);
         return response()->json([
             'success'=> true,
             'product'=> $product
-        ]);
+        ]);     
+
+        return response()->view('customer.product-detail', compact('product'));
     }
+
+    public function productDetail($id)
+    {
+        $product = Product::with([
+            'category',
+            'productOptions.option',
+            'productOptionValues.optionValue'
+        ])->findOrFail($id);
+
+        $relatedProducts = Product::where('id', '!=', $product->id)
+            ->where('status', 1)
+            ->take(5)
+            ->get();
+
+        return view('customer.product-detail', compact('product', 'relatedProducts'));
+    }
+
 
     /**
      * Show the form for editing the specified resource.

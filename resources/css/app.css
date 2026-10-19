@@ -9,6 +9,15 @@
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Bootstrap 5 collapse compatibility with Tailwind */
+.accordion-collapse.collapse.show {
+    visibility: visible !important;
+    display: block !important;
+}
+.accordion-collapse.collapse:not(.show) {
+    display: none !important;
+}
+
 /* ==========================================================================
    Vastrkaya E-Commerce - Main Application Stylesheet (app.css)
    ========================================================================== */
@@ -24,6 +33,14 @@ body {
     margin: 0;
     padding: 0;
 }
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 
 .site-wrapper {
     min-height: 100vh;
@@ -1535,4 +1552,27 @@ main {
     color: #64748b;
     text-decoration: underline;
 }
+
+/* ==========================================================================
+   Bootstrap 5 Collapse / Accordion compatibility with Tailwind CSS
+   ========================================================================== */
+.collapse.show,
+.accordion-collapse,
+.accordion-collapse.collapse,
+.accordion-collapse.collapsing,
+.accordion-collapse.collapse.show,
+.accordion-collapse *,
+.accordion-body,
+.accordion-body * {
+    visibility: visible !important;
+}
+
+.accordion-collapse.collapse:not(.show) {
+    display: none !important;
+}
+
+.accordion-collapse.collapse.show {
+    display: block !important;
+}
+
 

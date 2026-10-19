@@ -119,12 +119,10 @@
                                 <small class="text-muted">{{ Auth::user()->email ?? 'admin@gmail.com' }}</small>
                             </li>
                             <li>
-                                <button type="button" class="dropdown-item py-2 d-flex align-items-center gap-2" data-module-target="module-profile">
+                                <a class="dropdown-item py-2 d-flex align-items-center gap-2" href="{{ route('admin.profile.index') }}">
                                     <i class="bi bi-person text-primary"></i>
                                     <span>Admin Profile</span>
-                                </button>
-                            </li>
-                            <li>
+                                </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>

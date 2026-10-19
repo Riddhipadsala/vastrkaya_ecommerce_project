@@ -2,11 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Option;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
     public function index() {
-        return view('admin.dashboard');
+        
+        $products = Product::with('category')->get();
+        $productCount = Product::count();
+        $categories = Category::all();
+        $categoryCount = Category::count();
+        $options = Option::all();
+        $optionCount = Option::count();
+        $stock = Product::sum('stock');
+
+        if(request()->ajax()) {
+            return response()->json([
+                'products' => $products,
+                'productCount' => $productCount,
+                'categories' => $categories,
+                'categoryCount' => $categoryCount,
+                'options' => $options,
+                'optionCount' => $optionCount,
+                'stock' => $stock
+            ]);
+        }
+        return view('admin.dashboard', compact('products', 'categories', 'options', 'stock'));
     }
 }
