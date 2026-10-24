@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('option_id')->constrained('options')->onDelete('cascade');
             $table->string('name');
             $table->integer('sort_order')->nullable();
-            $table->string('option_image')->nullable();
+            $table->string('option_value_image')->nullable();
             $table->timestamps();
         });
     }

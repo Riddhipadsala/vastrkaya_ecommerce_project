@@ -78,7 +78,7 @@
                                     <span class="vk-section-badge mb-2">Welcome Back</span>
                                     <h2 class="vk-auth-header-title">Sign In to Your Account</h2>
                                     <p class="vk-auth-header-subtitle">
-                                        Access your wishlist, order history, and exclusive member discounts.
+                                        Access your order history, and exclusive member discounts.
                                     </p>
                                 </div>
 

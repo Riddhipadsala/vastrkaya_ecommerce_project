@@ -1134,30 +1134,6 @@ main {
     color: #059669;
 }
 
-.vk-add-cart-btn {
-    margin-top: auto;
-    width: 100%;
-    padding: 6px 12px;
-    border-radius: 9999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    background-color: #6c2222;
-    color: #ffffff;
-    border: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.vk-add-cart-btn:hover {
-    background-color: #854250;
-    color: #ffffff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
-}
 
 /* 5 Columns per Row Support */
 @media (min-width: 992px) {
@@ -1573,6 +1549,44 @@ main {
 
 .accordion-collapse.collapse.show {
     display: block !important;
+}
+
+/* ==========================================================================
+   Global Toast Component
+   ========================================================================== */
+.vk-toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+    max-height: 220px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.vk-toast {
+    pointer-events: auto;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #10b981;
+    padding: 12px 18px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 280px;
+    animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toastSlideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 

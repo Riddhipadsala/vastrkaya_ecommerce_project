@@ -37,8 +37,10 @@ class ProductRequest extends FormRequest
             'decrease_stock'      => 'nullable|integer|min:0',
             'options'             => 'nullable|array',
             'options.*.option_id' => 'nullable|exists:options,id',
+            'options.*.status'    => 'nullable|in:0,1',
             'options.*.values'    => 'nullable|array',
             'options.*.values.*'  => 'nullable|exists:option_values,id',
+            'options.*.prices' => 'nullable|array'
         ];
     }
 

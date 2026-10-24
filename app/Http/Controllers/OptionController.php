@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Option;
 use App\Models\OptionValue;
+use App\Models\ProductOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -81,19 +82,19 @@ class OptionController extends Controller
             if($optionValues && count($optionValues) > 0){
                 foreach($optionValues as $value){
 
-                    $image = $value['option_image'] ?? null;
+                    $image = $value['option_value_image'] ?? null;
 
                     if($image){
                     $fileName = $image->getClientOriginalName();
                     
-                    $value['option_image'] = $image->storeAs('option_value_images', $fileName, 'public');
+                    $value['option_value_image'] = $image->storeAs('option_value_images', $fileName, 'public');
                 }
 
                 $optionValue = OptionValue::create([
                     'option_id' => $option->id,
                     'name' => $value['name'],
                     'sort_order' => $value['sort_order'],
-                    'option_image' => $value['option_image'] ?? null
+                    'option_value_image' => $value['option_value_image'] ?? null
                 ]);
             }
         }
@@ -154,8 +155,8 @@ class OptionController extends Controller
                 $valueId = $value['id'] ?? null;
                 $uploadedImage = null;
 
-                if ($request->hasFile("option_values.{$key}.option_image")) {
-                    $file = $request->file("option_values.{$key}.option_image");
+                if ($request->hasFile("option_values.{$key}.option_value_image")) {
+                    $file = $request->file("option_values.{$key}.option_value_image");
                     $fileName = time() . '_' . $file->getClientOriginalName();
                     $uploadedImage = $file->storeAs('option_value_images', $fileName, 'public');
                 }
@@ -172,10 +173,10 @@ class OptionController extends Controller
 
                         // If a new image was uploaded, replace the old one
                         if ($uploadedImage) {
-                            if ($optionValue->option_image) {
-                                Storage::disk('public')->delete($optionValue->option_image);
+                            if ($optionValue->option_value_image) {
+                                Storage::disk('public')->delete($optionValue->option_value_image);
                             }
-                            $updateData['option_image'] = $uploadedImage;
+                            $updateData['option_value_image'] = $uploadedImage;
                         }
 
                         $optionValue->update($updateData);
@@ -186,7 +187,7 @@ class OptionController extends Controller
                         'option_id' => $option->id,
                         'name' => $value['name'],
                         'sort_order' => $value['sort_order'] ?? 0,
-                        'option_image' => $uploadedImage,
+                        'option_value_image' => $uploadedImage,
                     ]);
                     $keptValueIds[] = $newValue->id;
                 }
@@ -195,8 +196,8 @@ class OptionController extends Controller
 
         $deletedValues = $option->optionValues()->whereNotIn('id', $keptValueIds)->get();
         foreach ($deletedValues as $deletedVal) {
-            if ($deletedVal->option_image) {
-                Storage::disk('public')->delete($deletedVal->option_image);
+            if ($deletedVal->option_value_image) {
+                Storage::disk('public')->delete($deletedVal->option_value_image);
             }
             $deletedVal->delete();
         }
@@ -213,8 +214,8 @@ class OptionController extends Controller
         $optionValue = $option->optionValues()->get();
 
         foreach($optionValue as $value) {
-            if($value->option_image) {
-                Storage::disk('public')->delete($value->option_image);
+            if($value->option_value_image) {
+                Storage::disk('public')->delete($value->option_value_image);
             }
         }
         
@@ -226,4 +227,5 @@ class OptionController extends Controller
         ]);
 
     }
+
 }

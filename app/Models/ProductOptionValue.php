@@ -12,7 +12,8 @@ class ProductOptionValue extends Model
         'product_option_id',
         'option_value_id',
         'status',
-        'image'
+        'image',
+        'price'
     ];
 
     public function productOption()

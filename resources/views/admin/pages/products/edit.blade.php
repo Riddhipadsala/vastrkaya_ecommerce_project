@@ -10,7 +10,8 @@
                 <div class="d-flex align-items-center gap-3">
                     <div>
                         <h4 class="h5 fw-bold mb-0 text-heading">Edit Product: {{ $product->name }}</h4>
-                        <span class="font-12 text-muted">Product ID: #{{ $product->id }} &bull; Last updated: {{ $product->updated_at ? $product->updated_at->diffForHumans() : 'N/A' }}</span>
+                        <span class="font-12 text-muted"> &bull; Last updated:
+                            {{ $product->updated_at ? $product->updated_at->diffForHumans() : 'N/A' }}</span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2">
@@ -145,8 +146,8 @@
                     <div class="col-md-2">
                         <label class="vk-form-label fw-bold">Discount (%)</label>
                         <div class="input-group">
-                            <input type="number" step="0.01" min="0" max="100" name="discount_percentage"
-                                id="productDiscountPercent"
+                            <input type="number" step="0.01" min="0" max="100"
+                                name="discount_percentage" id="productDiscountPercent"
                                 class="form-control vk-form-control border-end-0 @error('discount_percentage') is-invalid @enderror"
                                 placeholder="0" value="{{ old('discount_percentage', $product->discount_percentage) }}"
                                 oninput="calculateDiscountFromPercent()">
@@ -163,7 +164,8 @@
                         <div class="input-group">
                             <input type="number" step="0.01" min="0" name="actual_amount" id="actualAmount"
                                 class="form-control vk-form-control border-end-0 @error('actual_amount') is-invalid @enderror"
-                                placeholder="0.00" value="{{ old('actual_amount', $product->discount_price ? ($product->price - $product->discount_price) : $product->price) }}">
+                                placeholder="0.00"
+                                value="{{ old('actual_amount', $product->discount_price ? $product->price - $product->discount_price : $product->price) }}">
                         </div>
                         @error('actual_amount')
                             <div class="text-danger font-12 mt-1">{{ $message }}</div>
@@ -197,10 +199,11 @@
                         <label class="vk-form-label fw-bold">Product Image</label>
                         <div class="d-flex align-items-center gap-3">
                             @php
-                                $imgSrc = $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/60x60?text=Preview';
+                                $imgSrc = $product->image
+                                    ? asset('storage/' . $product->image)
+                                    : 'https://via.placeholder.com/60x60?text=Preview';
                             @endphp
-                            <img id="imagePreview" src="{{ $imgSrc }}"
-                                alt="{{ $product->name }}"
+                            <img id="imagePreview" src="{{ $imgSrc }}" alt="{{ $product->name }}"
                                 style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px; border: 1px solid var(--vk-border); flex-shrink: 0;">
                             <div class="flex-grow-1">
                                 <input type="file" name="image" id="productImageInput"
@@ -208,7 +211,8 @@
                                     accept="image/*" onchange="previewImage(this)">
                                 <small class="text-muted font-12 d-block mt-1">
                                     @if ($product->image)
-                                        <span class="text-success fw-semibold"><i class="bi bi-check-circle"></i> Current image uploaded.</span>
+                                        <span class="text-success fw-semibold"><i class="bi bi-check-circle"></i> Current
+                                            image uploaded.</span>
                                         Leave empty to keep existing image. (Max: 2MB)
                                     @else
                                         Recommended: JPG, PNG, WEBP (Max: 2MB)
@@ -226,9 +230,11 @@
                         <label class="vk-form-label fw-bold">Status <span class="text-danger">*</span></label>
                         <select name="status" id="productStatus"
                             class="vk-form-select @error('status') is-invalid @enderror">
-                            <option value="1" {{ old('status', (string)$product->status) === '1' ? 'selected' : '' }}>Active (Visible on
+                            <option value="1"
+                                {{ old('status', (string) $product->status) === '1' ? 'selected' : '' }}>Active (Visible on
                                 Store)</option>
-                            <option value="0" {{ old('status', (string)$product->status) === '0' ? 'selected' : '' }}>Inactive (Hidden)
+                            <option value="0"
+                                {{ old('status', (string) $product->status) === '0' ? 'selected' : '' }}>Inactive (Hidden)
                             </option>
                         </select>
                         @error('status')
@@ -240,9 +246,11 @@
 
             <!-- 4. Product Options & Variants Card -->
             @php
-                $assignedOptionValueIds = $product->productOptionValues->pluck('option_value_id')->toArray();
+                $assignedOptionValueMap = $product->productOptionValues->keyBy('option_value_id');
+                $assignedOptionValueIds = $assignedOptionValueMap->keys()->toArray();
                 $hasExistingOptions = count($product->productOptions) > 0;
             @endphp
+
             <div class="vk-card p-4 mb-4">
                 <div
                     class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-2 border-bottom border-light">
@@ -252,6 +260,11 @@
                         </h5>
                     </div>
                     <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnToggleAllOptionBodies"
+                            onclick="toggleAllOptionBodies()" title="Collapse or Expand all option values">
+                            <i class="bi bi-arrows-collapse me-1" id="toggleAllOptionsIcon"></i>
+                            <span id="toggleAllOptionsText">Collapse All</span>
+                        </button>
                         <a href="{{ route('admin.options.index') }}" class="btn btn-sm btn-outline-secondary"
                             target="_blank">
                             <i class="bi bi-gear"></i> Manage Options
@@ -287,66 +300,139 @@
                         @php
                             $item = $pOpt->option;
                         @endphp
+
                         @if ($item)
-                            <div class="option-card rounded-2 border bg-white p-3 shadow-none" 
+                            <div class="option-card rounded-2 border p-3 shadow-none {{ ($pOpt->status ?? 1) == 0 ? 'bg-light opacity-75' : 'bg-white' }}"
                                 name="options[{{ $item->id }}]" id="option_card_{{ $item->id }}">
-                                
-                                <input type="hidden" name="options[{{ $item->id }}][option_id]" value="{{ $item->id }}">
-                                
+
+                                <input type="hidden" name="options[{{ $item->id }}][option_id]"
+                                    value="{{ $item->id }}">
+
                                 <!-- Option Card Header -->
-                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-2 mb-2 border-bottom border-light">
+                                <div
+                                    class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-2 mb-2 border-bottom border-light">
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="badge bg-primary text-white rounded-circle p-1">
                                             <i class="bi bi-check2"></i>
                                         </span>
+                                        @php
+                                            $assignedCount = $item->optionValues
+                                                ->filter(function ($v) use ($assignedOptionValueMap) {
+                                                    $pov = $assignedOptionValueMap->get($v->id);
+                                                    return $pov && $pov->status == 1;
+                                                })
+                                                ->count();
+                                        @endphp
                                         <div>
-                                            <h6 class="fw-bold text-heading mb-0 font-14">{{ $item->name }}</h6>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h6 class="fw-bold text-heading mb-0 font-14">{{ $item->name }}</h6>
+                                                <span
+                                                    class="badge bg-light text-primary border font-11 rounded-pill {{ $assignedCount > 0 ? '' : 'd-none' }}"
+                                                    id="selected_count_badge_{{ $item->id }}">
+                                                    {{ $assignedCount }} selected
+                                                </span>
+                                            </div>
                                             <small class="text-muted font-11">Type: {{ ucfirst($item->type) }}</small>
                                         </div>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-1">
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-primary py-1 px-2 font-12 rounded" 
-                                                onclick="selectAllValues('{{ $item->id }}')">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded"
+                                            id="btn_toggle_{{ $item->id }}"
+                                            onclick="toggleOptionBody('{{ $item->id }}')"
+                                            title="Collapse / Expand Values">
+                                            <i class="bi bi-chevron-up" id="icon_toggle_{{ $item->id }}"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-primary py-1 px-2 font-12 rounded"
+                                            onclick="selectAllValues('{{ $item->id }}')">
                                             <i class="bi bi-check-all"></i> Select All
                                         </button>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded" 
-                                                onclick="deselectAllValues('{{ $item->id }}')">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded"
+                                            onclick="deselectAllValues('{{ $item->id }}')">
                                             <i class="bi bi-x"></i> Clear
                                         </button>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger py-1 px-2 font-12 rounded" 
-                                                onclick="removeOptionCard('{{ $item->id }}')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        <select name="options[{{ $item->id }}][status]"
+                                            class="form-select form-select-sm py-1 px-2 font-12 rounded fw-medium"
+                                            style="width: auto; min-width: 95px;"
+                                            onchange="handleOptionStatusChange(this, '{{ $item->id }}', '{{ $product->id }}')">
+                                            <option value="1" {{ ($pOpt->status ?? 1) == 1 ? 'selected' : '' }}>
+                                                Active</option>
+                                            <option value="0" {{ ($pOpt->status ?? 1) == 0 ? 'selected' : '' }}>
+                                                Inactive</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- Values List -->
-                                <div>
-                                    <div class="fw-semibold font-12 text-muted mb-2">
-                                        Select Values:
+                                <!-- Values List Body (Collapsible) -->
+                                <div class="option-values-body" id="option_values_body_{{ $item->id }}">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="fw-semibold font-12 text-muted">
+                                            Select Values &amp; Optional Price:
+                                        </span>
                                     </div>
-                                    <div class="d-flex flex-wrap gap-2">
+                                    <div class="d-flex flex-wrap gap-2.5">
                                         @foreach ($item->optionValues as $val)
-                                            <div class="form-check p-2 px-3 border rounded bg-surface-subtle d-flex align-items-center gap-2 mb-0">
-                                                <input class="form-check-input mt-0 opt-val-cb-{{ $item->id }}" 
-                                                        type="checkbox" 
-                                                        name="options[{{ $item->id }}][values][]" 
-                                                        value="{{ $val->id }}" 
-                                                        id="val_{{ $val->id }}"
-                                                        {{ in_array($val->id, $assignedOptionValueIds) ? 'checked' : '' }}
-                                                />
-                                                <label class="form-check-label font-13 fw-semibold text-heading mb-0" for="val_{{ $val->id }}">
-                                                    @if ($val->option_image)
-                                                        <img src="{{ asset('storage/' . $val->option_image) }}" 
-                                                             alt="{{ $val->name }}" 
-                                                             style="width: 20px; height: 20px; object-fit: cover; border-radius: 4px;" class="me-1">
-                                                    @endif
-                                                    {{ $val->name }}
-                                                </label>
+                                            @php
+                                                $pov = $assignedOptionValueMap->get($val->id);
+                                                $isChecked = $pov && $pov->status == 1;
+                                                $valPrice = $pov && $pov->price > 0 ? $pov->price : '';
+                                            @endphp
+                                            <div class="variant-item-box rounded-3 border transition-all p-2.5 {{ $isChecked ? 'border-primary shadow-xs bg-white' : 'border-light bg-surface-subtle' }}"
+                                                id="variant_box_{{ $item->id }}_{{ $val->id }}"
+                                                style="min-width: 210px; flex: 1 1 210px; max-width: 270px;">
+
+                                                <!-- Top Row: Checkbox, Swatch & Label -->
+                                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                                    <div
+                                                        class="form-check d-flex align-items-center gap-2 mb-0 flex-grow-1 cursor-pointer">
+                                                        <input
+                                                            class="form-check-input mt-0 opt-val-cb-{{ $item->id }}"
+                                                            type="checkbox" name="options[{{ $item->id }}][values][]"
+                                                            value="{{ $val->id }}"
+                                                            id="val_{{ $item->id }}_{{ $val->id }}"
+                                                            data-option-id="{{ $item->id }}"
+                                                            data-val-id="{{ $val->id }}"
+                                                            onchange="toggleVariantPrice(this, '{{ $item->id }}', '{{ $val->id }}')"
+                                                            {{ $isChecked ? 'checked' : '' }} />
+                                                        <label
+                                                            class="form-check-label font-13 fw-semibold text-heading mb-0 cursor-pointer d-flex align-items-center gap-1.5"
+                                                            for="val_{{ $item->id }}_{{ $val->id }}">
+                                                            @if ($val->option_value_image)
+                                                                <img src="{{ asset('storage/' . $val->option_value_image) }}"
+                                                                    alt="{{ $val->name }}"
+                                                                    style="width: 22px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1);"
+                                                                    class="shrink-0">
+                                                            @endif
+                                                            <span>{{ $val->name }}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Price Section: Appears when checkbox is selected -->
+                                                <div class="variant-price-wrap mt-2 pt-2 border-top border-light {{ $isChecked ? '' : 'd-none' }}"
+                                                    id="price_wrap_{{ $item->id }}_{{ $val->id }}">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <label class="font-11 text-muted fw-semibold mb-0"
+                                                            for="price_{{ $item->id }}_{{ $val->id }}">
+                                                            <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
+                                                        </label>
+                                                        <small class="font-10 text-muted">Optional</small>
+                                                    </div>
+                                                    <div class="input-group input-group-sm">
+                                                        <span
+                                                            class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
+                                                        <input type="number" step="0.01" min="0"
+                                                            name="options[{{ $item->id }}][prices][{{ $val->id }}]"
+                                                            id="price_{{ $item->id }}_{{ $val->id }}"
+                                                            class="form-control form-control-sm border-start-0 font-12"
+                                                            placeholder="0.00"
+                                                            value="{{ $valPrice !== '' ? $valPrice : '' }}"
+                                                            {{ $isChecked ? '' : 'disabled' }} />
+                                                    </div>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -362,7 +448,8 @@
                         style="{{ $hasExistingOptions ? 'display: none;' : '' }}">
                         <i class="bi bi-sliders2 fs-3 text-secondary"></i>
                         <h6 class="fw-bold text-heading mt-2 mb-1">No Options Configured</h6>
-                        <p class="text-muted font-12 mb-0">Select an option from the dropdown above to configure variants for this product.</p>
+                        <p class="text-muted font-12 mb-0">Select an option from the dropdown above to configure variants
+                            for this product.</p>
                     </div>
                 </div>
             </div>
@@ -395,7 +482,7 @@
                 // Check if card is already added
                 if ($(`#option_card_${selectedOption}`).length > 0) {
                     if (window.showToast) {
-                        window.showToast('This option is already added to this product.','info');
+                        window.showToast('This option is already added to this product.', 'info');
                     } else {
                         alert('This option is already added to this product.');
                     }
@@ -406,7 +493,7 @@
                 axios.get(`/admin/options/${selectedOption}`)
                     .then((res) => {
                         let item = res.data.option;
-                        
+
                         let tag = `
                             <div class="option-card rounded-2 border bg-white p-3 shadow-none" 
                                 name="options[${item.id}]" id="option_card_${item.id}">
@@ -420,12 +507,24 @@
                                             <i class="bi bi-check2"></i>
                                         </span>
                                         <div>
-                                            <h6 class="fw-bold text-heading mb-0 font-14">${item.name}</h6>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h6 class="fw-bold text-heading mb-0 font-14">${item.name}</h6>
+                                                <span class="badge bg-light text-primary border font-11 rounded-pill d-none" id="selected_count_badge_${item.id}">
+                                                    0 selected
+                                                </span>
+                                            </div>
                                             <small class="text-muted font-11">Type: ${item.type}</small>
                                         </div>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-1">
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded" 
+                                                id="btn_toggle_${item.id}"
+                                                onclick="toggleOptionBody('${item.id}')"
+                                                title="Collapse / Expand Values">
+                                            <i class="bi bi-chevron-up" id="icon_toggle_${item.id}"></i>
+                                        </button>
                                         <button type="button" 
                                                 class="btn btn-sm btn-outline-primary py-1 px-2 font-12 rounded" 
                                                 onclick="selectAllValues('${item.id}')">
@@ -436,39 +535,78 @@
                                                 onclick="deselectAllValues('${item.id}')">
                                             <i class="bi bi-x"></i> Clear
                                         </button>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger py-1 px-2 font-12 rounded" 
-                                                onclick="removeOptionCard('${item.id}')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        <select name="options[${item.id}][status]" 
+                                                class="form-select form-select-sm py-1 px-2 font-12 rounded fw-medium" 
+                                                style="width: auto; min-width: 95px;"
+                                                onchange="handleOptionStatusChange(this, '${item.id}','{{ $product->id }}')">
+                                            <option value="1" selected>Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- Values List -->
-                                <div>
-                                    <div class="fw-semibold font-12 text-muted mb-2">
-                                        Select Values:
+                                <!-- Values List Body (Collapsible) -->
+                                <div class="option-values-body" id="option_values_body_${item.id}">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="fw-semibold font-12 text-muted">
+                                            Select Values &amp; Optional Price:
+                                        </span>
                                     </div>
-                                    <div class="d-flex flex-wrap gap-2">
+                                    <div class="d-flex flex-wrap gap-2.5">
                                         ${(item.option_values || []).map(val => {
                                             return `
-                                                <div class="form-check p-2 px-3 border rounded bg-surface-subtle d-flex align-items-center gap-2 mb-0">
-                                                    <input class="form-check-input mt-0 opt-val-cb-${item.id}" 
-                                                            type="checkbox" 
-                                                            name="options[${item.id}][values][]" 
-                                                            value="${val.id}" 
-                                                            id="val_${val.id}"
-                                                    />
-                                                    <label class="form-check-label font-13 fw-semibold text-heading mb-0" for="val_${val.id}">
-                                                        ${val.option_image ? `
-                                                        <img src="/storage/${val.option_image}" 
-                                                             alt="${val.name}" 
-                                                             style="width: 20px; height: 20px; object-fit: cover; border-radius: 4px;" class="me-1">
-                                                        ` : ''}
-                                                        ${val.name}
-                                                    </label>
-                                                </div>
-                                            `;
+                                                        <div class="variant-item-box rounded-3 border transition-all p-2.5 border-light bg-surface-subtle"
+                                                             id="variant_box_${item.id}_${val.id}"
+                                                             style="min-width: 210px; flex: 1 1 210px; max-width: 270px;">
+                                                            
+                                                            <!-- Top Row: Checkbox, Swatch & Label -->
+                                                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                                                <div class="form-check d-flex align-items-center gap-2 mb-0 flex-grow-1 cursor-pointer">
+                                                                    <input class="form-check-input mt-0 opt-val-cb-${item.id}" 
+                                                                            type="checkbox" 
+                                                                            name="options[${item.id}][values][]" 
+                                                                            value="${val.id}" 
+                                                                            id="val_${item.id}_${val.id}"
+                                                                            data-option-id="${item.id}"
+                                                                            data-val-id="${val.id}"
+                                                                            onchange="toggleVariantPrice(this, '${item.id}', '${val.id}')"
+                                                                    />
+                                                                    <label class="form-check-label font-13 fw-semibold text-heading mb-0 cursor-pointer d-flex align-items-center gap-1.5" for="val_${item.id}_${val.id}">
+                                                                        ${val.option_value_image ? `
+                                                                    <img src="/storage/${val.option_value_image}" 
+                                                                         alt="${val.name}" 
+                                                                         style="width: 22px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1);" class="shrink-0">
+                                                                ` : ''}
+                                                                        <span>${val.name}</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Price Section: Appears when checkbox is selected -->
+                                                            <div class="variant-price-wrap mt-2 pt-2 border-top border-light d-none" 
+                                                                 id="price_wrap_${item.id}_${val.id}">
+                                                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                    <label class="font-11 text-muted fw-semibold mb-0" for="price_${item.id}_${val.id}">
+                                                                        <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
+                                                                    </label>
+                                                                    <small class="font-10 text-muted">Optional</small>
+                                                                </div>
+                                                                <div class="input-group input-group-sm">
+                                                                    <span class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
+                                                                    <input type="number" 
+                                                                           step="0.01" 
+                                                                           min="0" 
+                                                                           name="options[${item.id}][prices][${val.id}]" 
+                                                                           id="price_${item.id}_${val.id}"
+                                                                           class="form-control form-control-sm border-start-0 font-12" 
+                                                                           placeholder="0.00" 
+                                                                           value=""
+                                                                           disabled
+                                                                        />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `;
                                         }).join('')}
                                     </div>
                                 </div>
@@ -480,7 +618,8 @@
                         optionPicker.value = '';
                     })
                     .catch((err) => {
-                        let errMsg = (err.response && err.response.data && err.response.data.message) ? err.response.data.message : 'Failed to load option';
+                        let errMsg = (err.response && err.response.data && err.response.data.message) ?
+                            err.response.data.message : 'Failed to load option';
                         if (window.showToast) {
                             window.showToast('error', errMsg);
                         } else {
@@ -489,6 +628,27 @@
                     });
             });
         });
+
+        // Toggle variant price section when variant is checked/unchecked
+        function toggleVariantPrice(cb, optionId, valId) {
+            const isChecked = $(cb).is(':checked');
+            const box = $(`#variant_box_${optionId}_${valId}`);
+            const priceWrap = $(`#price_wrap_${optionId}_${valId}`);
+            const priceInput = $(`#price_${optionId}_${valId}`);
+
+            if (isChecked) {
+                box.addClass('border-primary shadow-xs bg-white').removeClass('border-light bg-surface-subtle');
+                priceWrap.removeClass('d-none').hide().slideDown(140);
+                priceInput.prop('disabled', false);
+            } else {
+                box.removeClass('border-primary shadow-xs bg-white').addClass('border-light bg-surface-subtle');
+                priceWrap.slideUp(140, function() {
+                    $(this).addClass('d-none');
+                });
+                priceInput.prop('disabled', true);
+            }
+            updateSelectedCountBadge(optionId);
+        }
 
         // Live Image Preview
         function previewImage(input) {
@@ -535,25 +695,101 @@
             }
         }
 
-        // Remove option card
-        function removeOptionCard(optionId) {
-            const card = $(`#option_card_${optionId}`);
-            card.fadeOut(200, function() {
-                card.remove();
-                if ($('#optionsContainer .option-card').length === 0) {
-                    $('#noOptionsNotice').show();
-                }
-            });
-        }
-
         // Select all values for an option
         function selectAllValues(optionId) {
-            $(`.opt-val-cb-${optionId}`).prop('checked', true);
+            $(`.opt-val-cb-${optionId}`).each(function() {
+                if (!$(this).is(':checked')) {
+                    $(this).prop('checked', true);
+                    const valId = $(this).data('val-id');
+                    toggleVariantPrice(this, optionId, valId);
+                }
+            });
+            updateSelectedCountBadge(optionId);
         }
 
         // Deselect all values for an option
         function deselectAllValues(optionId) {
-            $(`.opt-val-cb-${optionId}`).prop('checked', false);
+            $(`.opt-val-cb-${optionId}`).each(function() {
+                if ($(this).is(':checked')) {
+                    $(this).prop('checked', false);
+                    const valId = $(this).data('val-id');
+                    toggleVariantPrice(this, optionId, valId);
+                }
+            });
+            updateSelectedCountBadge(optionId);
+        }
+
+        // Toggle visual style when status changed between Active & Inactive
+        function handleOptionStatusChange(selectElem, optionid, productid) {
+            const statusData = $(selectElem).val();
+            const card = $('#option_card_' + optionid);
+
+            if (statusData === '0') {
+                card.addClass('bg-light opacity-75');
+            } else {
+                card.removeClass('bg-light opacity-75');
+            }
+
+            axios.post('/admin/product/option/status', {
+                    optionId: optionid,
+                    status: statusData,
+                    productId: productid
+                })
+                .then((res) => {
+                    window.showToast('Option status changed!', 'success');
+                })
+                .catch((err) => {
+                    console.error(err);
+                    window.showToast('Something went wrong!', 'error');
+                });
+        }
+
+        // Update selected values counter badge for an option card
+        function updateSelectedCountBadge(optionId) {
+            const count = $(`.opt-val-cb-${optionId}:checked`).length;
+            const badge = $(`#selected_count_badge_${optionId}`);
+            if (badge.length) {
+                if (count > 0) {
+                    badge.text(`${count} selected`).removeClass('d-none');
+                } else {
+                    badge.addClass('d-none');
+                }
+            }
+        }
+
+        // Toggle individual option card values body (Collapse / Expand)
+        function toggleOptionBody(optionId) {
+            const body = $(`#option_values_body_${optionId}`);
+            const icon = $(`#icon_toggle_${optionId}`);
+            body.stop(true, true).slideToggle(180, function() {
+                if (body.is(':visible')) {
+                    icon.removeClass('bi-chevron-down').addClass('bi-chevron-up');
+                } else {
+                    icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                }
+            });
+        }
+
+        // Toggle all option cards at once
+        let allOptionsCollapsed = false;
+
+        function toggleAllOptionBodies() {
+            allOptionsCollapsed = !allOptionsCollapsed;
+            const bodies = $('.option-values-body');
+            const toggleIcon = $('#toggleAllOptionsIcon');
+            const toggleText = $('#toggleAllOptionsText');
+
+            if (allOptionsCollapsed) {
+                bodies.stop(true, true).slideUp(180);
+                $('[id^="icon_toggle_"]').removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                toggleIcon.removeClass('bi-arrows-collapse').addClass('bi-arrows-expand');
+                toggleText.text('Expand All');
+            } else {
+                bodies.stop(true, true).slideDown(180);
+                $('[id^="icon_toggle_"]').removeClass('bi-chevron-down').addClass('bi-chevron-up');
+                toggleIcon.removeClass('bi-arrows-expand').addClass('bi-arrows-collapse');
+                toggleText.text('Collapse All');
+            }
         }
     </script>
 @endsection

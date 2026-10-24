@@ -1,43 +1,6 @@
 <!-- Modern E-Commerce Footer -->
 <footer class="vk-footer mt-auto">
-    
 
-    <!-- 2. NEWSLETTER SUBSCRIPTION -->
-    <div class="vk-footer-newsletter py-5">
-        <div class="container-fluid px-3 px-lg-5">
-            <div class="row align-items-center justify-content-between g-4">
-                <div class="col-lg-6">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="vk-newsletter-icon text-white fs-2">
-                            <i class="bi bi-envelope-paper-heart"></i>
-                        </div>
-                        <div>
-                            <h4 class="vk-newsletter-heading mb-1">Stay In The Style Loop</h4>
-                            <p class="vk-newsletter-desc mb-0">Subscribe for early access to new collections & exclusive festive offers.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <form action="{{ url('/newsletter') }}" method="POST" class="vk-newsletter-form">
-                        @csrf
-                        <div class="input-group vk-newsletter-input-group ms-lg-auto">
-                            <input type="email" 
-                                   name="email" 
-                                   class="form-control vk-newsletter-input" 
-                                   placeholder="Enter your email address..." 
-                                   required 
-                                   autocomplete="email">
-                            <button class="btn vk-newsletter-btn" type="submit">
-                                Subscribe
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. MAIN FOOTER CONTENT LINKS -->
     <div class="vk-footer-main py-5">
         <div class="container-fluid px-3 px-lg-5">
             <div class="row g-4 g-lg-5">

@@ -232,6 +232,11 @@
                         </h5>
                     </div>
                     <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnToggleAllOptionBodies"
+                            onclick="toggleAllOptionBodies()" title="Collapse or Expand all option values">
+                            <i class="bi bi-arrows-collapse me-1" id="toggleAllOptionsIcon"></i>
+                            <span id="toggleAllOptionsText">Collapse All</span>
+                        </button>
                         <a href="{{ route('admin.options.index') }}" class="btn btn-sm btn-outline-secondary"
                             target="_blank">
                             <i class="bi bi-gear"></i> Manage Options
@@ -263,7 +268,7 @@
 
                 <!-- Configured Options Container -->
                 <div id="optionsContainer" class="d-flex flex-column gap-3">
-               
+
                     <!-- Notice when no option is visible -->
                     <div id="noOptionsNotice"
                         class="p-4 text-center bg-surface-subtle rounded-2 border border-dashed border-secondary border-opacity-25"
@@ -291,7 +296,6 @@
 
 @section('scripts')
     <script>
-   
         document.addEventListener('DOMContentLoaded', function() {
             const optionPicker = document.getElementById('optionPickerSelect');
 
@@ -301,7 +305,7 @@
                 axios.get(`/admin/options/${selectedOption}`)
                     .then((res) => {
                         let item = res.data.option;
-                        
+
                         let tag = `
                             <div class="option-card rounded-2 border bg-white p-3 shadow-none" 
                                 name="options[${item.id}]"    id="option_card_${item.id}">
@@ -315,12 +319,24 @@
                                             <i class="bi bi-check2"></i>
                                         </span>
                                         <div>
-                                            <h6 class="fw-bold text-heading mb-0 font-14">${item.name}</h6>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h6 class="fw-bold text-heading mb-0 font-14">${item.name}</h6>
+                                                <span class="badge bg-light text-primary border font-11 rounded-pill d-none" id="selected_count_badge_${item.id}">
+                                                    0 selected
+                                                </span>
+                                            </div>
                                             <small class="text-muted font-11">Type: ${item.type}</small>
                                         </div>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-1">
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded" 
+                                                id="btn_toggle_${item.id}"
+                                                onclick="toggleOptionBody('${item.id}')"
+                                                title="Collapse / Expand Values">
+                                            <i class="bi bi-chevron-up" id="icon_toggle_${item.id}"></i>
+                                        </button>
                                         <button type="button" 
                                                 class="btn btn-sm btn-outline-primary py-1 px-2 font-12 rounded" 
                                                 onclick="selectAllValues('${item.id}')">
@@ -336,34 +352,78 @@
                                                 onclick="removeOptionCard('${item.id}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        <select name="options[${item.id}][status]" 
+                                                class="form-select form-select-sm py-1 px-2 font-12 rounded fw-medium" 
+                                                style="width: auto; min-width: 95px;"
+                                                onchange="handleOptionStatusChange(this, '${item.id}')">
+                                            <option value="1" selected>Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- Values List -->
-                                <div>
-                                    <div class="fw-semibold font-12 text-muted mb-2">
-                                        Select Values:
+                                <!-- Values List Body (Collapsible) -->
+                                <div class="option-values-body" id="option_values_body_${item.id}">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="fw-semibold font-12 text-muted">
+                                            Select Values &amp; Optional Price:
+                                        </span>
                                     </div>
-                                    <div class="d-flex flex-wrap gap-2">
+                                    <div class="d-flex flex-wrap gap-2.5">
                                         ${(item.option_values || []).map(val => {
                                             return `
-                                                    <div class="form-check p-2 px-3 border rounded bg-surface-subtle d-flex align-items-center gap-2 mb-0">
-                                                        <input class="form-check-input mt-0 opt-val-cb-${item.id}" 
-                                                                type="checkbox" 
-                                                                name="options[${item.id}][values][]" 
-                                                            value="${val.id}" 
-                                                            id="val_${val.id}"
-                                                        />
-                                                    <label class="form-check-label font-13 fw-semibold text-heading mb-0" for="val_${val.id}">
-                                                        ${val.option_image ? `
-                                                        <img src="/storage/${val.option_image}" 
-                                                                alt="${val.name}" 
-                                                                style="width: 20px; height: 20px; object-fit: cover; border-radius: 4px;" class="me-1">
-                                                    ` : ''}
-                                                        ${val.name}
-                                                    </label>
-                                                </div>
-                                                `;
+                                                    <div class="variant-item-box rounded-3 border transition-all p-2.5 border-light bg-surface-subtle"
+                                                         id="variant_box_${item.id}_${val.id}"
+                                                         style="min-width: 210px; flex: 1 1 210px; max-width: 270px;">
+                                                        
+                                                        <!-- Top Row: Checkbox, Swatch & Label -->
+                                                        <div class="d-flex align-items-center justify-content-between gap-2">
+                                                            <div class="form-check d-flex align-items-center gap-2 mb-0 flex-grow-1 cursor-pointer">
+                                                                <input class="form-check-input mt-0 opt-val-cb-${item.id}" 
+                                                                        type="checkbox" 
+                                                                        name="options[${item.id}][values][]" 
+                                                                        value="${val.id}" 
+                                                                        id="val_${item.id}_${val.id}"
+                                                                        data-option-id="${item.id}"
+                                                                        data-val-id="${val.id}"
+                                                                        onchange="toggleVariantPrice(this, '${item.id}', '${val.id}')"
+                                                                />
+                                                                <label class="form-check-label font-13 fw-semibold text-heading mb-0 cursor-pointer d-flex align-items-center gap-1.5" for="val_${item.id}_${val.id}">
+                                                                    ${val.option_value_image ? `
+                                                                    <img src="/storage/${val.option_value_image}" 
+                                                                         alt="${val.name}" 
+                                                                         style="width: 22px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1);" class="shrink-0">
+                                                                ` : ''}
+                                                                    <span>${val.name}</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Price Section: Appears when checkbox is selected -->
+                                                        <div class="variant-price-wrap mt-2 pt-2 border-top border-light d-none" 
+                                                             id="price_wrap_${item.id}_${val.id}">
+                                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                <label class="font-11 text-muted fw-semibold mb-0" for="price_${item.id}_${val.id}">
+                                                                    <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
+                                                                </label>
+                                                                <small class="font-10 text-muted">Optional</small>
+                                                            </div>
+                                                            <div class="input-group input-group-sm">
+                                                                <span class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
+                                                                <input type="number" 
+                                                                       step="0.01" 
+                                                                       min="0" 
+                                                                       name="options[${item.id}][prices][${val.id}]" 
+                                                                       id="price_${item.id}_${val.id}"
+                                                                       class="form-control form-control-sm border-start-0 font-12" 
+                                                                       placeholder="0.00" 
+                                                                       value=""
+                                                                       disabled
+                                                                       oninput="onVariantPriceChange(this, '${item.id}', '${val.id}')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    `;
                                         }).join('')}
                                 </div>
                             </div>
@@ -450,14 +510,108 @@
             });
         }
 
+        // Toggle variant price section when variant is checked/unchecked
+        function toggleVariantPrice(cb, optionId, valId) {
+            const isChecked = $(cb).is(':checked');
+            const box = $(`#variant_box_${optionId}_${valId}`);
+            const priceWrap = $(`#price_wrap_${optionId}_${valId}`);
+            const priceInput = $(`#price_${optionId}_${valId}`);
+
+            if (isChecked) {
+                box.addClass('border-primary shadow-xs bg-white').removeClass('border-light bg-surface-subtle');
+                priceWrap.removeClass('d-none').hide().slideDown(140);
+                priceInput.prop('disabled', false);
+            } else {
+                box.removeClass('border-primary shadow-xs bg-white').addClass('border-light bg-surface-subtle');
+                priceWrap.slideUp(140, function() {
+                    $(this).addClass('d-none');
+                });
+                priceInput.prop('disabled', true);
+            }
+            updateSelectedCountBadge(optionId);
+        }
+
         // Select all values for an option
         function selectAllValues(optionId) {
-            $('.opt-val-cb-' + optionId).prop('checked', true);
+            $(`.opt-val-cb-${optionId}`).each(function() {
+                if (!$(this).is(':checked')) {
+                    $(this).prop('checked', true);
+                    const valId = $(this).data('val-id');
+                    toggleVariantPrice(this, optionId, valId);
+                }
+            });
+            updateSelectedCountBadge(optionId);
         }
 
         // Deselect all values for an option
         function deselectAllValues(optionId) {
-            $('.opt-val-cb-' + optionId).prop('checked', false);
+            $(`.opt-val-cb-${optionId}`).each(function() {
+                if ($(this).is(':checked')) {
+                    $(this).prop('checked', false);
+                    const valId = $(this).data('val-id');
+                    toggleVariantPrice(this, optionId, valId);
+                }
+            });
+            updateSelectedCountBadge(optionId);
+        }
+
+        // Toggle visual style when status changed between Active & Inactive
+        function handleOptionStatusChange(selectElem, optionId) {
+            const isInactive = selectElem.value === '0';
+            const card = $('#option_card_' + optionId);
+            if (isInactive) {
+                card.addClass('bg-light opacity-75');
+            } else {
+                card.removeClass('bg-light opacity-75');
+            }
+        }
+
+        // Update selected values counter badge for an option card
+        function updateSelectedCountBadge(optionId) {
+            const count = $(`.opt-val-cb-${optionId}:checked`).length;
+            const badge = $(`#selected_count_badge_${optionId}`);
+            if (badge.length) {
+                if (count > 0) {
+                    badge.text(`${count} selected`).removeClass('d-none');
+                } else {
+                    badge.addClass('d-none');
+                }
+            }
+        }
+
+        // Toggle individual option card values body (Collapse / Expand)
+        function toggleOptionBody(optionId) {
+            const body = $(`#option_values_body_${optionId}`);
+            const icon = $(`#icon_toggle_${optionId}`);
+            body.stop(true, true).slideToggle(180, function() {
+                if (body.is(':visible')) {
+                    icon.removeClass('bi-chevron-down').addClass('bi-chevron-up');
+                } else {
+                    icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                }
+            });
+        }
+
+        // Toggle all option cards at once
+        let allOptionsCollapsed = false;
+
+        function toggleAllOptionBodies() {
+            allOptionsCollapsed = !allOptionsCollapsed;
+            const bodies = $('.option-values-body');
+            const toggleIcon = $('#toggleAllOptionsIcon');
+            const toggleText = $('#toggleAllOptionsText');
+
+            if (allOptionsCollapsed) {
+                bodies.stop(true, true).slideUp(180);
+                $('[id^="icon_toggle_"]').removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                toggleIcon.removeClass('bi-arrows-collapse').addClass('bi-arrows-expand');
+                toggleText.text('Expand All');
+            } else {
+                bodies.stop(true, true).slideDown(180);
+                $('[id^="icon_toggle_"]').removeClass('bi-chevron-down').addClass('bi-chevron-up');
+                toggleIcon.removeClass('bi-arrows-expand').addClass('bi-arrows-collapse');
+                toggleText.text('Collapse All');
+            }
         }
     </script>
 @endsection

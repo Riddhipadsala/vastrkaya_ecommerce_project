@@ -107,8 +107,8 @@
                     <div class="mb-2">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Status</label>
                         <select name="status" class="form-select form-select-sm">
-                            <option value="active" selected>Active</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="1" selected>Active</option>
+                            <option value="0">Inactive</option>
                         </select>
                     </div>
                 </div>
@@ -170,8 +170,8 @@
                     <div class="mb-2">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Status</label>
                         <select name="status" id="editCategoryStatus" class="form-select form-select-sm">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
                         </select>
                     </div>
                 </div>
@@ -234,8 +234,8 @@
                             </td>
                             <td class="text-secondary font-13">${e.description || '-'}</td>
                             <td>
-                                <span class="badge ${e.status === 'active' ? 'text-success border-success' : 'text-danger border-danger'} border border-opacity-25 rounded-pill px-2 py-1 font-12">
-                                    ${e.status === 'active' ? 'Active' : 'Inactive'}
+                                <span class="badge ${e.status === 1 ? 'text-success border-success' : 'text-danger border-danger'} border border-opacity-25 rounded-pill px-2 py-1 font-12">
+                                    ${e.status === 1 ? 'Active' : 'Inactive'}
                                 </span>
                             </td>
                             <td class="text-end pe-3">

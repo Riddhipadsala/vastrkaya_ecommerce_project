@@ -61,6 +61,13 @@
             </a>
         </li>
 
+        <li class="vk-nav-item">
+            <a href="{{ route('admin.settings.index') }}" class="vk-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                <i class="bi bi-gear-fill vk-nav-icon"></i>
+                <span>Store Settings</span>
+            </a>
+        </li>
+
         <li class="vk-nav-item mt-4 pt-2 border-top border-secondary border-opacity-10">
             <a href="{{ route('dashboard') }}" class="vk-nav-link text-muted" target="_blank">
                 <i class="bi bi-box-arrow-up-right vk-nav-icon"></i>

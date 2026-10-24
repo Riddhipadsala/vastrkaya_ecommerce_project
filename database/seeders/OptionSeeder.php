@@ -85,7 +85,7 @@ class OptionSeeder extends Seeder
                     ],
                     [
                         'sort_order' => $valData['sort_order'],
-                        'option_image' => null
+                        'option_value_image' => null
                     ]
                 );
             }

@@ -260,5 +260,10 @@
         setupToggle('toggleRegPasswordBtn', 'reg_password', 'toggleRegPasswordIcon');
         setupToggle('toggleConfPasswordBtn', 'password_confirmation', 'toggleConfPasswordIcon');
     });
+
+    document.getElementById('reg_phone').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        e.target.value = e.target.value.slice(0, 10);
+    })
 </script>
 @endsection

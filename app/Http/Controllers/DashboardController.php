@@ -12,7 +12,7 @@ class DashboardController extends Controller
     public function index(){
 
         if(request()->ajax() || request()->wantsJson()) {
-            $categories = Category::all();
+            $categories = Category::where('status',1)->get();
 
             return response()->json([
                 'success'=> true,
@@ -20,8 +20,11 @@ class DashboardController extends Controller
             ]);
         }
 
-        $categories = Category::all()->where('status','active');
-        $products = Product::all()->where('status',1);
+        $categories = Category::where('status',1)->get();
+        
+        $products = Product::with('category')->where('status',1)->whereHas('category',function($query){
+            $query->where('status',1);
+        })->get();
 
         return view('customer.dashboard', compact('categories', 'products'));
     }

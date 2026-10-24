@@ -60,7 +60,7 @@ class CategoryController extends Controller
             'name'=> 'required|string|max:255',
             'description'=> 'required|string|max:255',
             'image' => 'required',
-            'status' => 'nullable|in:active,inactive'
+            'status' => 'nullable|in:1,0'
         ]);
 
         if($request->hasFile('image')) {
@@ -106,7 +106,7 @@ class CategoryController extends Controller
         $validate = $request->validate([
             'name'=> 'required|string|max:255',
             'description'=> 'required|string|max:255',
-            'status' => 'nullable|in:active,inactive',
+            'status' => 'nullable|in:1,0',
             'image'=> 'nullable'
         ]);
 

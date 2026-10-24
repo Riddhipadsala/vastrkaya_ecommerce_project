@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('option_id')->constrained('options')->onDelete('cascade');
             $table->foreignId('product_option_id')->constrained('product_options')->onDelete('cascade');
             $table->foreignId('option_value_id')->constrained('option_values')->onDelete('cascade');
-            $table->tinyInteger('status')->default(0)->comment('0 for inactive, 1 for active');
+            $table->tinyInteger('status')->default(1)->comment('0 for inactive, 1 for active');
             $table->string('image');
             $table->timestamps();
         });

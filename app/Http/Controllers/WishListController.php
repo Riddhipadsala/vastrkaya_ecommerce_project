@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\WishList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WishListController extends Controller
 {
@@ -12,7 +14,17 @@ class WishListController extends Controller
      */
     public function index()
     {
-        //
+        $query = WishList::with('product.category');
+
+        if(Auth::check()) {
+            $query->where('user_id', Auth::id());
+        } else {
+            $query->where('session', session()->getId());
+        }
+
+        $wishlistItems = $query->get();
+
+        return view('customer.wishlist', compact('wishlistItems'));
     }
 
     /**
@@ -52,14 +64,48 @@ class WishListController extends Controller
      */
     public function update(Request $request, WishList $wishList)
     {
-        //
+        $validate = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            '_method' => 'required',
+            '_token' => 'required'
+        ]);
+
+        $data = [
+            'product_id'=> $validate['product_id'],
+            'user_id'=> Auth::id() ?? null,
+            'session'=> session()->getId() ?? null
+        ];
+
+        $query = WishList::where('product_id', $data['product_id']);
+        if (Auth::check()) {
+            $query->where('user_id', Auth::id());
+        } else {
+            $query->where('session', session()->getId());
+        }
+        $wishedProduct = $query->first();
+
+        
+        if($wishedProduct) {
+            
+            $wishedProduct->delete();
+            
+            return response()->json([
+                'success'=> true,
+                'message'=> 'remove the record from he wishlist'
+            ]);
+        }
+   
+        $wishList = WishList::create($data);
+        
+        if($wishList){
+                return response()->json([
+                    'success'=> true,
+                    'message' => 'Product added in wishlist'
+                ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(WishList $wishList)
-    {
-        //
+    public function destroy(WishList $wishlist) {
+
     }
 }

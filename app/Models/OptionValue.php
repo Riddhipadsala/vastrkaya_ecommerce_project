@@ -10,7 +10,7 @@ class OptionValue extends Model
         'option_id',
         'name',
         'sort_order',
-        'option_image'
+        'option_value_image'
     ]; 
 
     public function option(){

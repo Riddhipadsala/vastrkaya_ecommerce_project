@@ -16,4 +16,10 @@ class Category extends Model
     public function products() {
         return $this->hasMany(Product::class);
     }
+
+    // Helper function to safely get the name
+    public function getNameSafeAttribute()
+    {
+        return $this->name ?: 'N/A';
+    }
 }

@@ -131,14 +131,15 @@
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center gap-2">
                                             @php
-                                                $imgSrc = $val->option_image
-                                                    ? asset('storage/' . $val->option_image)
+                                                $imgSrc = $val->option_value_image
+                                                    ? asset('storage/' . $val->option_value_image)
                                                     : 'https://via.placeholder.com/40x40?text=Img';
                                             @endphp
                                             <img id="preview-{{ $idx + 1 }}" src="{{ $imgSrc }}"
                                                 alt="{{ $val->name }}"
                                                 style="width: 36px; height: 36px; object-fit: cover; border-radius: 8px; border: 1px solid var(--vk-border); flex-shrink: 0;">
-                                            <input type="file" name="option_values[{{ $idx + 1 }}][option_image]"
+                                            <input type="file"
+                                                name="option_values[{{ $idx + 1 }}][option_value_image]"
                                                 class="form-control vk-form-control form-control-sm" accept="image/*"
                                                 onchange="previewRowImage(this, 'preview-{{ $idx + 1 }}')">
                                         </div>
@@ -254,7 +255,7 @@
                          alt="Preview" 
                          style="width: 36px; height: 36px; object-fit: cover; border-radius: 8px; border: 1px solid var(--vk-border); flex-shrink: 0;">
                     <input type="file" 
-                           name="option_values[${rowIndex}][option_image]" 
+                           name="option_values[${rowIndex}][option_value_image]" 
                            class="form-control vk-form-control form-control-sm" 
                            accept="image/*"
                            onchange="previewRowImage(this, 'preview-${rowIndex}')">

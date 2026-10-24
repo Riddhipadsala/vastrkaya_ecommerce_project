@@ -1,7 +1,7 @@
 <?php
 
     function categorystatus($status){
-        if($status == 'active') {
+        if($status == 1) {
             return "Active";
         }
         else {

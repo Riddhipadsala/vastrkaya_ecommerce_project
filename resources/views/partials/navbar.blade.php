@@ -72,7 +72,7 @@
                                 <span>My Orders</span>
                             </a>
                         </li>
-                        <li>
+                        <li class="d-none">
                             <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="{{ url('/wishlist') }}">
                                 <i class="bi bi-heart text-secondary"></i>
                                 <span>Wishlist</span>
@@ -105,11 +105,11 @@
                 </div>
 
                 <!-- WISHLIST -->
-                <a href="{{ url('/wishlist') }}" class="vk-action-link d-flex flex-column align-items-center text-decoration-none">
+                <a href="{{ url('/wishlist') }}" class="vk-action-link d-flex flex-column align-items-center text-decoration-none  d-none">
                     <div class="vk-icon-wrapper position-relative">
                         <i class="bi bi-heart"></i>
-                        <span class="vk-badge position-absolute translate-middle badge rounded-pill bg-danger">
-                            0
+                        <span class="vk-badge position-absolute translate-middle badge rounded-pill bg-danger navbar-bag">
+                            
                         </span>
                     </div>
                     <span class="vk-action-label d-none d-lg-inline">Wishlist</span>
@@ -119,8 +119,8 @@
                 <a href="{{ url('/cart') }}" class="vk-action-link d-flex flex-column align-items-center text-decoration-none">
                     <div class="vk-icon-wrapper position-relative">
                         <i class="bi bi-bag"></i>
-                        <span class="vk-badge position-absolute translate-middle badge rounded-pill bg-dark">
-                            0
+                        <span id="navCartBadge" class="vk-badge position-absolute translate-middle badge rounded-pill bg-dark">
+                            
                         </span>
                     </div>
                     <span class="vk-action-label d-none d-lg-inline">Bag</span>

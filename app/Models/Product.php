@@ -38,4 +38,13 @@ class Product extends Model
         return $this->hasMany(ProductOptionValue::class);
     }
 
+    public function wishLists()
+    {
+        return $this->hasMany(WishList::class);
+    }
+
+    public function cartItems() {
+        return $this->hasMany(CartItem::class);
+    }
+
 }

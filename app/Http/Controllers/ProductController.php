@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductOption;
 use App\Models\ProductOptionValue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -72,9 +73,11 @@ class ProductController extends Controller
                 $productOption = ProductOption::create([
                     'product_id'=> $product->id,
                     'option_id'=> (int) $option['option_id'],
+                    'status'   => isset($option['status']) ? (int) $option['status'] : 1,
                 ]);
 
                 $optionValue = $option['values'] ?? [];
+                $prices = $option['prices'] ?? [];
 
                 if(is_array($optionValue)){
                     foreach($optionValue as $value){
@@ -91,6 +94,7 @@ class ProductController extends Controller
                             'option_id'=> (int) $option['option_id'],
                             'product_id'=> (int) $product->id,
                             // 'image'=> $value['image']
+                            'price' => ($prices[$value] != '' && $prices[$value] != null) ? $prices[$value] : 0,
                         ]);
                     }
                 }
@@ -109,22 +113,44 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['productOptions.option.optionValues', 'productOptionValues.optionValue', 'category']);
-        return response()->json([
-            'success'=> true,
-            'product'=> $product
-        ]);     
+        $product->load([
+            'productOptions' => function ($q) {
+                $q->where('status', 1);
+            },
+            'productOptions.option.optionValues',
+            'productOptionValues' => function ($q) {
+                $q->where('status', 1);
+            },
+            'productOptionValues.optionValue',
+            'category',
+            'wishLists'
+        ]);
 
-        return response()->view('customer.product-detail', compact('product'));
+        return view('customer.product-detail', compact('product'));
     }
 
-    public function productDetail($id)
+    public function productDetail(int $id)
     {
-        $product = Product::with([
+        $query = Product::with([
             'category',
+            'productOptions' => function ($q) {
+                $q->where('status', 1);
+            },
             'productOptions.option',
-            'productOptionValues.optionValue'
-        ])->findOrFail($id);
+            'productOptionValues' => function ($q) {
+                $q->where('status', 1);
+            },
+            'productOptionValues.optionValue',
+            'wishLists' => function ($q) {
+                if(Auth::check()) {
+                    $q->where('user_id', Auth::id());
+                } else {
+                    $q->where('session', session()->getId());
+                }
+            }
+        ]);
+
+        $product = $query->findOrFail($id);
 
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->where('status', 1)
@@ -140,62 +166,125 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['productOptions.option.optionValues', 'productOptionValues.optionValue', 'category']);
+        $product->load([
+            'productOptions',
+
+            'productOptions.option.optionValues',
+
+            'productOptionValues.optionValue',
+
+            'category'
+        ]);
+// dd($product);
         $categories = Category::all();
         $options = Option::with('optionValues')->get();
-        return view('admin.pages.products.edit', compact('product', 'categories', 'options'));
+
+        return view('admin.pages.products.edit', compact(
+            'product',
+            'categories',
+            'options'
+        ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ProductRequest $request, Product $product)
     {
         $validate = $request->validated();
 
         if ($request->hasFile('image')) {
+
             if ($product->image && Storage::disk('public')->exists($product->image)) {
                 Storage::disk('public')->delete($product->image);
             }
+
             $file = $request->file('image');
+
             $filename = time() . '_' . $file->getClientOriginalName();
-            $validate['image'] = $file->storeAs('product_images', $filename, 'public');
+
+            $validate['image'] = $file->storeAs(
+                'product_images',
+                $filename,
+                'public'
+            );
         }
 
         $product->update($validate);
 
-        // Delete existing relations and re-sync
-        $product->productOptions()->delete();
-        $product->productOptionValues()->delete();
+        $submittedOptionIds = [];
 
-        if ($request->options) {
-            foreach ($request->options as $option) {
-                if (empty($option['option_id'])) {
-                    continue;
-                }
+        foreach ($request->input('options', []) as $option) {
 
-                $productOption = ProductOption::create([
+            if (empty($option['option_id'])) {
+                continue;
+            }
+
+            $optionId = (int) $option['option_id'];
+            $submittedOptionIds[] = $optionId;
+
+            $optionValues = $option['values'] ?? [];
+
+            $prices = $option['prices'] ?? [];
+
+            if (!is_array($optionValues)) {
+                $optionValues = [];
+            }
+
+            $productOption = ProductOption::updateOrCreate(
+                [
                     'product_id' => $product->id,
-                    'option_id'  => (int) $option['option_id'],
-                ]);
+                    'option_id' => $optionId,
+                ],
+                [
+                    'status' => $option['status'] ?? 1,
+                ]
+            );
 
-                $optionValue = $option['values'] ?? [];
+            if (empty($optionValues)) {
+                ProductOptionValue::where('product_id', $product->id)
+                    ->where('option_id', $optionId)
+                    ->update(['status'=> 0]);
 
-                if (is_array($optionValue)) {
-                    foreach ($optionValue as $value) {
-                        ProductOptionValue::create([
-                            'product_option_id' => $productOption->id,
-                            'option_value_id'   => (int) $value,
-                            'option_id'         => (int) $option['option_id'],
-                            'product_id'        => (int) $product->id,
-                            'image'             => '',
-                        ]);
-                    }
+                continue;
+            }
+
+            ProductOptionValue::where('product_id', $product->id)
+                ->where('option_id', $optionId)
+                ->whereNotIn('option_value_id', $optionValues)
+                ->update(['status'=> 0]);
+
+            foreach ($optionValues as $value) {
+
+                $valueId = (int) $value;
+
+                $price = $prices[$value] ?? 0;
+
+                if ($price === '' || $price === null) {
+                    $price = 0;
                 }
+
+                ProductOptionValue::updateOrCreate(
+                    [
+                        'product_option_id' => $productOption->id,
+                        'option_value_id' => $valueId,
+                        'option_id' => $optionId,
+                        'product_id' => $product->id,
+                    ],
+                    [
+                        'status' => 1,
+                        'price' => $price,
+                    ]
+                );
             }
         }
 
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
+        if (!empty($submittedOptionIds)) {
+            ProductOptionValue::where('product_id', $product->id)
+                ->whereNotIn('option_id', $submittedOptionIds)
+                ->update(['status' => 0]);
+        }
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Product updated successfully');
     }
 
     /**
@@ -208,6 +297,66 @@ class ProductController extends Controller
         if($product) {
             return response()->json([
                     'success'=> true,
+            ]);
+        }
+        else {
+            return response()->json([
+                'success'=> false,
+            ]);
+        }
+    }
+    
+    public function optionStatusChange(Request $request) {
+        $productOption = ProductOption::where('option_id', $request->optionId)->where('product_id', $request->productId)->first();
+
+        if (!$productOption) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product option not found'
+            ], 404);
+        }
+
+        $statusUpdate = $productOption->update(['status'=> $request->status]);
+
+        if($statusUpdate) {
+            return response()->json([
+                'success'=> true,
+                'productOption'=> $productOption
+            ]);
+        }
+        else {
+            return response()->json([
+                'success'=> false,
+            ]);
+        }
+    }
+
+    public function optionValuePriceChange(Request $request) {
+        $productOptionValue = ProductOptionValue::whereIn('id', $request->povId)->get();
+
+        if (!$productOptionValue) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product option value not found'
+            ], 404);
+        }
+
+        $product = Product::whereHas('productOptionValues', function ($q) use ($request) {
+            $q->whereIn('id', $request->povId);
+        })->first();
+     
+        $basePrice = $product->price + $productOptionValue->sum('price');
+
+        $finalPrice = $basePrice - ($basePrice *  $product->discount_percentage / 100);
+
+        $discount_price = $basePrice - $finalPrice;
+
+        if($productOptionValue) {
+            return response()->json([
+                'success'=> true,
+                'productOptionValue'=> $productOptionValue,
+                'finalPrice'=> Round($finalPrice),
+                'discount_price'=> Round($discount_price,2)
             ]);
         }
         else {

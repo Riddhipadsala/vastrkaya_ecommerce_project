@@ -100,13 +100,19 @@
     // =========================================================================
     // 3. Global Toast Utility
     // =========================================================================
-    window.showToast = function (message, type = 'success') {
+    window.showToast = window.showToastr = function (message, type = 'success') {
         let container = document.getElementById('vkToastContainer');
         if (!container) {
             container = document.createElement('div');
             container.id = 'vkToastContainer';
             container.className = 'vk-toast-container';
             document.body.appendChild(container);
+        }
+
+        // Limit maximum visible toasts to 3 so it doesn't take up full window height
+        const MAX_VISIBLE_TOASTS = 3;
+        while (container.children.length >= MAX_VISIBLE_TOASTS) {
+            container.firstElementChild.remove();
         }
 
         const toast = document.createElement('div');
@@ -143,7 +149,7 @@
                 toast.style.transform = 'translateY(10px)';
                 setTimeout(() => toast.remove(), 300);
             }
-        }, 4000);
+        }, 2800);
     };
 
     window.toggleTheme = toggleTheme;

@@ -162,10 +162,6 @@
                             <a href="{{ url('products/' . $product->id) }}" class="vk-product-thumb d-block text-decoration-none">
                                 <span class="vk-product-tag vk-tag-hot">{{ round($product->discount_percentage) }}%
                                     OFF</span>
-                                <button type="button" class="vk-wishlist-btn" title="Add to Wishlist"
-                                    aria-label="Add to Wishlist" onclick="event.preventDefault(); event.stopPropagation();">
-                                    <i class="bi bi-heart"></i>
-                                </button>
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                                     class="vk-product-img" loading="lazy">
                             </a>
@@ -186,9 +182,6 @@
                                     <span class="vk-price-mrp">₹{{ $product->discount_price }}</span>
                                     <span class="vk-price-discount">{{ $product->discount_percentage }}% OFF</span>
                                 </div>
-                                <button type="button" class="vk-add-cart-btn">
-                                    <i class="bi bi-bag-plus"></i> Add to Bag
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -206,15 +199,5 @@
 
         </div>
     </section>
-
-@endsection
-
-@section('script')
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-        })
-    </script>
 
 @endsection
