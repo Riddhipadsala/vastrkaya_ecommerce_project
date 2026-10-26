@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $guarded = [];
+    protected $fillable = ['minimum_order_amount','delivery_charge'];
 }

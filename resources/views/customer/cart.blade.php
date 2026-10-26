@@ -5,35 +5,6 @@
 @php
     $show_navbar = true;
     $show_footer = true;
-
-    $cartItems = $cart ?? session()->get('cart', []);
-
-    // Fallback demo items if cart is completely empty
-    $isDemo = empty($cartItems);
-    if ($isDemo) {
-        $cartItems = [
-            'demo_1' => [
-                'id' => 1,
-                'name' => 'Royal Heritage Cotton Silk Saree',
-                'category' => 'Ethnic Wear',
-                'price' => 1700,
-                'discount_price' => 2465,
-                'image' => 'product/images (4).jpg',
-                'quantity' => 1,
-                'size' => 'Free Size',
-            ],
-            'demo_2' => [
-                'id' => 2,
-                'name' => 'Art Silk Printed Festive Saree',
-                'category' => 'Ethnic Wear',
-                'price' => 2000,
-                'discount_price' => 2900,
-                'image' => 'product/images (4).jpg',
-                'quantity' => 1,
-                'size' => 'Free Size',
-            ],
-        ];
-    }
 @endphp
 
 @section('hero-section')
@@ -211,9 +182,10 @@
                                 </div>
 
                                 <div class="d-flex justify-content-between text-slate-600">
-                                    <span>Delivery Fee</span>
+                                    <span>Delivery Charges</span>
                                     <div class="text-end">
-                                        <span class="text-emerald-600 font-bold uppercase text-[10px]">FREE</span>
+                                        <span class="text-emerald-600 font-bold uppercase text-[10px]"
+                                            id="deliveryCharges">FREE</span>
                                     </div>
                                 </div>
 
@@ -234,15 +206,13 @@
                                             id="sumTotalSavings"></span></strong> on this order!
                                 </span>
                             </div>
-
                             <!-- Primary Checkout Button -->
                             <div class="mt-3.5">
-                                <button type="button"
-                                    class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition"
-                                    onclick="checkoutDemo()">
+                                <a href="{{ route('cart.contact') }}"
+                                    class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none">
                                     <span>PROCEED TO CHECKOUT</span>
                                     <i class="bi bi-arrow-right"></i>
-                                </button>
+                                </a>
                             </div>
 
                             <div class="mt-2.5 text-center">
@@ -327,36 +297,32 @@
                                                         }
                                                     }
                                                 }
-                                                return ` <
-                            span class =
+                                                return ` < span class =
                             "bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200" >
                             <
                             strong class = "uppercase" > $ {
                                 optName
-                            }: < /strong> ${optValName} <
-                            /span>
-                        `;
-                                            }).join('')
-                                            : (item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0
-                                                ? Object.entries(item.options).map(([name, val]) => ` <
-                        span class =
-                        "bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200" >
-                        <
-                        strong class = "uppercase" > $ {
-                            name
-                        }: < /strong> ${val} <
-                        /span>
-                        `).join('')
-                                                : ''
-                                            )
+                            }: < /strong> ${optValName} </span >
+                            `;
+                                                                            }).join('')
+                                                                            : (item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0
+                                                                                ? Object.entries(item.options).map(([name, val]) => ` <
+                            span class =
+                            "bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200" >
+                            <
+                            strong class = "uppercase" > $ {
+                                name
+                            }: < /strong> ${val} </span > `).join('')
+                                                                                : ''
+                                                                            )
                                         }
-                                        ${(item.product.stock > 0) ?
-                                           `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1">
-                                                <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
-                                            </span>`
-                                       :  `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1">
-                                                <i class="bi bi-x-circle-fill text-[10px]"></i> Out of Stock
-                                            </span>`
+                                        ${(item.product.stock > 0 || item.product.decrease_stock > 0) ?
+                                           `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
+                                                        <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
+                                                    </span>`
+                                       :  `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
+                                                        <i class="bi bi-x-circle-fill text-[10px]"></i> Out of Stock
+                                                    </span>`
                                        }
                                         
                                     </div>
@@ -367,8 +333,8 @@
                                     <span class="text-base font-bold text-slate-900">&#8377;<span id="price_${item.id}">${item.new_price}</span></span>
                                    ${item.product.discount_price > 0
                                         ? `<span class="text-xs text-slate-500">Discount per product</span>
-                                            <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
-                                            <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
+                                                    <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
+                                                    <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
                                         : ''
                                     }
                                 </div>
@@ -415,7 +381,6 @@
                 })
         }
 
-
         function mainPriceBox() {
             axios.get('/cart/price-count')
                 .then((res) => {
@@ -430,9 +395,9 @@
                     $('#cartCountHeader').text(totalCount);
                     $('#summaryCount').text(totalCount);
                     $('#sumTotalMrp').text(totalPrice.toLocaleString('en-IN'));
-                    $('#sumFinalAmount').text(totalPrice.toLocaleString('en-IN'));
-                    $('#sumTotalDiscount').text(totalDiscount.toLocaleString('en-IN'));
-           
+                    $('#sumFinalAmount').text((totalPrice + data.delivery_charges).toLocaleString('en-IN'));
+                    $('#deliveryCharges').text(data.delivery_charges.toLocaleString('en-IN'));
+
 
                     if (document.getElementById('navCartBadge')) {
                         document.getElementById('navCartBadge').textContent = totalCount;
@@ -445,6 +410,7 @@
 
         // Update item quantity in UI
         function updateItemQty(key, delta, price) {
+
             const qtyEl = document.getElementById('qty_' + key);
             if (!qtyEl) return;
 
@@ -459,9 +425,34 @@
                 })
                 .then((res) => {
                     if (res.data.success) {
+
                         $('#price_' + key).text(res.data.new_price);
+
+                        $('.stock_' + key).html(`
+                            <span class="text-success-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${key}">
+                                <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
+                            </span>`);
+
                         window.showToast('Item Quantity Updated Successfully', 'success');
+
                         mainPriceBox();
+                    } else {
+                        $('.stock_' + key).html(`
+                            <div class="d-flex flex-column align-items-start gap-1">
+
+                                <span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${key}">
+                                    <i class="bi bi-x-circle-fill text-[10px]"></i>
+                                    Out of Stock
+                                </span>
+
+                                <p class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 bg-gray-100 p-2 rounded stock_${key} mb-0">
+                                    ${res.data.stock}
+                                    <span class="text-slate-700">Quantity Available</span>
+                                </p>
+
+                            </div>
+                        `);
+                        window.showToast('Quantity is Out of Stock', 'error');
                     }
                 })
                 .catch((err) => {
@@ -497,6 +488,7 @@
                             }
 
                             mainPriceBox();
+
                         }, 200);
                         window.showToast('Item Removed Successfully', 'success');
                     } else {
@@ -521,6 +513,7 @@
                             document.getElementById('summaryCount').textContent = '0';
 
                             mainPriceBox();
+
                         }, 200);
                         window.showToast('Bag Cleared Successfully', 'success');
                     } else {
@@ -554,32 +547,14 @@
             }
         }
 
+        function checkoutStock(cart_item_id) {
+            axios.get(`/cart/checkout/stock/${cart_item_id}`)
+                .then((res) => {
 
-        // Recalculate summary totals purely in Frontend UI
-        function recalculateTotals() {
-            let totalQty = 0;
-            let subtotal = 0;
-            let totalMrp = 0;
+                })
+                .catch((err) => {
 
-            document.querySelectorAll('.cart-item-card').forEach(card => {
-                const qtyEl = card.querySelector('[id^="qty_"]');
-                const qty = parseInt(qtyEl ? qtyEl.textContent : 1) || 1;
-                totalQty += qty;
-                const priceEl = card.querySelector('.text-base.font-bold') || card.querySelector('.font-bold');
-                const price = parseFloat(priceEl ? priceEl.textContent.replace(/[^\d.]/g, '') : 1000);
-                subtotal += (price * qty);
-                totalMrp += ((price * 1.35) * qty);
-            });
-
-            const discount = Math.max(0, totalMrp - subtotal);
-            const finalPayable = Math.max(0, subtotal - appliedCouponDiscount);
-
-            const navBadge = document.getElementById('navCartBadge');
-            if (navBadge) navBadge.textContent = totalQty;
-        }
-
-        function checkoutDemo() {
-            alert('Proceeding to Checkout! (Frontend UI preview mode - you can connect your checkout backend logic here)');
+                })
         }
     </script>
 @endsection

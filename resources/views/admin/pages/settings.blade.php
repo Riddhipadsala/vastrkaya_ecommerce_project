@@ -14,21 +14,8 @@
                     <span class="font-12 text-muted">Configure minimum order requirements, free delivery thresholds, and delivery charges.</span>
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <a href="{{ route('admin.dashboard') }}" class="vk-btn vk-btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Dashboard
-                </a>
-            </div>
         </div>
     </div>
-
-    <!-- Feedback Alerts -->
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
@@ -54,34 +41,10 @@
             </div>
 
             <div class="row g-4">
-                <!-- 1. Minimum Order Amount -->
-                <div class="col-md-4">
-                    <label class="vk-form-label fw-bold mb-1" for="minOrderAmount">
-                        Minimum Order Amount (&#8377;) <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-surface text-muted border-end-0 font-13">&#8377;</span>
-                        <input type="number" 
-                               step="1" 
-                               min="0" 
-                               name="minimum_order_amount" 
-                               id="minOrderAmount"
-                               class="form-control vk-form-control border-start-0 @error('minimum_order_amount') is-invalid @enderror" 
-                               placeholder="1000" 
-                               value="{{ old('minimum_order_amount', $setting->minimum_order_amount ?? 1000) }}" 
-                               required>
-                    </div>
-                    <small class="text-muted font-11 d-block mt-1">
-                        Minimum cart total required before a customer can place an order.
-                    </small>
-                    @error('minimum_order_amount')
-                        <div class="text-danger font-12 mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
 
                 <!-- 2. Free Delivery Amount -->
                 <div class="col-md-4">
-                    <label class="vk-form-label fw-bold mb-1" for="freeDeliveryAmount">
+                    <label class="vk-form-label fw-bold mb-1" for="minimum_order_amount">
                         Free Delivery Threshold (&#8377;) <span class="text-danger">*</span>
                     </label>
                     <div class="input-group">
@@ -89,17 +52,17 @@
                         <input type="number" 
                                step="1" 
                                min="0" 
-                               name="free_delivery_amount" 
-                               id="freeDeliveryAmount"
-                               class="form-control vk-form-control border-start-0 @error('free_delivery_amount') is-invalid @enderror" 
+                               name="minimum_order_amount" 
+                               id="minimum_order_amount"
+                               class="form-control vk-form-control border-start-0 @error('minimum_order_amount') is-invalid @enderror" 
                                placeholder="0" 
-                               value="{{ old('free_delivery_amount', $setting->free_delivery_amount ?? 0) }}" 
+                               value="{{ old('minimum_order_amount', $setting->minimum_order_amount ?? 0) }}" 
                                required>
                     </div>
                     <small class="text-muted font-11 d-block mt-1">
-                        Orders at or above this amount qualify for free shipping (0 means disabled).
+                        Orders at or above this amount qualify for free shipping.
                     </small>
-                    @error('free_delivery_amount')
+                    @error('minimum_order_amount')
                         <div class="text-danger font-12 mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -107,7 +70,7 @@
                 <!-- 3. Delivery Charge -->
                 <div class="col-md-4">
                     <label class="vk-form-label fw-bold mb-1" for="deliveryCharge">
-                        Standard Delivery Charge (&#8377;) <span class="text-danger">*</span>
+                        Delivery Charge (&#8377;) <span class="text-danger">*</span>
                     </label>
                     <div class="input-group">
                         <span class="input-group-text bg-surface text-muted border-end-0 font-13">&#8377;</span>
@@ -122,7 +85,7 @@
                                required>
                     </div>
                     <small class="text-muted font-11 d-block mt-1">
-                        Delivery fee charged when cart total is below the free delivery threshold.
+                        Delivery Charge apply on the order.
                     </small>
                     @error('delivery_charge')
                         <div class="text-danger font-12 mt-1">{{ $message }}</div>

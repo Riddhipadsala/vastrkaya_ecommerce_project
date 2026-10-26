@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProfileController;
+use App\Http\Controllers\CartContactInformationController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -31,6 +32,7 @@ Route::delete('cart/delete/{id}', [CartController::class, 'delete'])->name('cart
 Route::delete('cart/delete-all', [CartController::class, 'deleteAll'])->name('cart.deleteAll');
 Route::put('cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::get('/cart/price-count', [CartController::class, 'getPriceCount'])->name('cart.price-count');
+Route::get('/cart/checkout/stock/{id}', [CartController::class, 'checkoutStock'])->name('cart.checkout.stock');
 
 Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->group(function() {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -43,6 +45,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
     Route::post('option-value/price/change',[ProductController::class,'optionValuePriceChange'])->name('option-value.price.change');
+    Route::get('cart-contact',[CartContactInformationController::class,'index'])->name('cart-contact.index');
+    Route::post('cart-contact',[CartContactInformationController::class,'store'])->name('cart-contact.store');
+    
 });
 
 Route::get('/register', function () {

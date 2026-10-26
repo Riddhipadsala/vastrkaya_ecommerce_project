@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->integer('minimum_order_amount')->default(1000);
-            $table->integer('free_delivery_amount')->default(0);
             $table->integer('delivery_charge')->default(0);
             $table->timestamps();
         });

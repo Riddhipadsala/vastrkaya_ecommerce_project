@@ -33,12 +33,10 @@ class SettingController extends Controller
     {
         $validated = $request->validate([
             'minimum_order_amount' => 'required|numeric|min:0',
-            'free_delivery_amount' => 'required|numeric|min:0',
             'delivery_charge'      => 'required|numeric|min:0',
         ]);
 
         Setting::updateOrCreate(
-            ['id' => 1],
             $validated
         );
 

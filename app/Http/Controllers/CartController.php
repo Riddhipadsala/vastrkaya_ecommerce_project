@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +21,7 @@ class CartController extends Controller
         else {
             $cart = Cart::with('cartItems.product.category','cartItems.product.productOptions.option.optionValues')->where('user_id', null)->where('session', session()->getId())->first();
         }
+
         $cartItem = $cart ? $cart->cartItems : collect();
        
         if(request()->wantsJson()) {
@@ -143,16 +145,31 @@ class CartController extends Controller
             $newQuantity = 1;
         }
 
+        $stock = (int) ($cartItem->product->stock ?? 0);
+        $remainingStock = $stock - $newQuantity;
+
+        if ($remainingStock < 0) {
+            return response()->json([
+                'success' => false,
+                'cartItem' => $cartItem->id,
+                'stock' => $stock,
+                'quantity' => $cartItem->quantity,
+                'message' => 'Product is out of stock'
+            ]);
+        }
+
         $cartItem->quantity = $newQuantity;
         $cartItem->new_price = $cartItem->price * $newQuantity;
         $cartItem->save();
-
 
         return response()->json([
             'success' => true,
             'unit_price' => $cartItem->price,
             'new_price' => $cartItem->new_price,
-            'quantity' => $newQuantity
+            'quantity' => $newQuantity,
+            'stock' => $stock,
+            'remaining_stock' => $remainingStock,
+            'is_out_of_stock' => ($remainingStock <= 0 || $stock <= 0)
         ]);
     }
 
@@ -162,6 +179,8 @@ class CartController extends Controller
         }else{
             $cart = Cart::with('cartItems.product')->where('session', session()->getId())->first();
         }
+
+        $setting = Setting::all();
 
         $total_price = $cart->cartItems->sum('new_price');
 
@@ -176,14 +195,42 @@ class CartController extends Controller
            
             return $discount_per_product ;
         });
-        
+
         $total_quantity = $cart->cartItems->sum('quantity');
 
+        if($total_price >= $setting[0]->minimum_order_amount){
+            $delivery_charges = 0;
+        }
+        else {
+            $delivery_charges = $setting[0]->delivery_charge;
+        }
+        
         return response()->json([
             'success' => true,
             'total_price' => $total_price,
             'total_count' => $total_quantity,
-            'total_discount' => $total_discount
+            'total_discount' => $total_discount,
+            'delivery_charges'=> $delivery_charges,
+        ]);
+    }
+
+    public function checkoutStock(Request $request) {
+        $cartItem = CartItem::find($request->id);
+        
+        $product = Product::find($cartItem->product_id);
+        
+        $productStock = $product->stock - $cartItem->quantity;
+        
+        if($productStock < 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product is out of stock'
+            ]);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'productStock' => $productStock
         ]);
     }
 }
