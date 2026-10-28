@@ -41,7 +41,7 @@
                 </div>
 
                 <!-- Collections / Categories -->
-                <div class="col-lg-2 col-6 col-md-3">
+                <div class="col-lg-3 col-6 col-md-3">
                     <h6 class="vk-footer-col-title">Collections</h6>
                     <ul class="vk-footer-links">
                         <li><a href="{{ url('/products') }}" class="vk-footer-link">New Arrivals</a></li>
@@ -67,7 +67,7 @@
                 </div>
 
                 <!-- Quick Links & Policies -->
-                <div class="col-lg-2 col-6 col-md-3">
+                <div class="col-lg-3 col-6 col-md-3">
                     <h6 class="vk-footer-col-title">Quick Links</h6>
                     <ul class="vk-footer-links">
                         <li><a href="{{ url('/about') }}" class="vk-footer-link">About Vastrkaya</a></li>
@@ -77,28 +77,6 @@
                         <li><a href="{{ url('/careers') }}" class="vk-footer-link">Careers</a></li>
                     </ul>
                 </div>
-
-                <!-- Contact & Store Info -->
-                <div class="col-lg-2 col-6 col-md-3">
-                    <h6 class="vk-footer-col-title">Store Info</h6>
-                    <div class="vk-contact-item">
-                        <i class="bi bi-geo-alt"></i>
-                        <span>Surat, Gujarat, India - 395006</span>
-                    </div>
-                    <div class="vk-contact-item">
-                        <i class="bi bi-telephone"></i>
-                        <span>+91 98765 43210</span>
-                    </div>
-                    <div class="vk-contact-item">
-                        <i class="bi bi-envelope"></i>
-                        <span>care@vastrkaya.com</span>
-                    </div>
-                    <div class="vk-contact-item">
-                        <i class="bi bi-clock"></i>
-                        <span>Mon - Sat: 10:00 AM - 7:00 PM</span>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

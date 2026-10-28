@@ -43,6 +43,7 @@
                        id="profileDropdown" 
                        role="button" 
                        data-bs-toggle="dropdown" 
+                       data-bs-display="static"
                        aria-expanded="false">
                         <div class="vk-icon-wrapper">
                             <i class="bi bi-person"></i>
@@ -67,7 +68,7 @@
                             @endguest
                         </li>
                         <li>
-                            <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="{{ url('/orders') }}">
+                            <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="{{ route('admin.orders') }}">
                                 <i class="bi bi-box-seam text-secondary"></i>
                                 <span>My Orders</span>
                             </a>
@@ -79,7 +80,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="{{ url('/addresses') }}">
+                            <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2" href="{{ route('admin.contact.index') }}">
                                 <i class="bi bi-geo-alt text-secondary"></i>
                                 <span>Saved Addresses</span>
                             </a>

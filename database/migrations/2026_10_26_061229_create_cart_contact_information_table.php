@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('cart_contact_information', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('cart_id')->constrained('carts')->onDelete('cascade');
             $table->string('name');
-            $table->integer('contact_number');
+            $table->string('contact_number');
             $table->string('address_type_line_1');
             $table->text('address_type_line_2');
             $table->string('city');
             $table->string('state');
-            $table->integer('pincode');
+            $table->string('pincode');
             $table->timestamps();
         });
     }

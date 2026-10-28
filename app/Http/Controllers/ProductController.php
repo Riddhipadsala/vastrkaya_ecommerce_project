@@ -307,6 +307,7 @@ class ProductController extends Controller
     }
     
     public function optionStatusChange(Request $request) {
+        
         $productOption = ProductOption::where('option_id', $request->optionId)->where('product_id', $request->productId)->first();
 
         if (!$productOption) {

@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OptionController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
@@ -45,10 +46,20 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
     Route::post('option-value/price/change',[ProductController::class,'optionValuePriceChange'])->name('option-value.price.change');
-    Route::get('cart-contact',[CartContactInformationController::class,'index'])->name('cart-contact.index');
-    Route::post('cart-contact',[CartContactInformationController::class,'store'])->name('cart-contact.store');
-    
+    Route::resource('checkout/contact', CartContactInformationController::class);
+    Route::get('/chcekout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
+    Route::post('/checkout/payment', [PaymentController::class,'store'])->name('checkout.payment.store');
+    Route::get('/checkout/success', [PaymentController::class, 'paymentSuccess'])->name('checkout.payment.success');
+    Route::get('/checkout/order-details', [PaymentController::class, 'orderDetail'])->name('checkout.order.details');
+    Route::get('/my-orders',[PaymentController::class, 'myOrders'])->name('orders');
 });
+
+Route::middleware('auth')->group(function() {
+
+});
+
+Route::get('/order/{id}/cancel', [PaymentController::class, 'orderCancel'])->name('order.cancel');
+Route::get('/order/details', [PaymentController::class, 'orderDetail'])->name('order.details');
 
 Route::get('/register', function () {
     return view('auth.register');

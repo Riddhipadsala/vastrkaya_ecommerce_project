@@ -208,7 +208,7 @@
                             </div>
                             <!-- Primary Checkout Button -->
                             <div class="mt-3.5">
-                                <a href="{{ route('cart.contact') }}"
+                                <a href="{{ route('admin.contact.index') }}"
                                     class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none">
                                     <span>PROCEED TO CHECKOUT</span>
                                     <i class="bi bi-arrow-right"></i>
@@ -241,7 +241,7 @@
         function fetchData() {
             axios.get('/cart')
                 .then((res) => {
-                    let data = res.data.cartItem;
+                    let data = res.data.cartItem || [];
 
                     $('#cartCountHeader').text(data.length);
                     $('#summaryCount').text(data.length);
@@ -283,46 +283,37 @@
 
                                     <!-- Attributes Pills -->
                                     <div class="d-flex flex-wrap align-items-center gap-1.5 mb-2">
-                                        ${Array.isArray(item.options) && item.options.length > 0
-                                            ? item.options.map(valId => {
-                                                let optName = 'Option';
-                                                let optValName = valId;
-                                                if (item.product?.product_options) {
-                                                    for (const po of item.product.product_options) {
-                                                        const foundVal = po.option?.option_values?.find(v => v.id == valId);
+                                        ${(() => {
+                                            if (Array.isArray(item.options) && item.options.length > 0) {
+                                                return item.options.map(valId => {
+                                                    let optName = '';
+                                                    let optValName = valId;
+                                                    const productOptions = item.product?.product_options || item.product?.productOptions || [];
+                                                    for (const po of productOptions) {
+                                                        const values = po.option?.option_values || po.option?.optionValues || [];
+                                                        const foundVal = values.find(v => v.id == valId || v.name == valId);
                                                         if (foundVal) {
-                                                            optName = po.option.name;
+                                                            optName = po.option?.name || '';
                                                             optValName = foundVal.name;
                                                             break;
                                                         }
                                                     }
-                                                }
-                                                return ` < span class =
-                            "bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200" >
-                            <
-                            strong class = "uppercase" > $ {
-                                optName
-                            }: < /strong> ${optValName} </span >
-                            `;
-                                                                            }).join('')
-                                                                            : (item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0
-                                                                                ? Object.entries(item.options).map(([name, val]) => ` <
-                            span class =
-                            "bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200" >
-                            <
-                            strong class = "uppercase" > $ {
-                                name
-                            }: < /strong> ${val} </span > `).join('')
-                                                                                : ''
-                                                                            )
-                                        }
+                                                    return `<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200">${optName ? `<strong class="uppercase text-slate-900">${optName}:</strong> ` : ''}${optValName}</span>`;
+                                                }).join('');
+                                            } else if (item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0) {
+                                                return Object.entries(item.options).map(([name, val]) => 
+                                                    `<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200"><strong class="uppercase text-slate-900">${name}:</strong> ${val}</span>`
+                                                ).join('');
+                                            }
+                                            return '';
+                                        })()}
                                         ${(item.product.stock > 0 || item.product.decrease_stock > 0) ?
                                            `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
-                                                        <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
-                                                    </span>`
+                                                            <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
+                                                        </span>`
                                        :  `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
-                                                        <i class="bi bi-x-circle-fill text-[10px]"></i> Out of Stock
-                                                    </span>`
+                                                            <i class="bi bi-x-circle-fill text-[10px]"></i> Out of Stock
+                                                        </span>`
                                        }
                                         
                                     </div>
@@ -333,8 +324,8 @@
                                     <span class="text-base font-bold text-slate-900">&#8377;<span id="price_${item.id}">${item.new_price}</span></span>
                                    ${item.product.discount_price > 0
                                         ? `<span class="text-xs text-slate-500">Discount per product</span>
-                                                    <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
-                                                    <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
+                                                        <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
+                                                        <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
                                         : ''
                                     }
                                 </div>
@@ -373,11 +364,11 @@
                     </div>`;
                     })
 
-                    $('#cartItemsList').append(records);
+                    $('#cartItemsList').html(records);
                     mainPriceBox();
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.error('Error fetching cart:', err);
                 })
         }
 

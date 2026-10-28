@@ -21,4 +21,13 @@ class Cart extends Model
         return $this->hasMany(CartItem::class);
     }
 
+    public function contactInfo()
+    {
+        return $this->hasMany(CartContactInformation::class);
+    }
+
+    public function payment() {
+        return $this->hasOne(Payment::class);
+    }
+
 }
