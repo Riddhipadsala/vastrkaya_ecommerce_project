@@ -98,7 +98,7 @@ class CartController extends Controller
         ]);
     }
 
-    public function delete($id) {
+    public function delete(int $id) {
         
         $cartItem = CartItem::find($id);
         $cart = $cartItem->delete();
@@ -129,7 +129,7 @@ class CartController extends Controller
         }
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request,int $id) {
         $cartItem = CartItem::find($id);
         
         if (!$cartItem) {

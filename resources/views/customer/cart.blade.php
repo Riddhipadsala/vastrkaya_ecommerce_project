@@ -208,7 +208,7 @@
                             </div>
                             <!-- Primary Checkout Button -->
                             <div class="mt-3.5">
-                                <a href="{{ route('admin.contact.index') }}"
+                                <a href="{{ route('contact.index') }}"
                                     class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none">
                                     <span>PROCEED TO CHECKOUT</span>
                                     <i class="bi bi-arrow-right"></i>
@@ -362,10 +362,11 @@
                             </div>
                         </div>
                     </div>`;
-                    })
+                })
 
                     $('#cartItemsList').html(records);
                     mainPriceBox();
+                    
                 })
                 .catch((err) => {
                     console.error('Error fetching cart:', err);
@@ -516,36 +517,6 @@
                 });
         };
 
-        // Coupon Apply simulation
-        function applyCoupon() {
-            const code = (document.getElementById('couponInput').value || '').trim().toUpperCase();
-            const badge = document.getElementById('couponAppliedBadge');
-            if (!code) {
-                alert('Please enter a coupon code.');
-                return;
-            }
 
-            if (code === 'VASTRA500' || code === 'FIRST500') {
-                appliedCouponDiscount = 500;
-                badge.style.display = 'flex';
-                badge.innerHTML =
-                    `<span class="d-inline-flex align-items-center gap-1 font-semibold text-[11px]"><i class="bi bi-check-circle-fill text-emerald-600"></i> Code <strong>${code}</strong> Applied!</span><span class="text-[11px] font-bold text-emerald-700">-₹500</span>`;
-                document.getElementById('sumCouponDiscount').textContent = '500';
-                mainPriceBox();
-                alert(`Coupon "${code}" applied successfully! You got ₹500 discount.`);
-            } else {
-                alert(`Coupon "${code}" is invalid or expired. Try VASTRA500.`);
-            }
-        }
-
-        function checkoutStock(cart_item_id) {
-            axios.get(`/cart/checkout/stock/${cart_item_id}`)
-                .then((res) => {
-
-                })
-                .catch((err) => {
-
-                })
-        }
     </script>
 @endsection

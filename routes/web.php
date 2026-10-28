@@ -45,6 +45,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
+   });
+
+Route::middleware('auth')->group(function() {
     Route::post('option-value/price/change',[ProductController::class,'optionValuePriceChange'])->name('option-value.price.change');
     Route::resource('checkout/contact', CartContactInformationController::class);
     Route::get('/chcekout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
@@ -52,14 +55,10 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::get('/checkout/success', [PaymentController::class, 'paymentSuccess'])->name('checkout.payment.success');
     Route::get('/checkout/order-details', [PaymentController::class, 'orderDetail'])->name('checkout.order.details');
     Route::get('/my-orders',[PaymentController::class, 'myOrders'])->name('orders');
+    Route::get('/order/{id}/cancel', [PaymentController::class, 'orderCancel'])->name('order.cancel');
+    Route::get('/order/details', [PaymentController::class, 'orderDetail'])->name('order.details');
 });
 
-Route::middleware('auth')->group(function() {
-
-});
-
-Route::get('/order/{id}/cancel', [PaymentController::class, 'orderCancel'])->name('order.cancel');
-Route::get('/order/details', [PaymentController::class, 'orderDetail'])->name('order.details');
 
 Route::get('/register', function () {
     return view('auth.register');

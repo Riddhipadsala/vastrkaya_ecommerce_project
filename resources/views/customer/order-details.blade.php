@@ -59,9 +59,6 @@
                                                         {{ $p->name ?? 'Ethnic Product' }}
                                                     </h5>
                                                     <div class="d-flex flex-wrap align-items-center gap-2 text-xs">
-                                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold border border-slate-200/60">
-                                                            Qty: <strong class="text-slate-900">{{ $p->orderitems->first()->quantity }}</strong>
-                                                        </span>
                                                         <span class="text-slate-300"></span>
                                                         <span class="text-[11px] text-slate-500 font-medium">
                                                             &#8377;{{ number_format($p->orderItems->first()->unit_price) }} each
@@ -73,10 +70,10 @@
                                             <!-- Price Summary Block (Far Right) -->
                                             <div class="text-end flex-shrink-0 ps-2">
                                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider d-block mb-0.5">
-                                                    Item Total
+                                                    Total Qty 
                                                 </span>
                                                 <span class="text-sm sm:text-base font-extrabold text-slate-900 d-block">
-                                                    &#8377;{{ number_format($order->total_amount, 2) }}
+                                                   {{ number_format($p->orderitems->first()->quantity) }}
                                                 </span>
                                             </div>
                                         </div>

@@ -81,13 +81,13 @@ class CartContactInformationController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.contact.index')->with('success', 'Delivery address saved successfully!');
+        return redirect()->route('contact.index')->with('success', 'Delivery address saved successfully!');
     }
 
     /**
      * Update the specified address in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,int $id)
     {
         $validated = $request->validate([
             'name'                => 'required|string|max:255',
@@ -112,18 +112,18 @@ class CartContactInformationController extends Controller
         $contactInfo = CartContactInformation::findOrFail($id);
         $contactInfo->update($validated);
 
-        return redirect()->route('admin.contact.index')->with('success', 'Address updated successfully!');
+        return redirect()->route('contact.index')->with('success', 'Address updated successfully!');
     }
 
     /**
      * Remove the specified address from storage.
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $contactInfo = CartContactInformation::findOrFail($id);
 
         $contactInfo->delete();
 
-        return redirect()->route('admin.contact.index')->with('success', 'Address removed successfully!');
+        return redirect()->route('contact.index')->with('success', 'Address removed successfully!');
     }
 }

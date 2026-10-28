@@ -90,18 +90,18 @@ class PaymentController extends Controller
                     ]
                 ],
                 'mode'=> 'payment',
-                'success_url'=> route('admin.checkout.payment.success', [
+                'success_url'=> route('checkout.payment.success', [
                                     'order_id'=> $order->id,
                                     'total_price'=> $validate['total_price'],
                                 ]) . '&session_id={CHECKOUT_SESSION_ID}',
 
-                'cancel_url'=> route('admin.checkout.payment')
+                'cancel_url'=> route('checkout.payment')
             ]);
 
             return redirect($session->url);
         }
 
-        return redirect()->route('admin.checkout.order.details',['payment_id'=> $payment->id,'order_id'=> $order->id])->with('success', 'Order placed successfully!');
+        return redirect()->route('checkout.order.details',['payment_id'=> $payment->id,'order_id'=> $order->id])->with('success', 'Order placed successfully!');
     }
 
     public function paymentSuccess(Request $request) {
@@ -120,7 +120,7 @@ class PaymentController extends Controller
         ]);
         
         if ($payment) {
-            return redirect()->route('admin.checkout.order.details',[
+            return redirect()->route('checkout.order.details',[
                 'payment_id'=> $payment->id,
                 'order_id'=> $request->order_id 
             ])->with('success', 'Payment successful! Here are your order details.');
@@ -144,10 +144,26 @@ class PaymentController extends Controller
             $products = Product::with('orderItems')->whereIn('id', $productIds)->get();
         }
         
+        if($order) {
+            $optionid = OrderItem::where('order_id',$order->id)->get('options');
+        }
+
         $cart = Cart::with('cartItems')->where('user_id', Auth::id()) ->latest()->first(); 
         
         if ($cart) { 
-            $cart->cartItems()->delete(); 
+            // foreach($cart->cartItems() as $ci) {
+            //     $product = Product::findOrFail($ci->product_id);
+                
+            //     $product->update([
+            //         'stock' => $product->stock - $ci->quantity
+            //     ]);
+
+            //     $product->save();
+            // }
+
+            
+
+            // $cart->cartItems()->delete(); 
         }
 
         $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->latest()->first();

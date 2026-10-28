@@ -768,7 +768,7 @@
 
         function fetchPrice(povId) {
 
-            axios.post('/admin/option-value/price/change', {
+            axios.post('/option-value/price/change', {
                 povId: povId,
                 _token: "{{ csrf_token() }}"
             })

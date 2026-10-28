@@ -48,7 +48,8 @@
                         <span class="font-bold">ADDRESS</span>
                     </span>
                     <span class="w-8 h-[1px] bg-slate-300"></span>
-                    <a href="{{ route('admin.checkout.payment') }}" class="text-slate-400 hover:text-slate-600 text-decoration-none d-inline-flex align-items-center gap-1.5">
+                    <a href="{{ route('checkout.payment') }}"
+                        class="text-slate-400 hover:text-slate-600 text-decoration-none d-inline-flex align-items-center gap-1.5">
                         <span
                             class="w-5 h-5 rounded-circle bg-slate-200 text-slate-500 d-inline-flex align-items-center justify-content-center text-[10px]">
                             3
@@ -89,14 +90,14 @@
                 <!-- LEFT COLUMN: Select Delivery Address OR Add/Edit Address Form (Managed via Laravel) -->
                 <div class="col-lg-7 col-xl-7">
                     @if (!empty($showForm))
-                       <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-2xs">
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-2xs">
                             <div
                                 class="d-flex align-items-center justify-content-between mb-3 pb-2 border-b border-slate-100">
                                 <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-0 font-sans">
                                     {{ isset($editAddress) ? 'Edit Delivery Address' : 'Add Delivery Address' }}
                                 </h5>
                                 @if (isset($cartContactInformation) && $cartContactInformation->isNotEmpty())
-                                    <a href="{{ route('admin.contact.index') }}"
+                                    <a href="{{ route('contact.index') }}"
                                         class="btn btn-sm btn-link text-slate-500 hover:text-slate-900 text-decoration-none p-0 text-xs">
                                         <i class="bi bi-x-lg me-1"></i> Back to Addresses
                                     </a>
@@ -104,7 +105,7 @@
                             </div>
 
                             <form
-                                action="{{ isset($editAddress) ? route('admin.contact.update', $editAddress->id) : route('admin.contact.store') }}"
+                                action="{{ isset($editAddress) ? route('contact.update', $editAddress->id) : route('contact.store') }}"
                                 method="POST">
                                 @csrf
                                 @if (isset($editAddress))
@@ -288,7 +289,7 @@
                                     <div class="row g-2.5">
                                         <div class="col-6">
                                             @if (isset($cartContactInformation) && $cartContactInformation->isNotEmpty())
-                                                <a href="{{ route('admin.contact.index') }}"
+                                                <a href="{{ route('contact.index') }}"
                                                     class="btn btn-outline-secondary w-100 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition text-center shadow-none text-decoration-none d-flex align-items-center justify-content-center">
                                                     Cancel
                                                 </a>
@@ -323,7 +324,7 @@
                                     style="color: #282c3f;">
                                     Select Delivery Address
                                 </h2>
-                                <a href="{{ route('admin.contact.index', ['add' => 1]) }}"
+                                <a href="{{ route('contact.index', ['add' => 1]) }}"
                                     class="btn text-xs font-bold uppercase tracking-wider px-3.5 py-2 rounded bg-white hover:bg-slate-50 transition shadow-none text-decoration-none"
                                     style="border: 1px solid #282c3f; color: #282c3f; font-size: 11px; letter-spacing: 0.5px;">
                                     ADD NEW ADDRESS
@@ -374,7 +375,7 @@
 
                                             <!-- Action Buttons: REMOVE / EDIT -->
                                             <div class="d-flex align-items-center gap-2 pt-1">
-                                                <form action="{{ route('admin.contact.destroy', $address->id) }}"
+                                                <form action="{{ route('contact.destroy', $address->id) }}"
                                                     method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
@@ -385,7 +386,7 @@
                                                     </button>
                                                 </form>
 
-                                                <a href="{{ route('admin.contact.index', ['edit' => $address->id]) }}"
+                                                <a href="{{ route('contact.index', ['edit' => $address->id]) }}"
                                                     class="btn bg-white hover:bg-slate-50 text-[11px] font-bold uppercase tracking-wider px-4 py-1.5 rounded transition shadow-none text-decoration-none"
                                                     style="border: 1px solid #282c3f; color: #282c3f; letter-spacing: 0.5px;">
                                                     EDIT
@@ -397,7 +398,7 @@
                             @endforeach
 
                             <!-- Dashed Button: + Add New Address (Reference Style) -->
-                            <a href="{{ route('admin.contact.index', ['add' => 1]) }}"
+                            <a href="{{ route('contact.index', ['add' => 1]) }}"
                                 class="bg-white border text-center p-3.5 rounded-md transition mb-4 shadow-2xs hover:shadow-xs text-decoration-none d-block"
                                 style="border: 1px dashed #d4d5d9; border-radius: 6px;">
                                 <span
@@ -409,7 +410,7 @@
 
                             <!-- Continue to Payment Button -->
                             <div class="pt-2">
-                                <a href="{{ route('admin.checkout.payment') }}"
+                                <a href="{{ route('checkout.payment') }}"
                                     class="btn w-100 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-sm transition border-0 d-flex align-items-center justify-content-center"
                                     style="background-color: #ff3f6c; letter-spacing: 0.5px; text-decoration: none;">
                                     Deliver To This Address &nbsp;<i class="bi bi-arrow-right"></i>
