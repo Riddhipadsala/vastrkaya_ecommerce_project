@@ -45,22 +45,25 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded',function () {
-            axios.get('/cart')
-            .then((res)=> {
-                let data = res.data.cartItem;
-                
-                $('#navCartBadge').text(data.length);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-        });
-
-       
-    </script>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded',function () {
+        axios.get('/cart/price-count')
+        .then((res)=> {
+            let data = res.data;
+            if (!data || !data.success) return;
+
+            let totalCount = parseInt(data.total_count ?? data.totalQuantity ?? 0);    
+            
+            $('#navCartBadge').text(totalCount);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    });
+</script>
+
 @yield('script')
 
 </html>

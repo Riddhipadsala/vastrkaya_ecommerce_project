@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\CartContactInformationController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OptionController;
@@ -45,6 +46,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
+    Route::resource('coupons', CouponController::class);
+   
    });
 
 Route::middleware('auth')->group(function() {

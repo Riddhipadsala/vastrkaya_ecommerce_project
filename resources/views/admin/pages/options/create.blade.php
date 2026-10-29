@@ -136,6 +136,8 @@
         // Add a new row to the table
         function addOptionValueRow(name = '', sortOrder = null) {
 
+            let type = document.getElementById('input-type').value;
+
             if (rowIndex != 0 && (type == 'radio' || type == 'checkbox' || type == 'select')) {
                 if ($(`.value-name-${rowIndex}`).val().trim() == '') {
                     window.showToast('Please provide previous row value', 'error');

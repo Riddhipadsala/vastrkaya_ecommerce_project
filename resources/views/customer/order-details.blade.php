@@ -39,7 +39,11 @@
                                     @endif
                                 </div>
                                 <div class="space-y-3">
-                                    @foreach($products as $p)
+                                    @foreach($orderItems as $oi)
+                                        @php
+                                            $p = $oi->product;
+                                        @endphp
+
                                         <div class="d-flex align-items-center justify-content-between gap-3 p-3 rounded-2xl bg-white border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all duration-200">
                                             <!-- Product Thumbnail & Details -->
                                             <div class="d-flex align-items-center gap-3 min-w-0 flex-grow-1">
@@ -55,13 +59,26 @@
                                                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#ff3f6c] d-block mb-1">
                                                         {{ $p->brand ?? 'Vastrkaya' }}
                                                     </span>
-                                                    <h5 class="text-xs sm:text-sm font-bold text-slate-800 truncate mb-1.5" title="{{ $p->name ?? 'Product' }}">
+                                                    <h5 class="text-xs sm:text-sm font-bold text-slate-800 truncate mb-1" title="{{ $p->name ?? 'Product' }}">
                                                         {{ $p->name ?? 'Ethnic Product' }}
                                                     </h5>
+
+                                                    @if(isset($oi->resolvedOptions) && $oi->resolvedOptions->isNotEmpty())
+                                                        <div class="d-flex flex-wrap gap-1 mb-1.5">
+                                                            @foreach($oi->resolvedOptions as $opt)
+                                                                <span class="badge bg-slate-500 text-slate-500 border border-slate-200 text-[10px] font-semibold px-2 py-1 rounded-md">
+                                                                    @if($opt->option)
+                                                                        <span class="text-slate-100 uppercase" style="font-size:9px;">{{ $opt->option->name }}:</span>
+                                                                    @endif
+                                                                    {{ $opt->optionValue->name ?? '' }}
+                                                                </span>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+
                                                     <div class="d-flex flex-wrap align-items-center gap-2 text-xs">
-                                                        <span class="text-slate-300"></span>
                                                         <span class="text-[11px] text-slate-500 font-medium">
-                                                            &#8377;{{ number_format($p->orderItems->first()->unit_price) }} each
+                                                            &#8377;{{ number_format($oi->unit_price) }} each
                                                         </span>
                                                     </div>
                                                 </div>
@@ -73,7 +90,7 @@
                                                     Total Qty 
                                                 </span>
                                                 <span class="text-sm sm:text-base font-extrabold text-slate-900 d-block">
-                                                   {{ number_format($p->orderitems->first()->quantity) }}
+                                                   {{ number_format($oi->quantity) }}
                                                 </span>
                                             </div>
                                         </div>
@@ -81,9 +98,8 @@
                                 </div>
                             </div>
                         @endif
-                       
                             {{-- Savings Highlight Strip --}}
-                            @if($setting->minimum_order_amount <= $payment->total_amount)
+                            @if($setting->minimum_order_amount <= $payment->amount)
                                 <div class="p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 d-flex align-items-center gap-2 text-xs text-emerald-900">
 
                                     <div class="w-5 h-5 rounded-full bg-emerald-600 text-white d-flex align-items-center justify-content-center text-[10px] flex-shrink-0">
@@ -148,13 +164,13 @@
 
                         <!-- 6. PAYMENT STATUS CARD -->
                         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs">
-                            <span class="text-xs font-bold text-slate-900 d-block mb-1.5">Payment Status</span>
+                            <span class="text-xs font-bold text-slate-900 d-block mb-1.5">Total Payment :</span>
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 text-xs">
                                 <div class="d-flex align-items-center gap-2 font-semibold text-slate-800">
                                     <i class="bi bi-check-circle-fill text-emerald-600 text-sm"></i>
                                     <span>{{ $payment->payment_method === 'online' ? 'Online Payment' : 'Cash on delivery' }}</span>
                                 </div>
-                                <span class="badge bg-emerald-500 text-emerald-100 font-bold px-2.5 py-1 rounded-full text-[10px]">&#8377;  {{  number_format($order->total_amount, 2) }}
+                                <span class="text-rose-200 font-bold px-2.5 py-1 rounded-full text-[50px]">&#8377;  {{  number_format($order->total_amount) }}
                                 </span>
                             </div>
                         </div>

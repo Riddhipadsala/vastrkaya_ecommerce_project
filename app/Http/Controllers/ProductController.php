@@ -168,14 +168,11 @@ class ProductController extends Controller
     {
         $product->load([
             'productOptions',
-
             'productOptions.option.optionValues',
-
             'productOptionValues.optionValue',
-
             'category'
         ]);
-// dd($product);
+
         $categories = Category::all();
         $options = Option::with('optionValues')->get();
 

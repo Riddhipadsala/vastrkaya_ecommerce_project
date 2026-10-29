@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartContactInformation;
+use App\Models\OptionValue;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ProductOption;
+use App\Models\ProductOptionValue;
 use App\Models\Setting;
 use App\Services\CartService;
 use Illuminate\Http\Request;
@@ -129,49 +132,58 @@ class PaymentController extends Controller
 
     public function orderDetail(Request $request)
     {
+        $order = Order::where('user_id', Auth::id())->latest()->first();
+
         if ($request->filled('payment_id')) {
+            
             $payment = Payment::findOrFail($request->payment_id);
-            $orderItem = OrderItem::where('order_id', $request->order_id)->get();
-            $productIds = $orderItem->pluck('product_id')->toArray();
+            
+            $orderItems = OrderItem::with('product')->where('order_id', $request->order_id)->get();
+
+            foreach ($orderItems as $oi) {
+                $oi->resolvedOptions = ProductOptionValue::with('optionValue','option')->where('product_id', $oi->product_id)->whereIn('option_value_id', $oi->options)->get();
+            }
+            $productIds = $orderItems->pluck('product_id')->toArray();
+
             $products = Product::with('orderItems')->whereIn('id', $productIds)->get();
-            $order = Order::where('user_id', Auth::id())->latest()->first();
+
         }
         else {
-            $order = Order::where('user_id', Auth::id())->latest()->first();
             $payment = Payment::where('order_id', $order->id)->first();
-            $orderItem = OrderItem::where('order_id', $order->id)->get();
-            $productIds = $orderItem->pluck('product_id')->toArray();
+
+            $orderItems = OrderItem::with('product')->where('order_id', $order->id)->get();
+            
+            foreach ($orderItems as $oi) {
+                $oi->resolvedOptions = ProductOptionValue::with('optionValue','option')->where('product_id', $oi->product_id)->whereIn('option_value_id', $oi->options)->get();
+            }
+
+            $productIds = $orderItems->pluck('product_id')->toArray();
+
             $products = Product::with('orderItems')->whereIn('id', $productIds)->get();
-        }
-        
-        if($order) {
-            $optionid = OrderItem::where('order_id',$order->id)->get('options');
         }
 
         $cart = Cart::with('cartItems')->where('user_id', Auth::id()) ->latest()->first(); 
         
         if ($cart) { 
-            // foreach($cart->cartItems() as $ci) {
-            //     $product = Product::findOrFail($ci->product_id);
-                
-            //     $product->update([
-            //         'stock' => $product->stock - $ci->quantity
-            //     ]);
+            foreach($cart->cartItems as $ci) {
+                $product = Product::findOrFail($ci->product_id);
+                $product->update([
+                    'stock' => $product->stock - $ci->quantity
+                ]);
 
-            //     $product->save();
-            // }
+                $product->save();
+            }
 
-            
-
-            // $cart->cartItems()->delete(); 
+            $cart->cartItems()->delete(); 
         }
 
         $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->latest()->first();
 
         $setting = Setting::first();
 
-        return view('customer.order-details', compact('selectedAddress', 'payment', 'products', 'order', 'setting'));
+        return view('customer.order-details', compact('selectedAddress', 'payment', 'products', 'order', 'setting','orderItems'));
     }
+
 
     public function orderCancel(int $id) {
         

@@ -17,8 +17,8 @@
                 <ol class="breadcrumb text-xs mb-0">
                     <li class="breadcrumb-item"><a href="{{ url('/') }}"
                             class="text-slate-500 hover:text-slate-900 text-decoration-none">Home</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0)"
-                            class="text-slate-500 hover:text-slate-900 text-decoration-none">My Account</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"
+                            class="text-slate-500 hover:text-slate-900 text-decoration-none">Shopping</a></li>
                     <li class="breadcrumb-item active text-slate-900 font-semibold" aria-current="page">My Orders</li>
                 </ol>
             </nav>
@@ -40,9 +40,9 @@
 
                         <!-- Section: Overview -->
                         <div class="py-2.5 border-b border-slate-100">
-                            <a href="javascript:void(0)"
+                            <a href="{{ route('dashboard') }}"
                                 class="text-xs font-semibold text-slate-700 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
-                                Overview
+                                Home
                             </a>
                         </div>
 

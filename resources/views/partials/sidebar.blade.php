@@ -17,52 +17,67 @@
         <li class="vk-menu-section-title">Core Modules</li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.dashboard') }}" class="vk-nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill vk-nav-icon"></i>
                 <span>Overview Dashboard</span>
             </a>
         </li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.categories.index') }}" class="vk-nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.categories.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                 <i class="bi bi-tags-fill vk-nav-icon"></i>
                 <span>Category Module</span>
             </a>
         </li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.products.index') }}" class="vk-nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.products.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam-fill vk-nav-icon"></i>
                 <span>Product Module</span>
             </a>
         </li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.options.index') }}" class="vk-nav-link {{ request()->routeIs('admin.options.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.options.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.options.*') ? 'active' : '' }}">
                 <i class="bi bi-sliders2 vk-nav-icon"></i>
                 <span>Option Module</span>
             </a>
         </li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.stock.index') }}" class="vk-nav-link {{ request()->routeIs('admin.stock.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.stock.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.stock.*') ? 'active' : '' }}">
                 <i class="bi bi-stack vk-nav-icon"></i>
                 <span>Current Stock Available</span>
                 <span class="vk-nav-badge bg-warning text-dark">Alerts</span>
             </a>
         </li>
 
+        <li class="vk-nav-item">
+            <a href="{{ route('admin.coupons.index') }}"
+                class="vk-nav-link {{ request()->routeIs('coupons.*') ? 'active' : '' }}">
+                <i class="bi bi-ticket-perforated-fill vk-nav-icon"></i>
+                <span>Coupon Module</span>
+            </a>
+        </li>
+
         <li class="vk-menu-section-title">Account & Settings</li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.profile.index') }}" class="vk-nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.profile.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
                 <i class="bi bi-person-badge-fill vk-nav-icon"></i>
                 <span>Admin Profile</span>
             </a>
         </li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.settings.index') }}" class="vk-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.settings.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                 <i class="bi bi-gear-fill vk-nav-icon"></i>
                 <span>Store Settings</span>
             </a>
