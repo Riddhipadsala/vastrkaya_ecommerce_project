@@ -27,7 +27,8 @@ return new class extends Migration
             $table->enum('payment_status', [
                 'pending',
                 'succeeded',
-                'failed',
+                'cancelled',
+                'refund'
             ])->default('pending');
 
             $table->timestamps();

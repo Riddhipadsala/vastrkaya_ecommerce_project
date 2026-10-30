@@ -18,6 +18,7 @@ class AdminDashboardController extends Controller
         $options = Option::all();
         $optionCount = Option::count();
         $stock = Product::sum('stock');
+        $UrgentStock = Product::where('stock','<=',5)->get();
 
         if(request()->ajax()) {
             return response()->json([
@@ -27,7 +28,8 @@ class AdminDashboardController extends Controller
                 'categoryCount' => $categoryCount,
                 'options' => $options,
                 'optionCount' => $optionCount,
-                'stock' => $stock
+                'stock' => $stock,
+                'UrgentStock'=> $UrgentStock
             ]);
         }
         return view('admin.dashboard', compact('products', 'categories', 'options', 'stock'));

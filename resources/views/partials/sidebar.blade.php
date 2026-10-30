@@ -48,14 +48,14 @@
             </a>
         </li>
 
-        <li class="vk-nav-item">
+        {{-- <li class="vk-nav-item">
             <a href="{{ route('admin.stock.index') }}"
                 class="vk-nav-link {{ request()->routeIs('admin.stock.*') ? 'active' : '' }}">
                 <i class="bi bi-stack vk-nav-icon"></i>
                 <span>Current Stock Available</span>
                 <span class="vk-nav-badge bg-warning text-dark">Alerts</span>
             </a>
-        </li>
+        </li> --}}
 
         <li class="vk-nav-item">
             <a href="{{ route('admin.coupons.index') }}"

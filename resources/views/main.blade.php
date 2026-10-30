@@ -49,12 +49,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded',function () {
-        axios.get('/cart/price-count')
+        axios.get('/cart')
         .then((res)=> {
             let data = res.data;
             if (!data || !data.success) return;
 
-            let totalCount = parseInt(data.total_count ?? data.totalQuantity ?? 0);    
+            let totalCount = parseInt(data.total_quantity ?? 0);    
             
             $('#navCartBadge').text(totalCount);
         })

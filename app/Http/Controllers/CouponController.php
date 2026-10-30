@@ -118,4 +118,41 @@ class CouponController extends Controller
             ]);
         }
     }
+
+    public function getCoupon(Request $request) {
+        $couponCode = trim($request->coupon);
+        $coupon = Coupon::where('code', $couponCode)->first();
+
+        $today = now()->toDateString();
+
+        if($coupon && $coupon->status == 1 && $coupon->end_date >= $today && $coupon->start_date <= $today && $coupon->used_total < $coupon->uses_total) {
+
+            session()->put('applied_coupon', [
+                'id'=> $coupon->id,
+                'type'=> $coupon->type,
+                'discount'=> $coupon->discount,
+                'code'=> $coupon->code
+            ]);
+
+            return response()->json([
+                'success'=> true,
+                'coupon'=> $coupon,
+                'message' => 'Coupon applied successfully'
+            ]);
+        }
+        else {
+            return response()->json([
+                'success'=> false,
+                'message' => 'Invalid or expired coupon'
+            ]);
+        }
+    }
+
+    public function removeCoupon() {
+        session()->forget('applied_coupon');
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon removed successfully'
+        ]);
+    }
 }

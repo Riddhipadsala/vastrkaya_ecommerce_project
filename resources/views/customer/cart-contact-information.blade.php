@@ -441,13 +441,22 @@
                                 </div>
 
                                 <div class="d-flex justify-content-between text-slate-600">
+                                    <span>Coupon</span>
+                                    <div class="text-end">
+                                        @if ($priceCount['coupon_discount_price'] != 0)
+                                            <span class="font-medium text-success">&#8377;{{ number_format($priceCount['coupon_discount_price'] ?? 0) }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between text-slate-600">
                                     <span>Delivery Charges</span>
                                     <div class="text-end">
                                         @if (($priceCount['delivery_charges'] ?? 0) == 0)
                                             <span class="text-emerald-600 font-bold uppercase text-[10px]">FREE</span>
                                         @else
                                             <span
-                                                class="font-medium text-slate-900">&#8377;{{ number_format($priceCount['delivery_charges']) }}</span>
+                                                class="font-medium text-danger">&#8377;{{ number_format($priceCount['delivery_charges']) }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -457,7 +466,7 @@
                                 <div class="d-flex justify-content-between text-sm font-bold text-slate-900">
                                     <span>Total Amount</span>
                                     <span
-                                        class="text-lg font-extrabold text-slate-900">&#8377;{{ number_format(($priceCount['total_price'] ?? 0) + ($priceCount['delivery_charges'] ?? 0)) }}</span>
+                                        class="text-lg font-extrabold text-slate-900">&#8377;{{ number_format(($priceCount['payable_price'] ?? 0)) }}</span>
                                 </div>
                             </div>
 

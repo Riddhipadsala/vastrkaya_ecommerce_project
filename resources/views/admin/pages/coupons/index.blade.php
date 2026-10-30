@@ -339,12 +339,15 @@
                     coupons.forEach(function (c, i) {
                         // Validity badge
                         let validity = '';
-                        if (c.end_date < today) {
-                            validity = `<span class="badge text-danger border border-danger border-opacity-25 rounded-pill px-2 py-1 font-12">Expired</span>`;
-                        } else if (c.start_date > today) {
-                            validity = `<span class="badge text-warning border border-warning border-opacity-25 rounded-pill px-2 py-1 font-12">Upcoming</span>`;
-                        } else {
-                            validity = `<span class="badge text-success border border-success border-opacity-25 rounded-pill px-2 py-1 font-12">Live</span>`;
+
+                        if(c.status == 1) {
+                            if (c.end_date < today) {
+                                validity = `<span class="badge text-danger border border-danger border-opacity-25 rounded-pill px-2 py-1 font-12">Expired</span>`;
+                            } else if (c.start_date > today) {
+                                validity = `<span class="badge text-warning border border-warning border-opacity-25 rounded-pill px-2 py-1 font-12">Upcoming</span>`;
+                            } else {
+                                validity = `<span class="badge text-success border border-success border-opacity-25 rounded-pill px-2 py-1 font-12">Live</span>`;
+                            }
                         }
 
                         // Type badge

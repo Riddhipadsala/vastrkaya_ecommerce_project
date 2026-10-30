@@ -95,45 +95,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Warehouse Stock Distribution Health Card -->
-    <div class="card border rounded-2 bg-white mb-4 shadow-none">
-        <div class="card-body p-3 p-md-4">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                <div>
-                    <h5 class="h6 fw-bold mb-1 text-heading">Warehouse Stock Distribution Health</h5>
-                </div>
-                <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-arrow-right"></i> Manage Inventory
-                </a>
-            </div>
-
-            <!-- Multi-segment Progress Bar -->
-            <div class="progress rounded-pill mb-3" style="height: 10px; background-color: #f1f5f9;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 82%;" title="In Stock (82%)"></div>
-                <div class="progress-bar bg-warning" role="progressbar" style="width: 12%;" title="Low Stock (12%)"></div>
-                <div class="progress-bar bg-danger" role="progressbar" style="width: 6%;" title="Out of Stock (6%)"></div>
-            </div>
-
-            <div class="row text-center font-12 g-2">
-                <div class="col-sm-4">
-                    <span class="d-inline-block rounded-circle bg-success me-1" style="width: 8px; height: 8px;"></span>
-                    <strong class="text-heading product-count"> Products</strong> In Stock (82%)
-                </div>
-                <div class="col-sm-4">
-                    <span class="d-inline-block rounded-circle bg-warning me-1" style="width: 8px; height: 8px;"></span>
-                    <strong class="text-heading product-count"> Products</strong> Low Stock (&le; 5 units)
-                </div>
-                <div class="col-sm-4">
-                    <span class="d-inline-block rounded-circle bg-danger me-1" style="width: 8px; height: 8px;"></span>
-                    <strong class="text-heading product-count"> Products</strong> Out of Stock (0 units)
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Split Overview Row: Recent Products & Quick Attention Sidebar -->
-    <div class="row g-4 mb-4">
+    <div class="row g-4 mt-4 mb-4">
         <!-- Left: Recent Products & Stock Status Table (Matching Product Module Table) -->
         <div class="col-lg-8">
             <div class="card border rounded-2 bg-white shadow-none h-100">
@@ -180,44 +144,7 @@
                     <p class="font-12 text-muted mb-3">
                         These items have fallen below safety inventory limits (&le; 5 units):
                     </p>
-
-                    <div class="d-flex flex-column gap-3">
-                        <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
-                            <div>
-                                <h6 class="mb-0 fw-bold text-heading font-13">Handcrafted Lehenga</h6>
-                                <small class="text-warning fw-semibold font-12">Only 4 Units Left</small>
-                            </div>
-                            <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-primary py-1 px-2 font-12">
-                                Restock
-                            </a>
-                        </div>
-
-                        <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
-                            <div>
-                                <h6 class="mb-0 fw-bold text-heading font-13">Chikankari Kurti</h6>
-                                <small class="text-danger fw-semibold font-12">0 Units (Out of Stock)</small>
-                            </div>
-                            <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-danger py-1 px-2 font-12">
-                                Restock
-                            </a>
-                        </div>
-
-                        <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
-                            <div>
-                                <h6 class="mb-0 fw-bold text-heading font-13">Bandhani Silk Dupatta</h6>
-                                <small class="text-warning fw-semibold font-12">3 Units Left</small>
-                            </div>
-                            <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-primary py-1 px-2 font-12">
-                                Restock
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="mt-3 pt-2 border-top border-light">
-                        <a href="{{ route('admin.stock.index') }}" class="btn btn-sm btn-outline-secondary w-100">
-                            <i class="bi bi-stack me-1"></i> Open Stock Management Hub
-                        </a>
-                    </div>
+                    <div class="urgent-stock"></div>
                 </div>
             </div>
 
@@ -331,6 +258,23 @@
                             </td>
                         </tr>
                     `;
+
+                    $('.urgent-stock').html(response.data.UrgentStock.map((element) => {
+                        return `
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-heading font-13">${element.name}</h6>
+                                    <small class="text-danger fw-semibold font-12">${element.stock} Units Left</small>
+                                </div>
+                                <a href="{{ route('admin.products.index') }}" class="btn btn-sm border-danger py-1 px-2 font-12">
+                                    Restock
+                                </a>
+                            </div>
+                        `;
+                    }).join(''));
+                    if(response.data.UrgentStock == 0){
+                        $('.urgent-stock').html(`<p class="text-center text-success fw-bold">No products left</p>`);
+                    }
                     $('.producttbl').html(data);
                 });
             }).catch(error => {

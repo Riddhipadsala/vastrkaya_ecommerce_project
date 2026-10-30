@@ -80,13 +80,6 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item py-2 px-3 d-flex align-items-center gap-2"
-                                href="{{ route('contact.index') }}">
-                                <i class="bi bi-geo-alt text-secondary"></i>
-                                <span>Saved Addresses</span>
-                            </a>
-                        </li>
-                        <li>
                             <hr class="dropdown-divider my-1">
                         </li>
                         @auth

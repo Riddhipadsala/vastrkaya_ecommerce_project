@@ -45,188 +45,178 @@
                     </span>
                 </div>
             </div>
+            
+            @if (!$cartItem->isEmpty())
+                <div class="row g-3 g-lg-4">
 
-            <!-- Free Delivery Notification Bar -->
-            <div
-                class="bg-emerald-50 border border-emerald-200 rounded-xl px-3.5 py-2.5 mb-3.5 d-flex align-items-center justify-content-between flex-wrap gap-2 text-xs">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-truck text-emerald-700 text-sm"></i>
-                    <span class="text-emerald-950 font-medium">
-                        Yay! You unlocked <strong class="text-emerald-800">FREE Standard Delivery</strong> on this order.
-                    </span>
-                </div>
-                <span class="badge bg-emerald-600 text-white font-semibold text-[10px] px-2 py-0.5 rounded-pill">
-                    FREE SHIPPING
-                </span>
-            </div>
+                    <!-- LEFT COLUMN: Cart Items List -->
+                    <div class="col-lg-7 col-xl-7">
 
-            <div class="row g-3 g-lg-4">
-
-                <!-- LEFT COLUMN: Cart Items List -->
-                <div class="col-lg-7 col-xl-7">
-
-                    <!-- Items Selection & Clear Header -->
-                    <div
-                        class="bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 mb-2.5 d-flex align-items-center justify-content-between shadow-2xs">
-                        <div class="d-flex align-items-center gap-2">
-                            <label for="selectAllCart" class="text-xs font-bold text-slate-800 cursor-pointer mb-0">
-                                ITEMS IN BAG (<span id="cartCountHeader"></span>)
-                            </label>
-                        </div>
-                        <button type="button"
-                            class="btn btn-link p-0 text-xs text-rose-600 hover:text-rose-700 text-decoration-none font-semibold shadow-none border-0"
-                            onclick="confirmDeleteOption()">
-                            <i class="bi bi-trash3 me-1"></i>Clear Bag
-                        </button>
-                    </div>
-
-                    <!-- Bag Items List -->
-                    <div class="space-y-3" id="cartItemsList">
-
-                    </div>
-
-                    <!-- Empty State -->
-                    <div id="emptyCartView" class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3"
-                        style="display: none;">
+                        <!-- Items Selection & Clear Header -->
                         <div
-                            class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 d-inline-flex align-items-center justify-content-center mb-3">
-                            <i class="bi bi-bag-x text-2xl"></i>
-                        </div>
-                        <h3 class="text-sm font-bold text-slate-900 mb-1">Your Shopping Bag is Empty</h3>
-                        <p class="text-xs text-slate-500 max-w-sm mx-auto mb-3">
-                            Explore our handcrafted luxury sarees and ethnic wear to add items to your bag.
-                        </p>
-                        <a href="{{ url('/') }}"
-                            class="btn btn-dark text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 shadow-sm">
-                            Continue Shopping &rarr;
-                        </a>
-                    </div>
-
-                    <!-- Security Assurance Strip -->
-                    <div
-                        class="d-flex align-items-center justify-content-around py-2.5 px-3 mt-3 border border-slate-200 rounded-xl bg-white text-xs text-slate-600">
-                        <span class="d-inline-flex align-items-center gap-1.5">
-                            <i class="bi bi-shield-check text-emerald-600 text-sm"></i> 100% Secure Checkout
-                        </span>
-                        <span class="text-slate-300">&bull;</span>
-                        <span class="d-inline-flex align-items-center gap-1.5">
-                            <i class="bi bi-arrow-repeat text-indigo-600 text-sm"></i> 7 Days Easy Return
-                        </span>
-                        <span class="text-slate-300">&bull;</span>
-                        <span class="d-inline-flex align-items-center gap-1.5">
-                            <i class="bi bi-patch-check text-amber-600 text-sm"></i> 100% Authentic Products
-                        </span>
-                    </div>
-
-                </div>
-
-                <!-- RIGHT COLUMN: Price Details & Checkout -->
-                <div class="col-lg-5 col-xl-5">
-                    <div class="sticky-top" style="top: 85px;">
-
-                        <!-- Coupons Card -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-3.5 mb-3 shadow-2xs">
-                            <div class="d-flex align-items-center gap-1.5 mb-2">
-                                <i class="bi bi-tag-fill text-amber-600 text-xs"></i>
-                                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Coupons &amp;
-                                    Offers</span>
+                            class="bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 mb-2.5 d-flex align-items-center justify-content-between shadow-2xs">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="selectAllCart" class="text-xs font-bold text-slate-800 cursor-pointer mb-0">
+                                    ITEMS IN BAG (<span id="cartCountHeader"></span>)
+                                </label>
                             </div>
-
-                            <div class="input-group input-group-sm mb-2">
-                                <input type="text" id="couponInput"
-                                    class="form-control text-xs uppercase shadow-none border-slate-200 rounded-start"
-                                    placeholder="ENTER COUPON CODE" value="VASTRA500">
-                                <button class="btn btn-dark text-xs px-3 font-semibold bg-slate-900 border-slate-900"
-                                    type="button" onclick="applyCoupon()">
-                                    Apply
-                                </button>
-                            </div>
-                            <div id="couponAppliedBadge"
-                                class="d-flex align-items-center justify-content-between p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
-                                <span class="d-inline-flex align-items-center gap-1 font-semibold text-[11px]">
-                                    <i class="bi bi-check-circle-fill text-emerald-600"></i> Code <strong>VASTRA500</strong>
-                                    Applied!
-                                </span>
-                                <span class="text-[11px] font-bold text-emerald-700">-&#8377;500</span>
-                            </div>
+                            <button type="button"
+                                class="btn btn-link p-0 text-xs text-rose-600 hover:text-rose-700 text-decoration-none font-semibold shadow-none border-0"
+                                onclick="confirmDeleteOption()">
+                                <i class="bi bi-trash3 me-1"></i>Clear Bag
+                            </button>
                         </div>
 
-                        <!-- Price Details Summary Box (Clean Sans-Serif Modern Typography) -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
-                            <h4
-                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 font-sans">
-                                PRICE DETAILS (<span id="summaryCount"></span> ITEMS)
-                            </h4>
+                        <!-- Bag Items List -->
+                        <div class="space-y-3" id="cartItemsList">
 
-                            <div class="space-y-2.5 text-xs font-sans">
-                                <div class="d-flex justify-content-between text-slate-600">
-                                    <span>Total Quantity</span>
-                                    <span class="font-medium text-slate-900"><span id="sumQuantity"></span></span>
+                        </div>
+        
+
+                        <!-- Security Assurance Strip -->
+                        <div
+                            class="d-flex align-items-center justify-content-around py-2.5 px-3 mt-3 border border-slate-200 rounded-xl bg-white text-xs text-slate-600">
+                            <span class="d-inline-flex align-items-center gap-1.5">
+                                <i class="bi bi-shield-check text-emerald-600 text-sm"></i> 100% Secure Checkout
+                            </span>
+                            <span class="text-slate-300">&bull;</span>
+                            <span class="d-inline-flex align-items-center gap-1.5">
+                                <i class="bi bi-arrow-repeat text-indigo-600 text-sm"></i> 7 Days Easy Return
+                            </span>
+                            <span class="text-slate-300">&bull;</span>
+                            <span class="d-inline-flex align-items-center gap-1.5">
+                                <i class="bi bi-patch-check text-amber-600 text-sm"></i> 100% Authentic Products
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-5 col-xl-5">
+                        <div class="sticky-top" style="top: 85px;">
+                            <div class="bg-white border border-slate-200 rounded-xl p-3.5 mb-3 shadow-2xs">
+                                <div class="d-flex align-items-center gap-1.5 mb-2">
+                                    <i class="bi bi-tag-fill text-amber-600 text-xs"></i>
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Coupons &amp;
+                                        Offers</span>
                                 </div>
 
-                                <div class="d-flex justify-content-between text-slate-600">
-                                    <span>Total MRP</span>
-                                    <span class="font-medium text-slate-900">&#8377;<span id="sumTotalMrp"></span></span>
+                                <div class="input-group input-group-sm mb-2" id="couponApplyGroup">
+                                    <input type="text" id="couponInput"
+                                        class="form-control text-xs uppercase shadow-none border-slate-200 rounded-start"
+                                        placeholder="ENTER COUPON CODE" value="">
+                                    <button class="btn btn-dark text-xs px-3 font-semibold bg-slate-900 border-slate-900"
+                                        type="button" onclick="applyCouponCode()">
+                                        Apply
+                                    </button>
                                 </div>
-
-                                <div class="d-flex justify-content-between text-slate-600 d-none">
-                                    <span>Discount on MRP</span>
-                                    <span class="text-emerald-600 font-semibold">-&#8377;<span
-                                            id="sumTotalDiscount"></span></span>
+                                <div id="couponAppliedBadge"
+                                    class="d-flex align-items-center justify-content-between p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800"
+                                    style="display: none !important;">
+                                    <div class="d-flex align-items-center gap-1.5 min-w-0">
+                                        <i class="bi bi-check-circle-fill text-emerald-600 flex-shrink-0"></i>
+                                        <span class="text-[11px] truncate">
+                                            Code <strong id="couponCode" class="text-emerald-950 uppercase"></strong> Applied!
+                                            (<span class="coupon-discount-price fw-semibold"></span>)
+                                        </span>
+                                    </div>
+                                    <button type="button"
+                                        class="btn btn-link p-0 text-rose-600 hover:text-rose-700 text-decoration-none font-bold text-[11px] flex-shrink-0 ms-2 shadow-none border-0"
+                                        onclick="removeCouponCode()">
+                                        <i class="bi bi-x-circle me-0.5"></i>Remove
+                                    </button>
                                 </div>
+                            </div>
 
-                                <div class="d-flex justify-content-between text-slate-600">
-                                    <span>Coupon Discount</span>
-                                    <span class="text-emerald-600 font-semibold">-&#8377;<span
-                                            id="sumCouponDiscount"></span></span>
-                                </div>
+                            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+                                <h4
+                                    class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 font-sans">
+                                    PRICE DETAILS (<span id="summaryCount"></span> ITEMS)
+                                </h4>
 
-                                <div class="d-flex justify-content-between text-slate-600">
-                                    <span>Delivery Charges</span>
-                                    <div class="text-end">
-                                        <span class="text-emerald-600 font-bold uppercase text-[10px]"
-                                            id="deliveryCharges">FREE</span>
+                                <div class="space-y-2.5 text-xs font-sans">
+                                    <div class="d-flex justify-content-between text-slate-600">
+                                        <span>Total Quantity</span>
+                                        <span class="font-medium text-slate-900"><span id="sumQuantity"></span></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between text-slate-600">
+                                        <span>Total MRP</span>
+                                        <span class="font-medium text-slate-900">&#8377;<span id="sumTotalMrp"></span></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between text-slate-600 d-none">
+                                        <span>Discount on MRP</span>
+                                        <span class="text-emerald-600 font-semibold">-&#8377;<span
+                                                id="sumTotalDiscount"></span></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between text-slate-600">
+                                        <span>Coupon Discount</span>
+                                        <span class="text-emerald-600 font-semibold">- <span
+                                                id="sumCouponDiscount"></span></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between text-slate-600">
+                                        <span>Delivery Charges</span>
+                                        <div class="text-end">
+                                        +  <span class="text-danger font-bold uppercase text-[10px]"
+                                                id="deliveryCharges">FREE</span>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-2.5 border-slate-200">
+
+                                    <div class="d-flex justify-content-between text-sm font-bold text-slate-900">
+                                        <span>Total Amount</span>
+                                        <span class="text-lg font-extrabold text-slate-900">&#8377;<span
+                                                id="sumFinalAmount"></span></span>
                                     </div>
                                 </div>
 
-                                <hr class="my-2.5 border-slate-200">
+                                <!-- Savings Badge -->
+                                <div class="mt-3 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
+                                    <span
+                                        class="text-xs font-semibold text-emerald-800 d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-stars text-amber-500"></i> You are saving <strong><span
+                                                id="sumTotalSavings"></span></strong> on this order!
+                                    </span>
+                                </div>
+                                <!-- Primary Checkout Button -->
+                                <div class="mt-3.5">
+                                    <a href="{{ route('contact.index') }}"
+                                        class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none">
+                                        <span>PROCEED TO CHECKOUT</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
 
-                                <div class="d-flex justify-content-between text-sm font-bold text-slate-900">
-                                    <span>Total Amount</span>
-                                    <span class="text-lg font-extrabold text-slate-900">&#8377;<span
-                                            id="sumFinalAmount"></span></span>
+                                <div class="mt-2.5 text-center">
+                                    <span class="text-[10px] text-slate-400">
+                                        <i class="bi bi-lock-fill me-1"></i> Safe &amp; Secure 256-Bit SSL Checkout
+                                    </span>
                                 </div>
                             </div>
-
-                            <!-- Savings Badge -->
-                            <div class="mt-3 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
-                                <span
-                                    class="text-xs font-semibold text-emerald-800 d-inline-flex align-items-center gap-1">
-                                    <i class="bi bi-stars text-amber-500"></i> You are saving <strong>&#8377;<span
-                                            id="sumTotalSavings"></span></strong> on this order!
-                                </span>
-                            </div>
-                            <!-- Primary Checkout Button -->
-                            <div class="mt-3.5">
-                                <a href="{{ route('contact.index') }}"
-                                    class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none">
-                                    <span>PROCEED TO CHECKOUT</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-
-                            <div class="mt-2.5 text-center">
-                                <span class="text-[10px] text-slate-400">
-                                    <i class="bi bi-lock-fill me-1"></i> Safe &amp; Secure 256-Bit SSL Checkout
-                                </span>
-                            </div>
                         </div>
-
                     </div>
                 </div>
-
-            </div>
-
+            @else
+                <div id="emptyCartView" class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3"
+                    >
+                    <div
+                        class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 d-inline-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-bag-x text-2xl"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-1">Your Shopping Bag is Empty</h3>
+                    <p class="text-xs text-slate-500 max-w-sm mx-auto mb-3">
+                        Explore our handcrafted luxury sarees and ethnic wear to add items to your bag.
+                    </p>
+                    <a href="{{ url('/') }}"
+                        class="btn btn-dark text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 shadow-sm">
+                        Continue Shopping &rarr;
+                    </a>
+                </div>
+            @endif
+            
         </div>
     </div>
 @endsection
@@ -246,7 +236,12 @@
                     $('#cartCountHeader').text(data.length);
                     $('#summaryCount').text(data.length);
                     let records = '';
-
+                    
+                    if(data.length == 0) {
+                        return;
+                    }
+                    console.log(data.length);
+                    
                     data.forEach(item => {
                         records += `
                     <div class="cart-item-card bg-white border border-slate-200 rounded-xl p-3 shadow-2xs transition-all duration-200 hover:border-slate-300" id="cartItem_${item.id}" data-unit-price="${item.price}">
@@ -373,23 +368,88 @@
                 })
         }
 
+        function applyCouponCode() {
+            let couponInputValue = $('#couponInput').val().trim();
+
+            if (!couponInputValue) {
+                window.showToast?.('Please enter coupon code', 'warning');
+                return;
+            }
+
+            axios.get('/get-coupon', {
+                params: {
+                    coupon: couponInputValue
+                }
+            })
+            .then((res) => {
+                if (res.data.success) {
+                    window.showToast?.(res.data.message, 'success');
+                    $('#couponInput').val('');
+                    mainPriceBox();
+                } else {
+                    window.showToast?.(res.data.message, 'error');
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                window.showToast?.('Failed to apply coupon', 'error');
+            });
+        }
+
+        function removeCouponCode() {
+            axios.post('/remove-coupon')
+                .then((res) => {
+                    if (res.data.success) {
+                        window.showToast?.(res.data.message, 'info');
+                        $('#couponInput').val('');
+                        mainPriceBox();
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    window.showToast?.('Failed to remove coupon', 'error');
+                });
+        }
+
         function mainPriceBox() {
             axios.get('/cart/price-count')
                 .then((res) => {
-                    let data = res.data;
+                    let data = res.data.data;
                     if (!data || !data.success) return;
 
                     let totalCount = parseInt(data.total_count ?? data.totalQuantity ?? 0) || 0;
                     let totalPrice = parseFloat(data.total_price ?? data.totalPrice ?? 0) || 0;
                     let totalDiscount = parseFloat(data.total_discount ?? data.totalDiscount ?? 0) || 0;
+                    let delivery_charges = parseFloat(data.delivery_charges ?? 0) || 0;
+                    let coupon_discount_price = parseFloat(data?.coupon_discount_price ?? 0) || 0;
+                    let payable_price = parseFloat(data.payable_price ?? 0) || 0;
 
                     $('#sumQuantity').text(totalCount);
                     $('#cartCountHeader').text(totalCount);
                     $('#summaryCount').text(totalCount);
                     $('#sumTotalMrp').text(totalPrice.toLocaleString('en-IN'));
-                    $('#sumFinalAmount').text((totalPrice + data.delivery_charges).toLocaleString('en-IN'));
-                    $('#deliveryCharges').text(data.delivery_charges.toLocaleString('en-IN'));
+                    $('#sumFinalAmount').text((payable_price).toLocaleString('en-IN'));
+                    $('#deliveryCharges').text(delivery_charges);
+                    $('#sumCouponDiscount').text(coupon_discount_price);
 
+                    if (data.coupon_code) {
+                        $('#couponCode').text(data.coupon_code);
+                        let formattedDiscount = data.couponType === 'percentage'
+                            ? `${data.coupon_discount}% OFF`
+                            : `₹${data.coupon_discount} OFF`;
+                        $('.coupon-discount-price').text(formattedDiscount);
+                        $('#couponAppliedBadge').attr('style', 'display: flex !important;');
+                        $('#couponApplyGroup').hide();
+                    } else {
+                        $('#couponAppliedBadge').attr('style', 'display: none !important;');
+                        $('#couponApplyGroup').show();
+                    }
+
+                    if(delivery_charges == 0) {
+                        $('#sumTotalSavings').text('Delivery Charges');
+                    } else {
+                        $('#sumTotalSavings').text('0');
+                    }
 
                     if (document.getElementById('navCartBadge')) {
                         document.getElementById('navCartBadge').textContent = totalCount;
@@ -516,7 +576,6 @@
                     console.log(err);
                 });
         };
-
 
     </script>
 @endsection

@@ -104,14 +104,18 @@ class PaymentController extends Controller
             return redirect($session->url);
         }
 
-        return redirect()->route('checkout.order.details',['payment_id'=> $payment->id,'order_id'=> $order->id])->with('success', 'Order placed successfully!');
+        return redirect()->route('order.details',['payment_id'=> $payment->id,'order_id'=> $order->id])->with('success', 'Order placed successfully!');
     }
 
     public function paymentSuccess(Request $request) {
         
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = Session::retrieve($request->session_id);
+
         $payment = Payment::create([
             'order_id'=> $request->order_id,   
-            'payment_intent_id'=> $request->session_id,
+            'payment_intent_id'=> $session->payment_intent,
             'amount'=> $request->total_price,
             'payment_status'=> 'succeeded',
             'payment_method'=> 'online'
@@ -123,80 +127,10 @@ class PaymentController extends Controller
         ]);
         
         if ($payment) {
-            return redirect()->route('checkout.order.details',[
+            return redirect()->route('order.details',[
                 'payment_id'=> $payment->id,
                 'order_id'=> $request->order_id 
             ])->with('success', 'Payment successful! Here are your order details.');
         }
-    }
-
-    public function orderDetail(Request $request)
-    {
-        $order = Order::where('user_id', Auth::id())->latest()->first();
-
-        if ($request->filled('payment_id')) {
-            
-            $payment = Payment::findOrFail($request->payment_id);
-            
-            $orderItems = OrderItem::with('product')->where('order_id', $request->order_id)->get();
-
-            foreach ($orderItems as $oi) {
-                $oi->resolvedOptions = ProductOptionValue::with('optionValue','option')->where('product_id', $oi->product_id)->whereIn('option_value_id', $oi->options)->get();
-            }
-            $productIds = $orderItems->pluck('product_id')->toArray();
-
-            $products = Product::with('orderItems')->whereIn('id', $productIds)->get();
-
-        }
-        else {
-            $payment = Payment::where('order_id', $order->id)->first();
-
-            $orderItems = OrderItem::with('product')->where('order_id', $order->id)->get();
-            
-            foreach ($orderItems as $oi) {
-                $oi->resolvedOptions = ProductOptionValue::with('optionValue','option')->where('product_id', $oi->product_id)->whereIn('option_value_id', $oi->options)->get();
-            }
-
-            $productIds = $orderItems->pluck('product_id')->toArray();
-
-            $products = Product::with('orderItems')->whereIn('id', $productIds)->get();
-        }
-
-        $cart = Cart::with('cartItems')->where('user_id', Auth::id()) ->latest()->first(); 
-        
-        if ($cart) { 
-            foreach($cart->cartItems as $ci) {
-                $product = Product::findOrFail($ci->product_id);
-                $product->update([
-                    'stock' => $product->stock - $ci->quantity
-                ]);
-
-                $product->save();
-            }
-
-            $cart->cartItems()->delete(); 
-        }
-
-        $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->latest()->first();
-
-        $setting = Setting::first();
-
-        return view('customer.order-details', compact('selectedAddress', 'payment', 'products', 'order', 'setting','orderItems'));
-    }
-
-
-    public function orderCancel(int $id) {
-        
-        $order = Order::where('id',$id)->first();
-        $order->update([
-            'order_status'=> 'cancelled'
-        ]);
-
-        return redirect()->back()->with('success', 'Order cancelled successfully!');
-    }
-
-    public function myOrders(Request $request) {
-        $orders = Order::with('orderItems.product','payment')->where('user_id',Auth::id())->latest()->get();
-        return view('customer.orders', compact('orders'));
     }
 }

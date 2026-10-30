@@ -9,6 +9,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OptionController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
@@ -56,10 +57,11 @@ Route::middleware('auth')->group(function() {
     Route::get('/chcekout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
     Route::post('/checkout/payment', [PaymentController::class,'store'])->name('checkout.payment.store');
     Route::get('/checkout/success', [PaymentController::class, 'paymentSuccess'])->name('checkout.payment.success');
-    Route::get('/checkout/order-details', [PaymentController::class, 'orderDetail'])->name('checkout.order.details');
-    Route::get('/my-orders',[PaymentController::class, 'myOrders'])->name('orders');
-    Route::get('/order/{id}/cancel', [PaymentController::class, 'orderCancel'])->name('order.cancel');
-    Route::get('/order/details', [PaymentController::class, 'orderDetail'])->name('order.details');
+    Route::get('/my-orders',[OrderController::class, 'myOrders'])->name('orders');
+    Route::get('/order/{id}/cancel', [OrderController::class, 'orderCancel'])->name('order.cancel');
+    Route::get('/order/details', [OrderController::class, 'orderDetail'])->name('order.details');
+    Route::get('/get-coupon',[CouponController::class, 'getCoupon'])->name('getCoupon');
+    Route::post('/remove-coupon',[CouponController::class, 'removeCoupon'])->name('removeCoupon');
 });
 
 

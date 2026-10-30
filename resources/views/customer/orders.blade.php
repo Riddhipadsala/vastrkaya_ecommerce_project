@@ -64,7 +64,7 @@
                                 CREDITS
                             </span>
                             <div class="space-y-1">
-                                <a href="javascript:void(0)"
+                                <a href="/cart"
                                     class="text-xs text-slate-600 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
                                     Coupons
                                 </a>
@@ -80,10 +80,6 @@
                                 <a href="javascript:void(0)"
                                     class="text-xs text-slate-600 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
                                     Profile
-                                </a>
-                                <a href="{{ route('contact.index') }}"
-                                    class="text-xs text-slate-600 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
-                                    Addresses
                                 </a>
                             </div>
                         </div>

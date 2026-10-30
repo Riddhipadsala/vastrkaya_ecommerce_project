@@ -310,14 +310,14 @@
                     <!-- Quantity & Action Buttons -->
                     <div class="d-flex flex-wrap align-items-center gap-2 my-3">
                         <!-- Add to Cart Button -->
-                        <button type="button" id="addToCartBtn" onclick="handleAddToCart({{ $product }})"
+                        <button type="button" id="addToCartBtn" onclick="handleAddToCart({{ $product }},'addTocart')"
                             class="btn btn-dark flex-grow-1 text-xs font-semibold d-inline-flex align-items-center justify-content-center gap-1.5 rounded shadow-sm h-[38px] bg-slate-900 border-slate-900 hover:bg-slate-800 transition-all duration-200">
                             <i class="bi bi-cart3 text-sm"></i>
                             <span id="addToCartBtnText">Add to Cart</span>
                         </button>
 
                         <!-- Buy Now Button -->
-                        <button type="button"
+                        <button type="button" onclick="handleAddToCart({{ $product }},'buyNow')"
                             class="btn btn-warning flex-grow-1 text-xs font-semibold d-inline-flex align-items-center justify-content-center gap-1.5 rounded shadow-sm text-dark h-[38px] bg-amber-500 border-amber-500 hover:bg-amber-600">
                             <i class="bi bi-lightning-fill text-sm"></i> Buy Now
                         </button>
@@ -326,40 +326,18 @@
                     <!-- Simple Clean Details Accordions -->
                     <div class="accordion" id="productDetailsAccordion">
 
-                        <!-- 1. Description -->
-                        <div class="accordion-item border border-slate-200 rounded mb-2 overflow-hidden">
-                            <h2 class="accordion-header" id="headingDescription">
-                                <button
-                                    class="accordion-button text-xs font-semibold text-slate-800 bg-slate-50 py-2.5 px-3.5 shadow-none"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription"
-                                    aria-expanded="true" aria-controls="collapseDescription">
-                                    <i class="bi bi-file-text me-2 text-primary"></i> Product Description
-                                </button>
-                            </h2>
-                            <div id="collapseDescription" class="accordion-collapse collapse show"
-                                aria-labelledby="headingDescription">
-                                <div class="accordion-body text-xs text-slate-600 p-3.5 bg-white leading-relaxed">
-                                    <p class="mb-0">
-                                        {!! nl2br(e($product->description)) ?:
-                                            'Carefully crafted using premium quality materials for style, comfort, and durability. Ideal for casual, festive, and daily wear.' !!}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 2. Specifications / Product Details -->
                         <div class="accordion-item border border-slate-200 rounded mb-2 overflow-hidden">
                             <h2 class="accordion-header" id="headingSpecs">
                                 <button
-                                    class="accordion-button collapsed text-xs font-semibold text-slate-800 bg-slate-50 py-2.5 px-3.5 shadow-none"
+                                    class="accordion-button text-xs font-semibold text-slate-800 bg-slate-50 py-2.5 px-3.5 shadow-none"
                                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecs"
-                                    aria-expanded="false" aria-controls="collapseSpecs">
+                                    aria-expanded="true" aria-controls="collapseSpecs">
                                     <i class="bi bi-info-circle me-2 text-primary"></i> Specifications & Details
                                 </button>
                             </h2>
-                            <div id="collapseSpecs" class="accordion-collapse collapse" aria-labelledby="headingSpecs">
+                            <div id="collapseSpecs" class="accordion-collapse collapse show" aria-labelledby="headingSpecs">
                                 <div class="accordion-body p-0">
-                                    <table class="table table-sm table-bordered mb-0 text-xs">
+                                    <table class="table table-sm table-bordered mb-2 text-xs">
                                         <tbody>
                                             <tr>
                                                 <td class="bg-slate-50 text-slate-500 font-semibold w-2/5">Category</td>
@@ -392,7 +370,26 @@
                             </div>
                         </div>
 
-                        <!-- 3. Shipping & Returns -->
+                        <div class="accordion-item border border-slate-200 rounded mb-2 overflow-hidden">
+                            <h2 class="accordion-header" id="headingDescription">
+                                <button
+                                    class="accordion-button text-xs font-semibold text-slate-800 bg-slate-50 py-2.5 px-3.5 shadow-none"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription"
+                                    aria-expanded="true" aria-controls="collapseDescription">
+                                    <i class="bi bi-file-text me-2 text-primary"></i> Product Description
+                                </button>
+                            </h2>
+                            <div id="collapseDescription" class="accordion-collapse collapse show"
+                                aria-labelledby="headingDescription">
+                                <div class="accordion-body text-xs text-slate-600 p-3.5 bg-white leading-relaxed">
+                                    <p class="mb-0">
+                                        {!! nl2br(e($product->description)) ?:
+                                            'Carefully crafted using premium quality materials for style, comfort, and durability. Ideal for casual, festive, and daily wear.' !!}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="accordion-item border border-slate-200 rounded mb-2 overflow-hidden">
                             <h2 class="accordion-header" id="headingShipping">
                                 <button
@@ -788,7 +785,7 @@
         let toastTimeout = null;
 
         // Handle Add to Cart Button UI interaction
-        function handleAddToCart(product) {
+        function handleAddToCart(product, action) {
             const selectedOptionValueIds = [];
 
             document.querySelectorAll('input[name^="opt_choice"]:checked').forEach(input => {
@@ -809,7 +806,14 @@
                     quantity: 1
                 })
                 .then(response => {
-                    showCartToast();
+                    if (response.data.success) {
+                        if (action == 'addToCart') {
+                            showCartToast();
+                        }
+                        else if (action == 'buyNow') {
+                            window.location.href = '{{ route('cart.index') }}';
+                        }
+                    }
                 })
                 .catch((err) => {
                     console.error(err);
