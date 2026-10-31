@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\MainCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +15,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson() || $request->ajax()) {
-            $query = Category::query();
+            $query = Category::with('main_category');
 
             if($request->id){
                 $query->where('id', $request->id);
@@ -40,7 +41,8 @@ class CategoryController extends Controller
                 'categories' => $categories
             ]);
         }
-        return view('admin.pages.categories');
+        $mainCategories = MainCategory::all();
+        return view('admin.pages.categories', compact('mainCategories'));
     }
 
     /**
@@ -57,6 +59,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
+            'main_category_id' => 'required|exists:main_categories,id',
             'name'=> 'required|string|max:255',
             'description'=> 'required|string|max:255',
             'image' => 'required',
@@ -92,6 +95,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        $category->load('main_category');
         return response()->json([
             'success' => true,
             'category' => $category
@@ -104,6 +108,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $validate = $request->validate([
+            'main_category_id' => 'required|exists:main_categories,id',
             'name'=> 'required|string|max:255',
             'description'=> 'required|string|max:255',
             'status' => 'nullable|in:1,0',

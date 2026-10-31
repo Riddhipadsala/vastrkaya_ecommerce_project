@@ -25,6 +25,14 @@
         </li>
 
         <li class="vk-nav-item">
+            <a href="{{ route('admin.main-categories.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.main-categories.*') ? 'active' : '' }}">
+                <i class="bi bi-diagram-3-fill vk-nav-icon"></i>
+                <span>Main Category Module</span>
+            </a>
+        </li>
+
+        <li class="vk-nav-item">
             <a href="{{ route('admin.categories.index') }}"
                 class="vk-nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                 <i class="bi bi-tags-fill vk-nav-icon"></i>

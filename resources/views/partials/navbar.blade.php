@@ -22,7 +22,7 @@
                     <span class="vk-search-icon position-absolute top-50 translate-middle-y">
                         <i class="bi bi-search"></i>
                     </span>
-                    <input type="text" name="q" class="form-control vk-search-input"
+                    <input type="text" name="q" class="form-control vk-search-input main-search"
                         placeholder="Search for clothes, brands, collections..." autocomplete="off">
                     <button type="submit" class="btn vk-search-btn position-absolute top-50 translate-middle-y">
                         Search

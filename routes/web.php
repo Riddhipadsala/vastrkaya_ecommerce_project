@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MainCategoryController;
 use App\Http\Controllers\OptionController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -29,6 +30,7 @@ Route::get('/login', function () {
 Route::get('/',[DashboardController::class,'index'])->name('dashboard');
 // Route::resource('wishlist', WishListController::class)->only(['index', 'update']);
 Route::get('/products/{id}', [ProductController::class, 'productDetail'])->name('customer.products.show');
+Route::get('/products', [ProductController::class,'productsPage'])->name('customer.product.page');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::delete('cart/delete/{id}', [CartController::class, 'delete'])->name('cart.delete');
@@ -39,6 +41,7 @@ Route::get('/cart/checkout/stock/{id}', [CartController::class, 'checkoutStock']
 
 Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->group(function() {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('main-categories', MainCategoryController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('options', OptionController::class);

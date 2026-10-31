@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Setting;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 
@@ -24,9 +26,11 @@ class DashboardController extends Controller
         
         $products = Product::with('category')->where('status',1)->whereHas('category',function($query){
             $query->where('status',1);
-        })->get();
+        })->limit(10)->get();
 
-        return view('customer.dashboard', compact('categories', 'products'));
+        $coupons = Coupon::all();
+        
+        return view('customer.dashboard', compact('categories', 'products','coupons'));
     }
 
-    }
+}

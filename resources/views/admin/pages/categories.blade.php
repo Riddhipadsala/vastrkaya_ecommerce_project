@@ -42,11 +42,12 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light border-bottom">
                     <tr class="text-secondary font-13">
-                        <th style="width: 8%;" class="ps-3">#</th>
-                        <th style="width: 12%;">Image</th>
-                        <th style="width: 25%;">Category Name</th>
-                        <th style="width: 33%;">Description</th>
-                        <th style="width: 12%;">Status</th>
+                        <th style="width: 6%;" class="ps-3">#</th>
+                        <th style="width: 10%;">Image</th>
+                        <th style="width: 20%;">Category Name</th>
+                        <th style="width: 18%;">Main Category</th>
+                        <th style="width: 26%;">Description</th>
+                        <th style="width: 10%;">Status</th>
                         <th style="width: 10%;" class="text-end pe-3">Action</th>
                     </tr>
                 </thead>
@@ -89,21 +90,32 @@
                         </div>
                     </div>
 
-                    <!-- 2. Category Title -->
+                    <!-- 2. Main Category Selection -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold font-13 text-secondary mb-1">Main Category <span class="text-danger">*</span></label>
+                        <select name="main_category_id" id="addMainCategoryId" class="form-select form-select-sm" required>
+                            <option value="" disabled selected>-- Select Main Category --</option>
+                            @foreach ($mainCategories ?? [] as $mainCat)
+                                <option value="{{ $mainCat->id }}">{{ $mainCat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- 3. Category Title -->
                     <div class="mb-3">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Category Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control form-control-sm"
                             placeholder="e.g. Sarees, Lehengas, Kurtis" required>
                     </div>
 
-                    <!-- 3. Category Description -->
+                    <!-- 4. Category Description -->
                     <div class="mb-3">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Description <span class="text-danger">*</span></label>
                         <textarea name="description" class="form-control form-control-sm" rows="3"
                             placeholder="Write a brief overview of this category..." required></textarea>
                     </div>
 
-                    <!-- 4. Category Status -->
+                    <!-- 5. Category Status -->
                     <div class="mb-2">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Status</label>
                         <select name="status" class="form-select form-select-sm">
@@ -154,19 +166,30 @@
                         </div>
                     </div>
 
-                    <!-- 2. Category Title -->
+                    <!-- 2. Main Category Selection -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold font-13 text-secondary mb-1">Main Category <span class="text-danger">*</span></label>
+                        <select name="main_category_id" id="editMainCategoryId" class="form-select form-select-sm" required>
+                            <option value="" disabled>-- Select Main Category --</option>
+                            @foreach ($mainCategories ?? [] as $mainCat)
+                                <option value="{{ $mainCat->id }}">{{ $mainCat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- 3. Category Title -->
                     <div class="mb-3">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Category Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="editCategoryTitle" class="form-control form-control-sm" required>
                     </div>
 
-                    <!-- 3. Category Description -->
+                    <!-- 4. Category Description -->
                     <div class="mb-3">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Description</label>
                         <textarea name="description" id="editCategoryDescription" class="form-control form-control-sm" rows="3"></textarea>
                     </div>
 
-                    <!-- 4. Category Status -->
+                    <!-- 5. Category Status -->
                     <div class="mb-2">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">Status</label>
                         <select name="status" id="editCategoryStatus" class="form-select form-select-sm">
@@ -213,7 +236,7 @@
             if (categories.length === 0) {
                 data = `
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
+                        <td colspan="7" class="text-center py-4 text-muted">
                             <i class="bi bi-inbox fs-3 d-block mb-1"></i>
                             No categories found
                         </td>
@@ -221,6 +244,7 @@
                 `;
             } else {
                 categories.forEach((e, index) => {
+                    let mainCatName = e.main_category ? e.main_category.name : '-';
                     data += `
                         <tr>
                             <td class="ps-3 text-secondary fw-semibold font-13">${index + 1}</td>
@@ -231,6 +255,11 @@
                             </td>
                             <td>
                                 <div class="fw-semibold text-heading font-14">${e.name}</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border font-12 px-2.5 py-1 rounded-pill">
+                                    <i class="bi bi-diagram-3 me-1 text-primary"></i>${mainCatName}
+                                </span>
                             </td>
                             <td class="text-secondary font-13">${e.description || '-'}</td>
                             <td>
@@ -269,11 +298,13 @@
     function editCategory(id) {
         axios.get(`/admin/categories/${id}/edit`)
             .then((res) => {
-                $('#editCategoryImgPreview').attr('src', `/storage/${res.data.category.image}`);
-                $('#editCategoryTitle').val(res.data.category.name);
-                $('#editCategoryDescription').val(res.data.category.description);
-                $('#editCategoryStatus').val(res.data.category.status); 
-                $('.update-id').val(res.data.category.id); 
+                let cat = res.data.category;
+                $('#editCategoryImgPreview').attr('src', `/storage/${cat.image}`);
+                $('#editMainCategoryId').val(cat.main_category_id || '');
+                $('#editCategoryTitle').val(cat.name);
+                $('#editCategoryDescription').val(cat.description);
+                $('#editCategoryStatus').val(cat.status); 
+                $('.update-id').val(cat.id); 
             })
             .catch((err) => {
                 window.showToast?.('Failed to edit category', 'error');

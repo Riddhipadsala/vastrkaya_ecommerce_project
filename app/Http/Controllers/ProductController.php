@@ -363,4 +363,27 @@ class ProductController extends Controller
             ]);
         }
     }
+
+    public function productsPage(Request $request) {
+        $query = Product::with('category')->where('status',1)->whereHas('category',function($query){
+            $query->where('status',1);
+        });
+
+        
+
+        $categories = Category::where('status',1)->get();
+
+        $brands = Product::get('brand');
+
+        $products = $query->get();
+   
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success'=> true,
+                'products'=> $products
+            ]); 
+        }
+
+        return view('customer.products', compact('products','categories','brands'));
+    }
 }

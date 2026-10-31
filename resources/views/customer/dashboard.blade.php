@@ -95,8 +95,8 @@
                             <i class="bi bi-tag"></i>
                         </div>
                         <div>
-                            <h6 class="vk-value-title">Flat ₹500 First Order Off</h6>
-                            <p class="vk-value-subtitle">Use Coupon Code: <strong>VASTRA500</strong></p>
+                            <h6 class="vk-value-title">Big First Order Discount</h6>
+                            <p class="vk-value-subtitle">Use Coupon Code: <strong>{{ $coupons[0]->code}}</strong></p>
                         </div>
                     </div>
                 </div>
