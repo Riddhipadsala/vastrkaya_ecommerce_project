@@ -10,20 +10,9 @@
     $sellingPrice = (float) $product->price;
     $discountPrice = (float) ($product->discount_price ?? 0);
     $discountPercent = (float) ($product->discount_percentage ?? 0);
-
-    if ($discountPrice > 0 && $discountPrice < $sellingPrice) {
-        $actualPrice = $sellingPrice;
-        $finalPrice = $discountPrice;
-    } else {
-        $finalPrice = $sellingPrice;
-        $actualPrice = $discountPrice > $sellingPrice ? $discountPrice : $sellingPrice * 1.3;
-    }
-
-    if ($discountPercent <= 0 && $actualPrice > $finalPrice) {
-        $discountPercent = (($actualPrice - $finalPrice) / $actualPrice) * 100;
-    }
-
-    $savings = max(0, $actualPrice - $finalPrice);
+    $finalPrice = (float) ($product->final_price ?? 0);
+   
+    $savings = max(0, $sellingPrice - $finalPrice);
 @endphp
 
 @section('hero-section')
@@ -38,7 +27,7 @@
                             class="text-slate-500 hover:text-slate-900 text-decoration-none">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ url('/') }}"
+                        <a href="{{ url('/products') }}"
                             class="text-slate-500 hover:text-slate-900 text-decoration-none">Shop</a>
                     </li>
                     @if ($product->category)
@@ -152,7 +141,7 @@
                 </div>
 
                 <!-- RIGHT COLUMN: Product Details & Purchase Actions -->
-                <div class="col-lg-7 col-xl-7">
+                <div class="col-lg-7 col-xl-7 product-details" data-id="{{ $product->id }}" data-price={{ $finalPrice }}>
 
                     <!-- Category / Brand Line -->
                     <div class="d-flex align-items-center justify-content-between mb-1">
@@ -200,7 +189,7 @@
                         </span>
                         @if ($savings > 0)
                             <span class="text-muted text-decoration-line-through text-xs">
-                                &#8377;<span class="discount-price">{{ number_format($product->price ) }}</span>
+                                &#8377;<span class="base-price">{{ number_format($product->price ) }}</span>
                             </span>
                             <span class="text-xs font-bold text-success px-1.5 py-0.5 text-success bg-opacity-10 rounded">
                                 {{ round($discountPercent) }}% OFF
@@ -209,30 +198,6 @@
                     </div>
                     <div class="text-xs text-slate-400 mb-3">Inclusive of all taxes</div>
 
-                    <!-- Scoped Option Swatch Selection Styles -->
-                    <style>
-                        .vk-option-item {
-                            position: relative;
-                            display: inline-flex;
-                        }
-
-                        .vk-option-item input[type="radio"]:checked+label {
-                            border-color: #0f172a !important;
-                            box-shadow: 0 0 0 1px #0f172a !important;
-                        }
-
-                        .vk-option-item.has-img input[type="radio"]:checked+label {
-                            background-color: #f8fafc !important;
-                            color: #0f172a !important;
-                            font-weight: 600 !important;
-                        }
-
-                        .vk-option-item.has-text input[type="radio"]:checked+label {
-                            background-color: #0f172a !important;
-                            color: #ffffff !important;
-                            font-weight: 600 !important;
-                        }
-                    </style>
 
                     <!-- Variants / Options Selection -->
                     @if ($product->productOptions && $product->productOptions->count() > 0)
@@ -279,6 +244,7 @@
                                                         data-option-name="{{ $optModel->name }}"
                                                         data-pov-id="{{ $pov->id }}"
                                                         data-option-id="{{ $optModel->id }}"
+                                                        data-price="{{ $pov->price }}"
                                                         onchange="handleOptionChange('{{ $optModel->id }}', '{{ $optVal->name }}', '{{ $valImg ? asset('storage/' . $valImg) : '' }}', {{ $pov->id }})"
                                                         {{ $isFirst ? 'checked' : '' }}>
 
@@ -477,7 +443,7 @@
                                 Related Products
                             </h3>
                         </div>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ url('/products') }}"
                             class="text-decoration-none text-xs font-semibold text-slate-900 hover:text-amber-700 d-inline-flex align-items-center gap-1 transition">
                             View All Products &rarr;
                         </a>
@@ -574,76 +540,33 @@
             </button>
         </div>
     </div>
+@dump($product);
+    
+    <!-- Scoped Option Swatch Selection Styles -->
+    <style>
+        .vk-option-item {
+            position: relative;
+            display: inline-flex;
+        }
 
-    <!-- Size Guide Modal -->
-    <div class="modal fade" id="sizeGuideModal" tabindex="-1" aria-labelledby="sizeGuideModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-sm">
-                <div class="modal-header py-2.5 px-3 border-b border-slate-200">
-                    <h6 class="modal-title font-bold text-slate-900 text-xs mb-0" id="sizeGuideModalLabel">
-                        <i class="bi bi-rulers me-1.5 text-danger"></i>Size Measurement Guide
-                    </h6>
-                    <button type="button" class="btn-close text-[10px] shadow-none" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-3">
-                    <p class="text-xs text-slate-500 mb-2">Measurements are in inches (&plusmn; 0.5" standard tolerance):
-                    </p>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped text-xs align-middle text-center mb-0">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Size</th>
-                                    <th>Chest</th>
-                                    <th>Waist</th>
-                                    <th>Hips</th>
-                                    <th>Length</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>S</strong></td>
-                                    <td>36</td>
-                                    <td>32</td>
-                                    <td>38</td>
-                                    <td>54</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>M</strong></td>
-                                    <td>38</td>
-                                    <td>34</td>
-                                    <td>40</td>
-                                    <td>54</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>L</strong></td>
-                                    <td>40</td>
-                                    <td>36</td>
-                                    <td>42</td>
-                                    <td>55</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>XL</strong></td>
-                                    <td>42</td>
-                                    <td>38</td>
-                                    <td>44</td>
-                                    <td>55</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>XXL</strong></td>
-                                    <td>44</td>
-                                    <td>40</td>
-                                    <td>46</td>
-                                    <td>56</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        .vk-option-item input[type="radio"]:checked+label {
+            border-color: #0f172a !important;
+            box-shadow: 0 0 0 1px #0f172a !important;
+        }
+
+        .vk-option-item.has-img input[type="radio"]:checked+label {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+            font-weight: 600 !important;
+        }
+
+        .vk-option-item.has-text input[type="radio"]:checked+label {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+    </style>
+
 @endsection
 
 @section('script')
@@ -723,21 +646,20 @@
 
         document.addEventListener('DOMContentLoaded', function () {
 
-            let povIds = [];
+            let option_price = 0;
 
             $('.input-radio:checked').each(function () {
-                let povId = $(this).data('pov-id');
-
-                if (povId) {
-                    povIds.push(povId);
-                }
+                option_price += parseFloat($(this).attr("data-price"));
             });
 
-            if(povIds.length != 0) {
-                fetchPrice(povIds);
-            }
+            let main_price = parseFloat($('.product-details').attr('data-price'));
             
+            let final_price = parseInt(option_price + main_price);
+
+            $('.price').text(final_price);
+
         });
+
 
         function handleOptionChange(optionId, valName, valImage, povId) {
 
@@ -747,39 +669,17 @@
                 lbl.textContent = valName;
             }
 
-            let povIds = [];
+            let option_price = 0;
+
              $('.input-radio:checked').each(function () {
-                let povId = $(this).data('pov-id');
-
-                if (povId) {
-                    povIds.push(povId);
-                }
-
+                option_price += parseFloat($(this).attr("data-price"));
             });
+           
+            let main_price = parseFloat($('.product-details').attr('data-price'));
+            let final_price = parseInt(option_price + main_price);
 
-            if(povIds.length != 0) {
-                fetchPrice(povIds);
-            }
-        }
-
-
-        function fetchPrice(povId) {
-
-            axios.post('/option-value/price/change', {
-                povId: povId,
-                _token: "{{ csrf_token() }}"
-            })
-            .then((res) => {
-                if (res.data.success) {
-                    $('.price').text(res.data.finalPrice);
-                    $('.discount-price').text(res.data.discount_price);
-                }
-            })
-            .catch((err) => {
-                console.error(err.response?.data || err);
-                window.showToast('Something went wrong', 'error');
-            });
-
+            $('.price').text(final_price);
+        
         }
 
         let toastTimeout = null;
@@ -807,12 +707,14 @@
                 })
                 .then(response => {
                     if (response.data.success) {
-                        if (action == 'addToCart') {
+
+                        if (action == 'addTocart') {
                             showCartToast();
                         }
                         else if (action == 'buyNow') {
                             window.location.href = '{{ route('cart.index') }}';
                         }
+
                     }
                 })
                 .catch((err) => {

@@ -16,18 +16,56 @@
                 </span>
             </a>
 
+            <!-- MAIN CATEGORIES (Shown on Dashboard) -->
+            @if(isset($main_category) && $main_category->isNotEmpty())
+                <nav class="vk-main-nav d-none d-lg-flex align-items-center ms-3 ms-xl-4 gap-1 gap-xl-2">
+                    @foreach($main_category as $mainCat)
+                        <div class="vk-nav-item position-relative">
+                            <a href="{{ url('/products?main_category=' . $mainCat->id) }}"
+                               class="vk-nav-link text-uppercase fw-bold px-2.5 py-2 d-inline-flex align-items-center gap-1 text-decoration-none">
+                                <span>{{ $mainCat->name }}</span>
+                                @if($mainCat->categories && $mainCat->categories->isNotEmpty())
+                                    <i class="bi bi-chevron-down vk-nav-arrow" style="font-size: 9px;"></i>
+                                @endif
+                            </a>
+                            @if($mainCat->categories && $mainCat->categories->isNotEmpty())
+                                <div class="vk-category-dropdown position-absolute py-2 px-1">
+                                    <div class="px-3 py-1 mb-1 text-muted text-uppercase fw-bold border-bottom" style="font-size: 10px; letter-spacing: 0.5px;">
+                                        {{ $mainCat->name }} Collections
+                                    </div>
+                                    @foreach($mainCat->categories as $subCat)
+                                        <a class="dropdown-item py-1.5 px-3 rounded d-flex align-items-center justify-content-between"
+                                           href="{{ url('/products?category=' . $subCat->id) }}">
+                                            <span>{{ $subCat->name }}</span>
+                                            <i class="bi bi-arrow-right text-muted opacity-50" style="font-size: 11px;"></i>
+                                        </a>
+                                    @endforeach
+                                    <div class="dropdown-divider my-1"></div>
+                                    <a class="dropdown-item py-1.5 px-3 rounded text-primary fw-semibold" style="font-size: 12px;"
+                                       href="{{ url('/products?main_category=' . $mainCat->id) }}">
+                                        View All {{ $mainCat->name }} &rarr;
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </nav>
+            @endif
+
             <!-- 2. SEARCH BAR (Desktop & Tablet) -->
-            <div class="vk-search-container d-none d-md-block flex-grow-1 mx-3 mx-lg-5">
-                <form action="{{ url('/search') }}" method="GET" class="vk-search-form position-relative">
-                    <span class="vk-search-icon position-absolute top-50 translate-middle-y">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" name="q" class="form-control vk-search-input main-search"
-                        placeholder="Search for clothes, brands, collections..." autocomplete="off">
-                    <button type="submit" class="btn vk-search-btn position-absolute top-50 translate-middle-y">
-                        Search
-                    </button>
-                </form>
+            <div class="vk-search-container d-none d-md-block flex-grow-1 mx-3 mx-lg-5 position-relative">
+                <span class="vk-search-icon position-absolute top-50 translate-middle-y">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" name="q" class="form-control vk-search-input main-search"
+                    placeholder="Search for clothes, brands, collections..." autocomplete="off">
+
+                <!-- Plain Empty Dropdown Box (Activates on typing) -->
+                <div id="searchDropdown" class="vk-search-dropdown position-absolute start-0 w-100 bg-white rounded-3 shadow-lg border border-slate-200 d-none" style="top: calc(100% + 6px); z-index: 1050; min-height: 120px; overflow: hidden;">
+                    <div id="searchDropdownContent" class="p-3">
+                        <!-- Plain empty box container -->
+                    </div>
+                </div>
             </div>
 
             <!-- 3. ACTION ICONS (Profile, Wishlist, Bag) -->
@@ -133,15 +171,32 @@
         </div>
 
         <!-- MOBILE SEARCH BAR (Visible only on small screens) -->
-        <div class="vk-mobile-search d-block d-md-none pb-2 pt-1">
+        <div class="vk-mobile-search d-block d-md-none pb-2 pt-1 position-relative">
             <form action="{{ url('/search') }}" method="GET" class="vk-search-form position-relative">
                 <span class="vk-search-icon position-absolute top-50 translate-middle-y">
                     <i class="bi bi-search"></i>
                 </span>
-                <input type="text" name="q" class="form-control vk-search-input"
+                <input type="text" name="q" class="form-control vk-search-input" oninput="mainSearch(event)"
                     placeholder="Search clothes, collections..." autocomplete="off">
             </form>
+            <!-- Plain Empty Dropdown Box Mobile -->
+            <div id="searchDropdownMobile" class="vk-search-dropdown position-absolute start-0 w-100 bg-white rounded-3 shadow-lg border border-slate-200 d-none" style="top: calc(100% + 4px); z-index: 1050; min-height: 100px; overflow: hidden;">
+                <div id="searchDropdownMobileContent" class="p-3">
+                </div>
+            </div>
         </div>
+
+        <!-- MOBILE MAIN CATEGORIES (Visible only on small screens when on Dashboard) -->
+        @if(isset($main_category) && $main_category->isNotEmpty())
+            <div class="vk-mobile-main-cats d-flex d-lg-none overflow-auto gap-2 pb-2 pt-1 border-top" style="scrollbar-width: none;">
+                @foreach($main_category as $mainCat)
+                    <a href="{{ url('/products?main_category=' . $mainCat->id) }}" 
+                       class="badge bg-light text-dark text-decoration-none border rounded-pill px-3 py-1.5 text-uppercase fw-semibold text-nowrap" style="font-size: 11px;">
+                        {{ $mainCat->name }}
+                    </a>
+                @endforeach
+            </div>
+        @endif
 
     </div>
 </header>

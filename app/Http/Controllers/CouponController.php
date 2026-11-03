@@ -120,12 +120,16 @@ class CouponController extends Controller
     }
 
     public function getCoupon(Request $request) {
+
         $couponCode = trim($request->coupon);
         $coupon = Coupon::where('code', $couponCode)->first();
 
         $today = now()->toDateString();
 
         if($coupon && $coupon->status == 1 && $coupon->end_date >= $today && $coupon->start_date <= $today && $coupon->used_total < $coupon->uses_total) {
+
+            $coupon->used_total += 1;
+            $coupon->save();
 
             session()->put('applied_coupon', [
                 'id'=> $coupon->id,
@@ -149,7 +153,16 @@ class CouponController extends Controller
     }
 
     public function removeCoupon() {
+        if (session()->has('applied_coupon')) {
+            $sessionCoupon = session()->get('applied_coupon');
+            $coupon = Coupon::where('code', $sessionCoupon['code'])->first();
+
+            $coupon->used_total > 0 ? $coupon->used_total -= 1 : $coupon->used_total = 0;
+            $coupon->save();
+        }
+
         session()->forget('applied_coupon');
+
         return response()->json([
             'success' => true,
             'message' => 'Coupon removed successfully'

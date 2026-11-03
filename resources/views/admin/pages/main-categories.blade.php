@@ -8,7 +8,6 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>
             <h4 class="h5 fw-bold mb-0 text-heading">Main Category Management</h4>
-            <span class="font-13 text-muted">Organize root divisions like Men, Women, Kids &amp; Accessories</span>
         </div>
         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addMainCategoryModal">
             <i class="bi bi-plus-lg"></i> Add Main Category
@@ -47,6 +46,7 @@
                     <tr class="text-secondary font-13">
                         <th style="width: 10%;" class="ps-3">#</th>
                         <th style="width: 50%;">Main Category Name</th>
+                        <th style="width: 16%;">Status</th>
                         <th style="width: 25%;">Created At</th>
                         <th style="width: 15%;" class="text-end pe-3">Action</th>
                     </tr>
@@ -108,13 +108,23 @@
             </div>
             <form id="editMainCategoryForm" onsubmit="updateMainCategory(event)">
                 @csrf
-                <input type="hidden" id="edit_category_id">
+                <input type="hidden" id="edit_category_id" name="id">
                 <div class="modal-body p-4">
-                    <div class="mb-2">
+                    <div class="mb-3">
                         <label class="form-label fw-bold font-13 text-secondary mb-1">
                             Main Category Name <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="name" id="edit_category_name" class="form-control form-control-sm" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label class="form-label fw-bold font-13 text-secondary mb-1">
+                            Status <span class="text-danger">*</span>
+                        </label>
+                        <select name="status" id="edit_category_status" class="form-select form-select-sm" required>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer border-top bg-light bg-opacity-25 py-2">
@@ -193,6 +203,11 @@
                                     <span>${cat.name}</span>
                                 </div>
                             </td>
+                            <td>
+                                <span class="badge ${cat.status === 1 ? 'text-success border-success' : 'text-danger border-danger'} border border-opacity-25 rounded-pill px-2 py-1 font-12">
+                                    ${cat.status === 1 ? 'Active' : 'Inactive'}
+                                </span>
+                            </td>
                             <td class="text-secondary font-13">${createdDate}</td>
                             <td class="text-end pe-3">
                                 <div class="d-inline-flex gap-1">
@@ -218,16 +233,16 @@
     }
 
     function clearFilter() {
-        $('#filter_id').val('');
-        $('#filter_name').val('');
+        $('#filter_id, #filter_name, #filter_status').val('');
         fetchData();
     }
 
     function storeMainCategory(e) {
         e.preventDefault();
-        let name = $('#add_category_name').val();
+        let name = $('#add_category_name').val().trim();
+        let status = $('#add_category_status').val();
 
-        axios.post('{{ route("admin.main-categories.store") }}', { name: name })
+        axios.post('{{ route("admin.main-categories.store") }}', { name: name, status: status })
             .then((res) => {
                 if (res.data.success) {
                     bootstrap.Modal.getInstance(document.getElementById('addMainCategoryModal'))?.hide();
@@ -248,6 +263,7 @@
                 let cat = res.data.mainCategory;
                 $('#edit_category_id').val(cat.id);
                 $('#edit_category_name').val(cat.name);
+                $('#edit_category_status').val(cat.status !== undefined ? cat.status : 1);
                 let modal = new bootstrap.Modal(document.getElementById('editMainCategoryModal'));
                 modal.show();
             })
@@ -259,9 +275,10 @@
     function updateMainCategory(e) {
         e.preventDefault();
         let id = $('#edit_category_id').val();
-        let name = $('#edit_category_name').val();
+        let name = $('#edit_category_name').val().trim();
+        let status = $('#edit_category_status').val();
 
-        axios.put(`/admin/main-categories/${id}`, { name: name })
+        axios.put(`/admin/main-categories/${id}`, { name: name, status: status })
             .then((res) => {
                 if (res.data.success) {
                     bootstrap.Modal.getInstance(document.getElementById('editMainCategoryModal'))?.hide();

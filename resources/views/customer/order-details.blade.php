@@ -33,7 +33,7 @@
                                         Ordered Items ({{ isset($products) && $products->isNotEmpty() ? $products->count() : $items->count() }})
                                     </h4>
                                     @if ($order->order_status)
-                                        <span class="badge {{($order->order_status == 'pending')? 'bg-warning' : (($order->order_status == 'delivered')? 'bg-success' : 'bg-danger')}} border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                        <span class="badge {{($order->order_status == 'pending')? 'bg-warning' : (($order->order_status == 'cancelled')? 'bg-danger' : 'bg-success')}} border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                             {{ $order->order_status }}
                                         </span>
                                     @endif
@@ -99,7 +99,7 @@
                             </div>
                         @endif
                             {{-- Savings Highlight Strip --}}
-                            @if($setting->minimum_order_amount <= $payment->amount)
+                            @if($setting->minimum_order_amount <= $payment->amount && ($payment->payment_status != 'cancelled' && $payment->payment_status != 'refund'))
                                 <div class="p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 d-flex align-items-center gap-2 text-xs text-emerald-900">
 
                                     <div class="w-5 h-5 rounded-full bg-emerald-600 text-white d-flex align-items-center justify-content-center text-[10px] flex-shrink-0">
@@ -112,6 +112,23 @@
                                             &#8377;{{ $setting->delivery_charge }}
                                         </strong>
                                         on this Order.
+                                    </span>
+
+                                </div>
+                            @endif
+
+                            @if($payment->payment_status == 'refund')
+                                <div class="p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 d-flex align-items-center gap-2 text-xs text-emerald-900">
+
+                                    <div class="w-5 h-5 rounded-full bg-emerald-600 text-white d-flex align-items-center justify-content-center text-[10px] flex-shrink-0">
+                                        <i class="bi bi-stars"></i>
+                                    </div>
+
+                                    <span class="font-medium text-[11px] sm:text-xs">
+                                        Refunded
+                                        <strong class="text-emerald-700">
+                                            &#8377;{{ $order->total_amount }}
+                                        </strong>
                                     </span>
 
                                 </div>
@@ -223,6 +240,5 @@
             </div>
         </div>
     </div>
-
 
 @endsection

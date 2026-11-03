@@ -28,9 +28,14 @@ Route::get('/login', function () {
 
 
 Route::get('/',[DashboardController::class,'index'])->name('dashboard');
+Route::post('/main-search',[DashboardController::class, 'mainSearch'])->name('main-search');
 // Route::resource('wishlist', WishListController::class)->only(['index', 'update']);
+
+//product
 Route::get('/products/{id}', [ProductController::class, 'productDetail'])->name('customer.products.show');
 Route::get('/products', [ProductController::class,'productsPage'])->name('customer.product.page');
+
+//cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::delete('cart/delete/{id}', [CartController::class, 'delete'])->name('cart.delete');
@@ -39,6 +44,12 @@ Route::put('cart/update/{id}', [CartController::class, 'update'])->name('cart.up
 Route::get('/cart/price-count', [CartController::class, 'getPriceCount'])->name('cart.price-count');
 Route::get('/cart/checkout/stock/{id}', [CartController::class, 'checkoutStock'])->name('cart.checkout.stock');
 
+//customer option change ,that time price change
+Route::post('option-value/price/change',[ProductController::class,'optionValuePriceChange'])->name('option-value.price.change');
+
+
+
+//admin
 Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->group(function() {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('main-categories', MainCategoryController::class);
@@ -47,22 +58,35 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::resource('options', OptionController::class);
     Route::resource('stock', StockController::class);
     Route::resource('profile', AdminProfileController::class);
+
+    //setting
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
-    Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
+
     Route::resource('coupons', CouponController::class);
-   
+    
+    //product
+    Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
    });
 
+
+//customers
 Route::middleware('auth')->group(function() {
-    Route::post('option-value/price/change',[ProductController::class,'optionValuePriceChange'])->name('option-value.price.change');
+
+    //customer address
     Route::resource('checkout/contact', CartContactInformationController::class);
+
+    //payment
     Route::get('/chcekout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
     Route::post('/checkout/payment', [PaymentController::class,'store'])->name('checkout.payment.store');
     Route::get('/checkout/success', [PaymentController::class, 'paymentSuccess'])->name('checkout.payment.success');
+
+    //all orders
     Route::get('/my-orders',[OrderController::class, 'myOrders'])->name('orders');
     Route::get('/order/{id}/cancel', [OrderController::class, 'orderCancel'])->name('order.cancel');
     Route::get('/order/details', [OrderController::class, 'orderDetail'])->name('order.details');
+
+    //coupons apply
     Route::get('/get-coupon',[CouponController::class, 'getCoupon'])->name('getCoupon');
     Route::post('/remove-coupon',[CouponController::class, 'removeCoupon'])->name('removeCoupon');
 });

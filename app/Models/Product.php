@@ -19,6 +19,7 @@ class Product extends Model
         'stock',
         'descrese_stock',
         'price',
+        'final_price',
         'discount_price',
         'discount_percentage'
     ];

@@ -31,6 +31,7 @@ class ProductRequest extends FormRequest
             'price'               => 'required|numeric|min:0',
             'discount_price'      => 'nullable|numeric|min:0',
             'discount_percentage' => 'nullable|numeric|min:0|max:100',
+            'final_price'         => 'required|numeric|min:0',
             'stock'               => 'required|integer|min:0',
             'image'               => 'nullable|image|max:2048',
             'status'              => 'required|in:0,1',

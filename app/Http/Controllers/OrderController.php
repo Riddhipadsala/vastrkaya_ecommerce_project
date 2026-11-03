@@ -66,6 +66,8 @@ class OrderController extends Controller
             $cart->cartItems()->delete(); 
         }
 
+        session()->forget('applied_coupon');
+
         $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->latest()->first();
 
         $setting = Setting::first();
@@ -115,7 +117,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Order cancelled successfully!');
+        return redirect()->back()->with('success', 'Order cancelled successfully.');
     }
 
 

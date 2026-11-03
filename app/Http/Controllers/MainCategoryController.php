@@ -12,7 +12,7 @@ class MainCategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = MainCategory::query();
+        $query = MainCategory::withCount('categories');
 
         if ($request->filled('id')) {
             $query->where('id', $request->id);
@@ -20,6 +20,10 @@ class MainCategoryController extends Controller
 
         if ($request->filled('name')) {
             $query->where('name', 'LIKE', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         $mainCategories = $query->orderBy('id', 'desc')->get();
@@ -41,6 +45,7 @@ class MainCategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:main_categories,name',
+            'status'=> 'required|in:1,0'
         ]);
 
         $mainCategory = MainCategory::create($validated);
@@ -77,7 +82,8 @@ class MainCategoryController extends Controller
         $mainCategory = MainCategory::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:main_categories,name,' . $id,
+            'name' => 'required',
+            'status'=> 'required|in:1,0'
         ]);
 
         $mainCategory->update($validated);

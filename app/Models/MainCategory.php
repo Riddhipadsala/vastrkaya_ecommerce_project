@@ -8,6 +8,7 @@ class MainCategory extends Model
 {
     protected $fillable = [
         'name',
+        'status'
     ];
 
     public function categories()

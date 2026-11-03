@@ -134,7 +134,7 @@
                                     </a>
                                 @endforeach
 
-                                @if ($order->order_status != 'cancelled' && $order->order_status != 'delivered')
+                                @if ($order->order_status != 'cancelled')
                                     <div class="px-3 sm:px-3.5 pb-3.5 pt-1">
                                         <div class="row g-2">
                                             <div class="col-12">

@@ -152,13 +152,13 @@
 
                     <!-- Remaining amount -->
                     <div class="col-md-4">
-                        <label class="vk-form-label fw-bold">Actual Amount (&#8377;)</label>
+                        <label class="vk-form-label fw-bold">Final Amount (&#8377;)</label>
                         <div class="input-group">
-                            <input type="number" step="0.01" min="0" name="actual_amount" id="actualAmount"
-                                class="form-control vk-form-control border-end-0 @error('actual_amount') is-invalid @enderror"
-                                placeholder="0.00" value="{{ old('actual_amount') }}">
+                            <input type="number" step="0.01" min="0" name="final_price" id="finalPrice"
+                                class="form-control vk-form-control border-end-0 @error('final_price') is-invalid @enderror"
+                                placeholder="0.00" value="{{ old('final_price') }}">
                         </div>
-                        @error('actual_amount')
+                        @error('final_price')
                             <div class="text-danger font-12 mt-1">{{ $message }}</div>
                         @enderror
                     </div>
@@ -372,58 +372,58 @@
                                     <div class="d-flex flex-wrap gap-2.5">
                                         ${(item.option_values || []).map(val => {
                                             return `
-                                                    <div class="variant-item-box rounded-3 border transition-all p-2.5 border-light bg-surface-subtle"
-                                                         id="variant_box_${item.id}_${val.id}"
-                                                         style="min-width: 210px; flex: 1 1 210px; max-width: 270px;">
-                                                        
-                                                        <!-- Top Row: Checkbox, Swatch & Label -->
-                                                        <div class="d-flex align-items-center justify-content-between gap-2">
-                                                            <div class="form-check d-flex align-items-center gap-2 mb-0 flex-grow-1 cursor-pointer">
-                                                                <input class="form-check-input mt-0 opt-val-cb-${item.id}" 
-                                                                        type="checkbox" 
-                                                                        name="options[${item.id}][values][]" 
-                                                                        value="${val.id}" 
-                                                                        id="val_${item.id}_${val.id}"
-                                                                        data-option-id="${item.id}"
-                                                                        data-val-id="${val.id}"
-                                                                        onchange="toggleVariantPrice(this, '${item.id}', '${val.id}')"
-                                                                />
-                                                                <label class="form-check-label font-13 fw-semibold text-heading mb-0 cursor-pointer d-flex align-items-center gap-1.5" for="val_${item.id}_${val.id}">
-                                                                    ${val.option_value_image ? `
+                                                        <div class="variant-item-box rounded-3 border transition-all p-2.5 border-light bg-surface-subtle"
+                                                             id="variant_box_${item.id}_${val.id}"
+                                                             style="min-width: 210px; flex: 1 1 210px; max-width: 270px;">
+                                                            
+                                                            <!-- Top Row: Checkbox, Swatch & Label -->
+                                                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                                                <div class="form-check d-flex align-items-center gap-2 mb-0 flex-grow-1 cursor-pointer">
+                                                                    <input class="form-check-input mt-0 opt-val-cb-${item.id}" 
+                                                                            type="checkbox" 
+                                                                            name="options[${item.id}][values][]" 
+                                                                            value="${val.id}" 
+                                                                            id="val_${item.id}_${val.id}"
+                                                                            data-option-id="${item.id}"
+                                                                            data-val-id="${val.id}"
+                                                                            onchange="toggleVariantPrice(this, '${item.id}', '${val.id}')"
+                                                                    />
+                                                                    <label class="form-check-label font-13 fw-semibold text-heading mb-0 cursor-pointer d-flex align-items-center gap-1.5" for="val_${item.id}_${val.id}">
+                                                                        ${val.option_value_image ? `
                                                                     <img src="/storage/${val.option_value_image}" 
                                                                          alt="${val.name}" 
                                                                          style="width: 22px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1);" class="shrink-0">
                                                                 ` : ''}
-                                                                    <span>${val.name}</span>
-                                                                </label>
+                                                                        <span>${val.name}</span>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <!-- Price Section: Appears when checkbox is selected -->
-                                                        <div class="variant-price-wrap mt-2 pt-2 border-top border-light d-none" 
-                                                             id="price_wrap_${item.id}_${val.id}">
-                                                            <div class="d-flex align-items-center justify-content-between mb-1">
-                                                                <label class="font-11 text-muted fw-semibold mb-0" for="price_${item.id}_${val.id}">
-                                                                    <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
-                                                                </label>
-                                                                <small class="font-10 text-muted">Optional</small>
-                                                            </div>
-                                                            <div class="input-group input-group-sm">
-                                                                <span class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
-                                                                <input type="number" 
-                                                                       step="0.01" 
-                                                                       min="0" 
-                                                                       name="options[${item.id}][prices][${val.id}]" 
-                                                                       id="price_${item.id}_${val.id}"
-                                                                       class="form-control form-control-sm border-start-0 font-12" 
-                                                                       placeholder="0.00" 
-                                                                       value=""
-                                                                       disabled
-                                                                       oninput="onVariantPriceChange(this, '${item.id}', '${val.id}')">
+                                                            <!-- Price Section: Appears when checkbox is selected -->
+                                                            <div class="variant-price-wrap mt-2 pt-2 border-top border-light d-none" 
+                                                                 id="price_wrap_${item.id}_${val.id}">
+                                                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                    <label class="font-11 text-muted fw-semibold mb-0" for="price_${item.id}_${val.id}">
+                                                                        <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
+                                                                    </label>
+                                                                    <small class="font-10 text-muted">Optional</small>
+                                                                </div>
+                                                                <div class="input-group input-group-sm">
+                                                                    <span class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
+                                                                    <input type="number" 
+                                                                           step="0.01" 
+                                                                           min="0" 
+                                                                           name="options[${item.id}][prices][${val.id}]" 
+                                                                           id="price_${item.id}_${val.id}"
+                                                                           class="form-control form-control-sm border-start-0 font-12" 
+                                                                           placeholder="0.00" 
+                                                                           value=""
+                                                                           disabled
+                                                                           oninput="onVariantPriceChange(this, '${item.id}', '${val.id}')">
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    `;
+                                                        `;
                                         }).join('')}
                                 </div>
                             </div>
@@ -460,12 +460,12 @@
                 const diff = price - discountPrice;
                 const percent = (discountPrice * 100) / price;
                 $('#productDiscountPercent').val(percent.toFixed(2));
-                $('#actualAmount').val(diff.toFixed(2));
+                $('#finalPrice').val(diff.toFixed(2));
             } else if (discountPrice === 0) {
                 $('#productDiscountPercent').val('');
-                $('#actualAmount').val(price.toFixed(2));
+                $('#finalPrice').val(price.toFixed(2));
             } else {
-                $('#actualAmount').val(0);
+                $('#finalPrice').val(0);
             }
         }
 
@@ -478,10 +478,10 @@
                 const discountAmount = (price * percent) / 100;
                 const newPrice = price - discountAmount;
                 $('#productDiscountPrice').val(discountAmount.toFixed(2));
-                $('#actualAmount').val(newPrice.toFixed(2));
+                $('#finalPrice').val(newPrice.toFixed(2));
             } else {
                 $('#productDiscountPrice').val('');
-                $('#actualAmount').val(0);
+                $('#finalPrice').val(0);
             }
         }
 

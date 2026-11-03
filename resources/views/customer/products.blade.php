@@ -171,9 +171,27 @@
                                 <i class="bi bi-sliders text-slate-600"></i>
                                 <span>FILTERS</span>
                             </span>
-                            <button type="button" class="btn btn-link p-0 text-[11px] font-bold text-[#ff3f6c] hover:text-[#d93057] text-decoration-none shadow-none border-0">
+                            <button type="button" class="btn btn-link p-0 text-[11px] font-bold text-[#ff3f6c] hover:text-[#d93057] text-decoration-none shadow-none border-0 clear-all"
+                                onClick="clearAll()">
                                 CLEAR ALL
                             </button>
+                        </div>
+
+                        <!-- FILTER 0: main CATEGORIES -->
+                        <div class="py-2.5 border-b border-slate-100">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">For Who ?</span>
+                                <i class="bi bi-chevron-down text-slate-400 text-[10px]"></i>
+                            </div>
+                            <div class="space-y-1.5 text-xs text-slate-600 max-h-40 overflow-y-auto" style="scrollbar-width: thin;">
+                                @foreach($categories->unique('main_category_id') as $category)
+                                    <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900 py-0.5">
+                                        <input type="checkbox" name="main_category_id" value="{{$category->main_category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
+                                        <span class="flex-grow-1 truncate">{{$category->main_category->name}}</span>
+                                    </label>
+                                @endforeach
+
+                            </div>
                         </div>
 
                         <!-- FILTER 1: CATEGORIES -->
@@ -220,19 +238,19 @@
                             </div>
                             <div class="space-y-1.5 text-xs text-slate-600">
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="0-999">
+                                    <input type="radio" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="0-999">
                                     <span>Under &#8377;999</span>
                                 </label>
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="1000-1999">
+                                    <input type="radio" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="1000-1999">
                                     <span>&#8377;1,000 to &#8377;1,999</span>
                                 </label>
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="2000-2999">
+                                    <input type="radio" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="2000-2999">
                                     <span>&#8377;2,000 to &#8377;2,999</span>
                                 </label>
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="3000-above">
+                                    <input type="radio" name="price" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="3000-above">
                                     <span>&#8377;3,000 and Above</span>
                                 </label>
                             </div>
@@ -246,19 +264,19 @@
                             </div>
                             <div class="space-y-1.5 text-xs text-slate-600">
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="10-100">
+                                    <input type="radio" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="10-100">
                                     <span>10% and above</span>
                                 </label>
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="20-100">
+                                    <input type="radio" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="20-100">
                                     <span>20% and above</span>
                                 </label>
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="30-100">
+                                    <input type="radio" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="30-100">
                                     <span>30% and above</span>
                                 </label>
                                 <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                    <input type="checkbox" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="40-100">
+                                    <input type="radio" name="discount_percentage" class="form-check-input mt-0 custom-checkbox py-0.5" style="accent-color: #ff3f6c;" value="40-100">
                                     <span>40% and above</span>
                                 </label>
                             </div>
@@ -312,6 +330,8 @@
 
                 </div>
 
+                {{ $products->links() }}
+
             </div>
 
         </div>
@@ -363,120 +383,138 @@
 
 @section('script')
 <script>
+    function collectFilters() {
+        let filters = {};
+
+        $('.custom-checkbox:checked').each(function () {
+            let name = $(this).attr('name');
+            let value = $(this).val();
+
+            if (!filters[name]) {
+                filters[name] = [];
+            }
+
+            filters[name].push(value);
+        });
+
+        return filters;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        fetchData();
-        
-        $('.custom-checkbox').on('change',function() {
-        
-    let filters = {};
-
-    $('.custom-checkbox:checked').each(function () {
-
-        let name = $(this).attr('name');
-        let value = $(this).val();
-
-        if (!filters[name]) {
-            filters[name] = [];
+        let urlParams = new URLSearchParams(window.location.search);
+        let urlMainCat = urlParams.get('main_category');
+        if (urlMainCat) {
+            $(`input[name="main_category_id"][value="${urlMainCat}"]`).prop('checked', true);
+        }
+        let urlCat = urlParams.get('category');
+        if (urlCat) {
+            $(`input[name="category_id"][value="${urlCat}"]`).prop('checked', true);
         }
 
-        filters[name].push(value);
-
-    });
-
-
-            axios.get('/products', {
-                params: {
-                    filters   
-                }
-            })
-            .then((res) => {
-                console.log(res);
-                
-            })
-
+        fetchData(collectFilters());
+        
+        $('.custom-checkbox').on('change', function() {
+            fetchData(collectFilters());
         });
     });
 
-    function fetchData() {
+    function clearAll() {
+        $('.custom-checkbox:checked').prop('checked', false);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        fetchData({});
+    }
 
-        axios.get('/products')
-        .then((res) => {
-            let products = (res.data && res.data.products) ? res.data.products : [];
-            let container = $('.products-record');
+    function fetchData(filters) {
 
-            if (!products || products.length === 0) {
-                container.html(`
-                    <div class="col-12 py-5 text-center">
-                        <i class="bi bi-box-seam text-slate-300" style="font-size: 2.5rem;"></i>
-                        <h6 class="mt-3 text-slate-700 font-semibold" style="font-size: 14px;">No products found</h6>
-                        <p class="text-slate-400" style="font-size: 12px;">Browse other categories or check back soon.</p>
-                    </div>
-                `);
-                $('#productCountHeader').text('(0 items)');
-                $('#productCountPagination').text('0');
-                return;
-            }
+        let filterData = filters || {};
+        let urlParams = new URLSearchParams(window.location.search);
 
-            $('#productCountHeader').text(`(${products.length} items)`);
-            $('#productCountPagination').text(products.length);
+        axios.get('/products',
+                    { params :
+                        {
+                            filters: filterData,
+                            category: urlParams.get('category'),
+                            main_category: urlParams.get('main_category')
+                        }
+                    }
+            )
+            .then((res) => {
+                let products = (res.data && res.data.products) ? res.data.products.data : [];
+                let container = $('.products-record');
 
-            let html = '';
-
-            products.forEach((p) => {
-              
-                let image = (p.image) ? '/storage/'+p.image : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=80';
-                let brand = p.brand ? p.brand : (p.category ? p.category.name : 'Vastrkaya');
-                let name = p.name || 'Ethnic Wear';
-
-                let price = parseFloat(p.price) || 0;
-                let discountPrice = parseFloat(p.discount_price) || 0;
-                let discountPercent = parseFloat(p.discount_percentage) || 0;
-
-                html += `
-                    <div class="col">
-                        <div class="myntra-card">
-                            
-                            <!-- Thumbnail Image (3:4 Fashion Aspect Ratio) -->
-                            <a href="/products/${p.id}" class="myntra-img-wrap">
-                                <img src="${image}" alt="${name}" loading="lazy">
-                                
-                                <!-- Rating Pill (Bottom Left over image) -->
-                                <div class="myntra-rating-pill">
-                                    <span>4.2</span>
-                                    <i class="bi bi-star-fill"></i>
-                                    <span class="rating-count">| 120</span>
-                                </div>
-                            </a>
-
-                            <!-- Product Info Body -->
-                            <div class="myntra-info">
-                                <!-- Brand -->
-                                <div class="myntra-brand text-truncate" title="${brand}">
-                                    ${brand}
-                                </div>
-
-                                <!-- Title / Subtitle -->
-                                <div class="myntra-title text-truncate" title="${name}">
-                                    <a href="/products/${p.id}" class="text-decoration-none" style="color: inherit;">
-                                        ${name}
-                                    </a>
-                                </div>
-
-                                <!-- Pricing Line -->
-                                <div class="myntra-price-row">
-                                    <span class="myntra-final-price">Rs. ${price}</span>
-                                    ${discountPercent ? `
-                                        <span class="myntra-mrp">Rs. ${discountPrice}</span>
-                                        <span class="myntra-discount">(${discountPercent}% OFF)</span>
-                                    ` : ''}
-                                </div>
-                            </div>
-
+                if (!products || products.length === 0) {
+                    container.html(`
+                        <div class="col-12 py-5 text-center">
+                            <i class="bi bi-box-seam text-slate-300" style="font-size: 2.5rem;"></i>
+                            <h6 class="mt-3 text-slate-700 font-semibold" style="font-size: 14px;">No products found</h6>
+                            <p class="text-slate-400" style="font-size: 12px;">Browse other categories or check back soon.</p>
                         </div>
-                    </div>
-                `;
+                    `);
+                    $('#productCountHeader').text('(0 items)');
+                    $('#productCountPagination').text('0');
+                    return;
+                }
 
-            });
+                $('#productCountHeader').text(`(${products.length} items)`);
+                $('#productCountPagination').text(products.length);
+
+                let html = '';
+
+                products.forEach((p) => {
+                
+                    let image = (p.image) ? '/storage/'+p.image : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=80';
+                    let brand = p.brand ? p.brand : (p.category ? p.category.name : 'Vastrkaya');
+                    let name = p.name || 'Ethnic Wear';
+
+                    let price = parseFloat(p.price) || 0;
+                    let discountPrice = parseFloat(p.discount_price) || 0;
+                    let discountPercent = parseFloat(p.discount_percentage) || 0;
+
+                    html += `
+                        <div class="col">
+                            <div class="myntra-card">
+                                
+                                <!-- Thumbnail Image (3:4 Fashion Aspect Ratio) -->
+                                <a href="/products/${p.id}" class="myntra-img-wrap">
+                                    <img src="${image}" alt="${name}" loading="lazy">
+                                    
+                                    <!-- Rating Pill (Bottom Left over image) -->
+                                    <div class="myntra-rating-pill">
+                                        <span>4.2</span>
+                                        <i class="bi bi-star-fill"></i>
+                                        <span class="rating-count">| 120</span>
+                                    </div>
+                                </a>
+
+                                <!-- Product Info Body -->
+                                <div class="myntra-info">
+                                    <!-- Brand -->
+                                    <div class="myntra-brand text-truncate" title="${brand}">
+                                        ${brand}
+                                    </div>
+
+                                    <!-- Title / Subtitle -->
+                                    <div class="myntra-title text-truncate" title="${name}">
+                                        <a href="/products/${p.id}" class="text-decoration-none" style="color: inherit;">
+                                            ${name}
+                                        </a>
+                                    </div>
+
+                                    <!-- Pricing Line -->
+                                    <div class="myntra-price-row">
+                                        <span class="myntra-final-price">Rs. ${price - discountPrice}</span>
+                                        ${discountPercent ? `
+                                            <span class="myntra-mrp">Rs. ${discountPrice}</span>
+                                            <span class="myntra-discount">(${discountPercent}% OFF)</span>
+                                        ` : ''}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    `;
+
+                });
 
             container.html(html);
         })
@@ -488,9 +526,7 @@
                 </div>
             `);
         });
-
-
-}
+    }
 </script>
 @endsection
 

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('price')->default(0);
             $table->decimal('discount_price')->nullable();
             $table->decimal('discount_percentage')->nullable();
+            $table->decimal('final_price')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

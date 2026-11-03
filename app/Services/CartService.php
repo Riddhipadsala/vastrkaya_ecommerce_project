@@ -6,6 +6,8 @@ use App\Models\Coupon;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\isEmpty;
+
 class CartService {
 
     public function getPriceCount() {
@@ -21,12 +23,12 @@ class CartService {
         $total_price = $cart ? $cart->cartItems->sum('new_price') : 0;
 
         $total_quantity = $cart ? $cart->cartItems->sum('quantity') : 0;
-
+        
         if($total_price >= ($setting[0]->minimum_order_amount ?? 0)){
             $delivery_charges = 0;
         }
         else {
-            $delivery_charges = $cart->cartItem == null ? 0 : $setting[0]->delivery_charge ?? 0;
+            $delivery_charges = $cart->cartItems->isEmpty() ? 0 : $setting[0]->delivery_charge ?? 0;
         }
         
         $couponDiscountPrice = 0;
@@ -59,6 +61,7 @@ class CartService {
             'success' => true,
             'total_price' => Round($total_price),
             'total_count' => $total_quantity,
+            'minimum_order_amount'=> $setting[0]->minimum_order_amount,
             // 'total_discount' => $total_discount,
             'delivery_charges'=> $delivery_charges,
             'payable_price'=> Round(max(0, $total_price + $delivery_charges - $couponDiscountPrice)),

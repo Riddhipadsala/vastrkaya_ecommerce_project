@@ -57,39 +57,41 @@ class CartController extends Controller
             ]);
        }
 
-       //for quantity count
-       $cartItem = CartItem::where('cart_id', $cart->id)
-       ->where('product_id', $product_id)
-       ->get()
-       ->first(function ($item) use ($options) {
-           
-           $existing = $item->options ?? [];
-           if (is_array($existing)) {
-               ksort($existing);
+        $cartItem = null;
+        $existingCartItems = CartItem::where('cart_id', $cart->id)
+            ->where('product_id', $product_id)
+            ->get();
+
+        $selectedOptions = (array) $options;
+        sort($selectedOptions);
+
+        foreach ($existingCartItems as $item) {
+            $itemOptions = (array) ($item->options ?? []);
+            sort($itemOptions);
+
+            if ($itemOptions === $selectedOptions) {
+                $cartItem = $item;
+                break;
             }
-          
-                $selectedOptions = $options;
-                if (is_array($selectedOptions)) {
-                    ksort($selectedOptions);
-                }
-                return $existing == $selectedOptions;
-            });
+        }
 
         if ($cartItem) {
             
             $cartItem->increment('quantity', $quantity);
             $cartItem->new_price = $cartItem->price * $cartItem->quantity;
             $cartItem->save();
-
+        
         } else {
+
             $cartItem = CartItem::create([
                 'cart_id'    => $cart->id,
                 'product_id' => $product_id,
                 'quantity'   => $quantity,
                 'price'      => $price,
-                'new_price'  => $price,
+                'new_price'  => $price * $quantity,
                 'options'    => $options
             ]);   
+            
         }
         
         $total_count = CartItem::where('cart_id', $cart->id)->sum('quantity');

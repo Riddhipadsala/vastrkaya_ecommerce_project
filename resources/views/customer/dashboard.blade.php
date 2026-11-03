@@ -96,7 +96,8 @@
                         </div>
                         <div>
                             <h6 class="vk-value-title">Big First Order Discount</h6>
-                            <p class="vk-value-subtitle">Use Coupon Code: <strong>{{ $coupons[0]->code}}</strong></p>
+                            <p class="vk-value-subtitle">Use Coupon Code: <strong>{{ $coupons->code ?? 'Not
+                                    Available'}} </strong></p>
                         </div>
                     </div>
                 </div>
@@ -117,10 +118,9 @@
 
             <!-- Category Grid (5 Boxes in 1 Row on Desktop) -->
             <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 g-lg-4">
-
                 @foreach ($categories as $category)
                     <div class="col">
-                        <div class="vk-category-card h-100">
+                        <div class="vk-category-card h-100 category_div" id="category_id_{{$category->id}}">
                             <a href="{{ url('/products?category=' . $category->id) }}" class="vk-cat-img-box">
                                 <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
                                     class="vk-cat-img" loading="lazy">

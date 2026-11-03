@@ -32,6 +32,21 @@
 
 
         <main class="flex-grow-1">
+            @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 shadow-sm rounded-3" role="alert">
+                        <i class="bi bi-check-circle-fill fs-5"></i>
+                        <div>{{ session('success') }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 shadow-sm rounded-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                        <div>{{ session('error') }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
             @yield('hero-section')
         </main>
 
@@ -61,7 +76,120 @@
         .catch(err => {
             console.error(err);
         });
+
+        
+        $(document).on('click','.search-category',function(e) {
+
+            e.preventDefault();
+            
+            let id = $(this).data('id');
+            
+            $('.category_div').removeClass('highlight');
+
+            let c_div = $('#category_id_'+id);
+
+            if(c_div.length > 0) {
+                
+                c_div[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+                c_div.addClass('highlight');
+
+                setTimeout(function () {
+                    c_div.removeClass('highlight');
+                },3000);
+            }
+        })
+
+        
+        $(document).on('input','.main-search',function(e) {
+
+            let row = '';
+
+            console.log( $(this).val());
+            
+            
+            $('#searchDropdown').removeClass('d-none');
+            
+            axios.post('/main-search',{search: e.target.value})
+            .then((res)=> {
+                let data = res.data;
+                if(data.success){
+                    if (data.products.length > 0) {
+                        row += `<div class="search-heading">Products</div><ul class="vk-search-list">`;
+
+                        data.products.forEach((product) => {
+                            row += `
+                                <li>
+                                    <a href="/products/${product.id}" class="vk-search-link">
+                                        ${product.name}
+                                    </a>
+                                </li>
+                            `;
+                        });
+
+                        row += `</ul>`;
+                    }
+
+                    if (data.categories.length > 0) {
+                        row += `<div class="search-heading">Categories</div><ul class="vk-search-list">`;
+
+                        data.categories.forEach((category) => {
+                            row += `
+                                <li>
+                                    <a href="javascript:void(0)"
+                                    data-id="${category.id}"
+                                    class="search-category vk-search-link">
+                                        ${category.name}
+                                    </a>
+                                </li>
+                            `;
+                        });
+
+                        row += `</ul>`;
+                    }
+
+                    if (data.coupons.length > 0) {
+                        row += `<div class="search-heading">Coupons</div><ul class="vk-search-list">`;
+
+                        data.coupons.forEach((coupon) => {
+                            row += `
+                                <li>
+                                    <a href="/cart" class="vk-search-link">
+                                        ${coupon.coupon_name}
+                                    </a>
+                                </li>
+                            `;
+                        });
+
+                        row += `</ul>`;
+                    }
+                    
+                }
+                $('#searchDropdownContent').html(row);
+                
+            })
+            .catch((err)=> {
+                
+            })
+            
+        });
+
+        
+        $('.main-search').on('blur',function(e) {
+
+            setTimeout(function() {
+                $('#searchDropdown').addClass('d-none');
+            }, 2000);   
+            
+            $(this).val('');
+            
+        })
     });
+
+    
 </script>
 
 @yield('script')

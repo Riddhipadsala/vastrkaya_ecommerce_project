@@ -47,7 +47,7 @@
             </div>
             
             @if (!$cartItem->isEmpty())
-                <div class="row g-3 g-lg-4">
+                <div class="row g-3 g-lg-4 cart-view">
 
                     <!-- LEFT COLUMN: Cart Items List -->
                     <div class="col-lg-7 col-xl-7">
@@ -177,8 +177,7 @@
                                 <div class="mt-3 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
                                     <span
                                         class="text-xs font-semibold text-emerald-800 d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-stars text-amber-500"></i> You are saving <strong><span
-                                                id="sumTotalSavings"></span></strong> on this order!
+                                        <i class="bi bi-stars text-success-500 delivery-details"></i> 
                                     </span>
                                 </div>
                                 <!-- Primary Checkout Button -->
@@ -199,23 +198,23 @@
                         </div>
                     </div>
                 </div>
-            @else
-                <div id="emptyCartView" class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3"
-                    >
-                    <div
-                        class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 d-inline-flex align-items-center justify-content-center mb-3">
-                        <i class="bi bi-bag-x text-2xl"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-1">Your Shopping Bag is Empty</h3>
-                    <p class="text-xs text-slate-500 max-w-sm mx-auto mb-3">
-                        Explore our handcrafted luxury sarees and ethnic wear to add items to your bag.
-                    </p>
-                    <a href="{{ url('/') }}"
-                        class="btn btn-dark text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 shadow-sm">
-                        Continue Shopping &rarr;
-                    </a>
-                </div>
             @endif
+
+            <div id="emptyCartView" class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3 " style="display: none"
+                >
+                <div
+                    class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="bi bi-bag-x text-2xl"></i>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 mb-1">Your Shopping Bag is Empty</h3>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto mb-3">
+                    Explore our handcrafted luxury sarees and ethnic wear to add items to your bag.
+                </p>
+                <a href="{{ url('/products') }}"
+                    class="btn btn-dark text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 shadow-sm">
+                    Continue Shopping &rarr;
+                </a>
+            </div>
             
         </div>
     </div>
@@ -225,7 +224,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             fetchData();
-            mainPriceBox();
         });
 
         function fetchData() {
@@ -238,6 +236,8 @@
                     let records = '';
                     
                     if(data.length == 0) {
+                        $('.cart-view').hide();
+                        document.getElementById('emptyCartView').style.display = 'block';
                         return;
                     }
                     console.log(data.length);
@@ -446,9 +446,9 @@
                     }
 
                     if(delivery_charges == 0) {
-                        $('#sumTotalSavings').text('Delivery Charges');
-                    } else {
-                        $('#sumTotalSavings').text('0');
+                        $('.delivery-details').text(`You are saving Delivery Charges on this order! `);
+                    } else if(delivery_charges > 0) {
+                        $('.delivery-details').text(`You can saving Delivery Charges on the order of Rs ${data.minimum_order_amount} `);
                     }
 
                     if (document.getElementById('navCartBadge')) {
@@ -533,15 +533,15 @@
                             // Check if cart is now empty
                             const remaining = document.querySelectorAll('.cart-item-card');
                             if (remaining.length === 0) {
+                                $('.cart-view').hide();
                                 document.getElementById('emptyCartView').style.display = 'block';
                                 document.getElementById('cartItemsList').style.display = 'none';
                                 document.getElementById('cartCountHeader').textContent = '0';
                                 document.getElementById('summaryCount').textContent = '0';
                             }
-
-                            mainPriceBox();
-
+                            
                         }, 200);
+
                         window.showToast('Item Removed Successfully', 'success');
                     } else {
                         window.showToast('Item Not Found!', 'error');
