@@ -28,9 +28,8 @@ class OrderController extends Controller
             $payment = Payment::findOrFail($request->payment_id);
             
             $orderItems = OrderItem::with('product')->where('order_id', $request->order_id)->get();
-
             foreach ($orderItems as $oi) {
-                $oi->resolvedOptions = ProductOptionValue::with('optionValue','option')->where('product_id', $oi->product_id)->whereIn('option_value_id', $oi->options)->get();
+                $oi->resolvedOptions = ProductOptionValue::with('optionValue','option')->where('product_id', $oi->product_id)->whereIn('id', $oi->pro_opt_val)->get();
             }
             $productIds = $orderItems->pluck('product_id')->toArray();
 

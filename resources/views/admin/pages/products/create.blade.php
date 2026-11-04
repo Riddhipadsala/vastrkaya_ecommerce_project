@@ -399,31 +399,31 @@
                                                                 </div>
                                                             </div>
 
-                                                            <!-- Price Section: Appears when checkbox is selected -->
-                                                            <div class="variant-price-wrap mt-2 pt-2 border-top border-light d-none" 
-                                                                 id="price_wrap_${item.id}_${val.id}">
-                                                                <div class="d-flex align-items-center justify-content-between mb-1">
-                                                                    <label class="font-11 text-muted fw-semibold mb-0" for="price_${item.id}_${val.id}">
-                                                                        <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
-                                                                    </label>
-                                                                    <small class="font-10 text-muted">Optional</small>
-                                                                </div>
-                                                                <div class="input-group input-group-sm">
-                                                                    <span class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
-                                                                    <input type="number" 
-                                                                           step="0.01" 
-                                                                           min="0" 
-                                                                           name="options[${item.id}][prices][${val.id}]" 
-                                                                           id="price_${item.id}_${val.id}"
-                                                                           class="form-control form-control-sm border-start-0 font-12" 
-                                                                           placeholder="0.00" 
-                                                                           value=""
-                                                                           disabled
-                                                                           oninput="onVariantPriceChange(this, '${item.id}', '${val.id}')">
-                                                                </div>
+                                                        <!-- Price Section: Appears when checkbox is selected -->
+                                                        <div class="variant-price-wrap mt-2 pt-2 border-top border-light d-none" 
+                                                                id="price_wrap_${item.id}_${val.id}">
+                                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                <label class="font-11 text-muted fw-semibold mb-0" for="price_${item.id}_${val.id}">
+                                                                    <i class="bi bi-tag text-primary me-1"></i>Price (&#8377;):
+                                                                </label>
+                                                                <small class="font-10 text-muted">Optional</small>
+                                                            </div>
+                                                            <div class="input-group input-group-sm">
+                                                                <span class="input-group-text bg-light text-muted border-end-0 font-11">&#8377;</span>
+                                                                <input type="number" 
+                                                                        step="0.01" 
+                                                                        min="0" 
+                                                                        name="options[${item.id}][prices][${val.id}]" 
+                                                                        id="price_${item.id}_${val.id}"
+                                                                        class="form-control form-control-sm border-start-0 font-12" 
+                                                                        placeholder="0.00" 
+                                                                        value=""
+                                                                        disabled
+                                                                        oninput="onVariantPriceChange(this, '${item.id}', '${val.id}')">
                                                             </div>
                                                         </div>
-                                                        `;
+                                                    </div>
+                                                    `;
                                         }).join('')}
                                 </div>
                             </div>

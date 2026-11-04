@@ -9,7 +9,7 @@ class CartItem extends Model
     protected $fillable = [
         'cart_id',
         'product_id',
-        'options',
+        'pro_opt_val',
         'quantity',
         'price',
         'new_price'
@@ -26,6 +26,6 @@ class CartItem extends Model
     }
 
     protected $casts = [
-        'options'=> 'array',
+        'pro_opt_val'=> 'array',
     ];
 }

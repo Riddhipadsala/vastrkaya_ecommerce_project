@@ -57,7 +57,7 @@ class PaymentController extends Controller
                 'quantity'=> $cartItem->quantity,
                 'unit_price'=> $cartItem->price,
                 'total_price'=> $cartItem->new_price,
-                'options'=> $cartItem->options
+                'pro_opt_val'=> $cartItem->pro_opt_val
             ]);
         }
 

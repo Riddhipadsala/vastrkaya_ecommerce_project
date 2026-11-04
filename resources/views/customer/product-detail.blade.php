@@ -240,7 +240,7 @@
                                                     <input type="radio"
                                                         class="btn-check peer opt-radio-{{ $optModel->id }} input-radio"
                                                         name="opt_choice[{{ $optModel->id }}]"
-                                                        id="optVal_{{ $pov->id }}" value="{{ $optVal->id }}"
+                                                        id="optVal_{{ $pov->id }}" value="{{ $pov->id }}"
                                                         data-option-name="{{ $optModel->name }}"
                                                         data-pov-id="{{ $pov->id }}"
                                                         data-option-id="{{ $optModel->id }}"
@@ -540,7 +540,6 @@
             </button>
         </div>
     </div>
-@dump($product);
     
     <!-- Scoped Option Swatch Selection Styles -->
     <style>
@@ -686,23 +685,19 @@
 
         // Handle Add to Cart Button UI interaction
         function handleAddToCart(product, action) {
-            const selectedOptionValueIds = [];
+            const prooptvalId = [];
 
             document.querySelectorAll('input[name^="opt_choice"]:checked').forEach(input => {
                 const valId = parseInt(input.value);
                 if (!isNaN(valId)) {
-                    selectedOptionValueIds.push(valId);
+                    prooptvalId.push(valId);
                 }
             });
-
-            // Extract numeric price safely (removes any currency symbols, commas, or spaces)
-            const rawPrice = $('.price').text() || '';
-            const cleanPrice = parseFloat(rawPrice.replace(/[^0-9.]/g, '')) || 0;
+            console.log(prooptvalId);
 
             axios.post('{{ route('cart.add') }}', {
                     product: product,
-                    options: selectedOptionValueIds,
-                    price: cleanPrice,
+                    proOptValIds: prooptvalId,
                     quantity: 1
                 })
                 .then(response => {

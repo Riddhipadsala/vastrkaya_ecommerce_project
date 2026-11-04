@@ -5,148 +5,156 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
-use App\Models\Setting;
+use App\Models\ProductOptionValue;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function index(){
-       
+    public function index()
+    {
+
         $cart = null;
 
-        if(auth()->check()) {
-            $cart = Cart::with('cartItems.product.category','cartItems.product.productOptions.option.optionValues')->where('user_id', auth()->id())->first();
-        }
-        else {
-            $cart = Cart::with('cartItems.product.category','cartItems.product.productOptions.option.optionValues')->where('user_id', null)->where('session', session()->getId())->first();
+        if (auth()->check()) {
+            $cart = Cart::with('cartItems.product.category', 'cartItems.product.productOptions.option.optionValues')->where('user_id', auth()->id())->first();
+        } else {
+            $cart = Cart::with('cartItems.product.category', 'cartItems.product.productOptions.option.optionValues')->where('user_id', null)->where('session', session()->getId())->first();
         }
 
         $cartItem = $cart ? $cart->cartItems : collect();
-       
+
         $total_quantity = $cart ? $cart->cartItems->sum('quantity') : 0;
 
-        if(request()->wantsJson()) {
+        if (request()->wantsJson()) {
             return response()->json([
-                'success'=> true,
-                'cartItem'=> $cartItem,
-                'total_quantity' => $total_quantity
+                'success' => true,
+                'cartItem' => $cartItem,
+                'total_quantity' => $total_quantity,
             ]);
         }
 
         return view('customer.cart', compact('cartItem'));
     }
 
-    public function add(Request $request){
-      
-       $product_id = $request->product['id'];
-       $quantity = (int) $request->quantity ?? 1;
-       $price = (float) $request->price ?? 0;
-       $options = $request->options ?? [];
+    public function add(Request $request)
+    {
 
-       $cart = null;
-       if(auth()->check()){
-           $cart = Cart::firstOrCreate([
-                'user_id' => Auth::id()
-           ]);
-       }
-       else {
+        $product_id = $request->product['id'];
+        $quantity = (int) $request->quantity ?? 1;
+        $proOptValIds = $request->proOptValIds ?? [];
+
+        $cart = null;
+        if (auth()->check()) {
             $cart = Cart::firstOrCreate([
-                'session' => session()->getId()
+                'user_id' => Auth::id(),
             ]);
-       }
+        } else {
+            $cart = Cart::firstOrCreate([
+                'session' => session()->getId(),
+            ]);
+        }
 
         $cartItem = null;
+        $itemproOptValIds = null;
         $existingCartItems = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $product_id)
             ->get();
 
-        $selectedOptions = (array) $options;
-        sort($selectedOptions);
+        $selectedproOptValIds = (array) $proOptValIds;
+        sort($selectedproOptValIds);
 
         foreach ($existingCartItems as $item) {
-            $itemOptions = (array) ($item->options ?? []);
-            sort($itemOptions);
+            $itemproOptValIds = (array) ($item->pro_opt_val ?? []);
+            sort($itemproOptValIds);
 
-            if ($itemOptions === $selectedOptions) {
+            if ($selectedproOptValIds === $itemproOptValIds) {
                 $cartItem = $item;
                 break;
             }
         }
 
+        $optionPriceCalculate = $selectedproOptValIds ? ProductOptionValue::whereIn('id', $selectedproOptValIds)->sum('price') : 0;
+        $productPriceCalculate = Product::where('id', $product_id)->get('final_price');
+
+        $finalPrice = (float) $optionPriceCalculate + (float) $productPriceCalculate[0]->final_price;
+        
         if ($cartItem) {
-            
+
             $cartItem->increment('quantity', $quantity);
             $cartItem->new_price = $cartItem->price * $cartItem->quantity;
             $cartItem->save();
-        
+
         } else {
 
             $cartItem = CartItem::create([
-                'cart_id'    => $cart->id,
+                'cart_id' => $cart->id,
                 'product_id' => $product_id,
-                'quantity'   => $quantity,
-                'price'      => $price,
-                'new_price'  => $price * $quantity,
-                'options'    => $options
-            ]);   
-            
+                'quantity' => $quantity,
+                'price' => $finalPrice,
+                'new_price' => $finalPrice * $quantity,
+                'pro_opt_val' => $proOptValIds,
+            ]);
+
         }
-        
+
         $total_count = CartItem::where('cart_id', $cart->id)->sum('quantity');
-        
+
         return response()->json([
-            'success' => true, 
+            'success' => true,
             'total_count' => $total_count,
-            'cart'=> $cart,
-            'cart_item'=> $cartItem
+            'cart' => $cart,
+            'cart_item' => $cartItem,
         ]);
     }
 
-    public function delete(int $id) {
-        
+    public function delete(int $id)
+    {
+
         $cartItem = CartItem::find($id);
         $cart = $cartItem->delete();
-        
-        if($cart) {
+
+        if ($cart) {
             return response()->json([
-                'success' => true
+                'success' => true,
             ]);
         } else {
-            return response()->json([
-                'success' => false
-            ]);
-        }
-    }
-
-    public function deleteAll() {
-     
-        $cartItem = CartItem::truncate();
-
-        if($cartItem) {
-            return response()->json([
-                'success' => true
-            ]);
-        } else {
-            return response()->json([
-                'success' => false
-            ]);
-        }
-    }
-
-    public function update(Request $request,int $id) {
-        $cartItem = CartItem::find($id);
-        
-        if (!$cartItem) {
             return response()->json([
                 'success' => false,
-                'message' => 'Cart item not found'
+            ]);
+        }
+    }
+
+    public function deleteAll()
+    {
+
+        $cartItem = CartItem::truncate();
+
+        if ($cartItem) {
+            return response()->json([
+                'success' => true,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+            ]);
+        }
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $cartItem = CartItem::find($id);
+
+        if (! $cartItem) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cart item not found',
             ], 404);
         }
 
         $newQuantity = (int) $request->quantity;
-      
+
         if ($newQuantity < 1) {
             $newQuantity = 1;
         }
@@ -160,7 +168,7 @@ class CartController extends Controller
                 'cartItem' => $cartItem->id,
                 'stock' => $stock,
                 'quantity' => $cartItem->quantity,
-                'message' => 'Product is out of stock'
+                'message' => 'Product is out of stock',
             ]);
         }
 
@@ -175,37 +183,39 @@ class CartController extends Controller
             'quantity' => $newQuantity,
             'stock' => $stock,
             'remaining_stock' => $remainingStock,
-            'is_out_of_stock' => ($remainingStock <= 0 || $stock <= 0)
+            'is_out_of_stock' => ($remainingStock <= 0 || $stock <= 0),
         ]);
     }
 
-    public function getPriceCount(CartService $cartService) {
-        
+    public function getPriceCount(CartService $cartService)
+    {
+
         $priceCount = $cartService->getPriceCount()->getData(true);
 
         return response()->json([
             'success' => true,
-            'data'=> $priceCount,
+            'data' => $priceCount,
         ]);
     }
 
-    public function checkoutStock(Request $request) {
+    public function checkoutStock(Request $request)
+    {
         $cartItem = CartItem::find($request->id);
-        
+
         $product = Product::find($cartItem->product_id);
-        
+
         $productStock = $product->stock - $cartItem->quantity;
-        
-        if($productStock < 0) {
+
+        if ($productStock < 0) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product is out of stock'
+                'message' => 'Product is out of stock',
             ]);
         }
-        
+
         return response()->json([
             'success' => true,
-            'productStock' => $productStock
+            'productStock' => $productStock,
         ]);
     }
 }

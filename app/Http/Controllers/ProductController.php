@@ -413,17 +413,18 @@ class ProductController extends Controller
 
         $products = $query->paginate(20);
         
-        $categories = Category::with('main_category')->where('status',1)->get();
-
-        $brands = Product::get('brand');
-   
+        
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success'=> true,
                 'products'=> $products
             ]); 
         }
+        
+        $categories = Category::with('main_category')->where('status',1)->get();
 
+        $brands = Product::get('brand');
+        
         return view('customer.products', compact('products','categories','brands'));
     }
 }

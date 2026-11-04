@@ -248,14 +248,15 @@
                         
                         <!-- Top Section: Image & Main Info -->
                         <div class="d-flex gap-3">
-
-                            <!-- Elegant Portrait Ratio Thumbnail (80px x 104px) -->
-                            <div class="rounded-lg bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative flex items-center justify-center p-1" style="width: 80px; height: 104px;">
-                                <img src="/storage/${item.product.image}" 
-                                        alt="${item.product.name}" 
-                                        class="w-full h-full object-cover rounded"
-                                        onerror="this.src='/storage/${item.product.image}'">
-                            </div>
+                            <a href='{{ url('/products/${item.product.id}') }}'>
+                                <!-- Elegant Portrait Ratio Thumbnail (80px x 104px) -->
+                                <div class="rounded-lg bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative flex items-center justify-center p-1" style="width: 80px; height: 104px;">
+                                    <img src="/storage/${item.product.image}" 
+                                            alt="${item.product.name}" 
+                                            class="w-full h-full object-cover rounded"
+                                            onerror="this.src='/storage/${item.product.image}'">
+                                </div>
+                            </a>
 
                             <!-- Info Column -->
                             <div class="flex-grow min-w-0 flex flex-col justify-between">
@@ -303,13 +304,13 @@
                                             return '';
                                         })()}
                                         ${(item.product.stock > 0 || item.product.decrease_stock > 0) ?
-                                           `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
+                                        `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
                                                             <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
                                                         </span>`
-                                       :  `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
+                                    :  `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
                                                             <i class="bi bi-x-circle-fill text-[10px]"></i> Out of Stock
                                                         </span>`
-                                       }
+                                    }
                                         
                                     </div>
                                 </div>
@@ -317,7 +318,7 @@
                                 <!-- Price Line -->
                                 <div class="d-flex align-items-baseline gap-2">
                                     <span class="text-base font-bold text-slate-900">&#8377;<span id="price_${item.id}">${item.new_price}</span></span>
-                                   ${item.product.discount_price > 0
+                                ${item.product.discount_price > 0
                                         ? `<span class="text-xs text-slate-500">Discount per product</span>
                                                         <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
                                                         <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
@@ -558,7 +559,7 @@
                 .then((res) => {
                     if (res.data.success) {
                         setTimeout(() => {
-                            document.querySelectorAll('.cart-item-card').forEach(c => c.remove());
+                            $('.cart-view').hide();
                             document.getElementById('emptyCartView').style.display = 'block';
                             document.getElementById('cartItemsList').style.display = 'none';
                             document.getElementById('cartCountHeader').textContent = '0';

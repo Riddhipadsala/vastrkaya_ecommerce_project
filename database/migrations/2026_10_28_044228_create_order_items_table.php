@@ -29,7 +29,7 @@ return new class extends Migration
 
             $table->decimal('total_price', 10, 2);
 
-            $table->json('options')->nullable();
+            $table->json('pro_opt_val')->nullable();
 
             $table->timestamps();
         });

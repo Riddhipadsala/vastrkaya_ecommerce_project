@@ -12,7 +12,7 @@ class OrderItem extends Model
         'quantity',
         'unit_price',
         'total_price',
-        'options'
+        'pro_opt_val'
     ];
 
     public function order() {
@@ -24,6 +24,6 @@ class OrderItem extends Model
     }
 
     protected $casts = [
-        'options'=> 'array',
+        'pro_opt_val'=> 'array',
     ];
 }

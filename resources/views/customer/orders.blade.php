@@ -87,76 +87,92 @@
                     </div>
                 </div>
 
-                <div class="col-lg-9 col-xl-9">
-
-                    <div class="space-y-3.5">
-                        @foreach ($orders as $order)
-                            <div
-                                class="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden hover:border-slate-300 transition-all duration-200">
-
-                                <!-- Header Status -->
-                                <div class="p-3 sm:p-3.5 pb-2.5 d-flex align-items-center gap-2.5">
-
-                                    <div>
-                                        <h4
-                                            class="text-xs sm:text-sm font-extrabold {{ $order->order_status == 'cancelled' ? 'text-rose-600' : 'text-green-600' }} mb-0 leading-tight">
-                                            {{ $order->order_status }}
-                                        </h4>
-                                        <span class="text-xs text-slate-500 font-medium">
-                                            {{ $order->updated_at->format('d M, Y, h:i A') }}
-                                        </span>
-                                        <p class="text-xs sm:text-sm font-semibold text-slate-900 mt-1 mb-0">
-                                            Total Amount : {{ Round($order->total_amount) }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                @foreach ($order->orderItems as $oi)
-                                    <a href="{{ route('order.details') }}"
-                                        class="d-flex align-items-center justify-content-between p-3 sm:p-3.5 border-t border-slate-100 text-decoration-none text-slate-800 hover:bg-slate-50/50 transition">
-                                        <div class="d-flex align-items-center gap-3 min-w-0">
-                                            <img src="{{ asset('storage/' . $oi->product->image) }}"
-                                                alt="Sparx Running Shoes"
-                                                class="w-14 h-18 sm:w-16 sm:h-20 object-cover rounded-xl bg-slate-50 border border-slate-200/80 flex-shrink-0">
-                                            <div class="min-w-0">
-                                                <span class="text-xs font-extrabold text-slate-900 d-block mb-0.5">
-                                                    {{ $oi->product->brand }}
-                                                </span>
-                                                <h5 class="text-xs text-slate-600 truncate mb-1 font-normal">
-                                                    {{ $oi->product->name }}
-                                                </h5>
-                                            </div>
-                                        </div>
-                                        <div class="ps-2 flex-shrink-0">
-                                            <i class="bi bi-chevron-right text-slate-400 text-sm">Per Product Price :
-                                                {{ $oi->unit_price }}</i>
-                                        </div>
-                                    </a>
-                                @endforeach
-
-                                @if ($order->order_status != 'cancelled')
-                                    <div class="px-3 sm:px-3.5 pb-3.5 pt-1">
-                                        <div class="row g-2">
-                                            <div class="col-12">
-                                                <a href="{{ route('order.cancel', $order->id) }}"
-                                                    class="btn btn-outline-secondary w-100 py-1.5 rounded-lg text-xs font-semibold text-slate-700 border-slate-300 hover:bg-slate-50 d-flex align-items-center justify-content-center gap-1 shadow-none">
-                                                    <i class="bi bi-x-circle text-slate-500"></i>
-                                                    <span>Cancel Order</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                            </div>
-                        @endforeach
-
+                @if ($orders->isEmpty())
+                    <div id="emptyCartView" class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3 col-lg-9 col-xl-9">
+                        <div
+                            class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 d-inline-flex align-items-center justify-content-center mb-3">
+                            <i class="bi bi-bag-x text-2xl"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-900 mb-1">Your Shopping Bag is Empty</h3>
+                        <p class="text-xs text-slate-500 max-w-sm mx-auto mb-3">
+                            Explore our handcrafted luxury sarees and ethnic wear to add items to your bag.
+                        </p>
+                        <a href="{{ url('/products') }}"
+                            class="btn btn-dark text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 shadow-sm">
+                            Continue Shopping &rarr;
+                        </a>
                     </div>
+                @else 
+                    <div class="col-lg-9 col-xl-9">
 
-                </div>
+                        <div class="space-y-3.5">
+                            @foreach ($orders as $order)
+                                <div
+                                    class="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden hover:border-slate-300 transition-all duration-200">
+
+                                    <!-- Header Status -->
+                                    <div class="p-3 sm:p-3.5 pb-2.5 d-flex align-items-center gap-2.5">
+
+                                        <div>
+                                            <h4
+                                                class="text-xs sm:text-sm font-extrabold {{ $order->order_status == 'cancelled' ? 'text-rose-600' : 'text-green-600' }} mb-0 leading-tight">
+                                                {{ $order->order_status }}
+                                            </h4>
+                                            <span class="text-xs text-slate-500 font-medium">
+                                                {{ $order->updated_at->format('d M, Y, h:i A') }}
+                                            </span>
+                                            <p class="text-xs sm:text-sm font-semibold text-slate-900 mt-1 mb-0">
+                                                Total Amount : {{ Round($order->total_amount) }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    @foreach ($order->orderItems as $oi)
+                                        <a href="{{ route('order.details') }}"
+                                            class="d-flex align-items-center justify-content-between p-3 sm:p-3.5 border-t border-slate-100 text-decoration-none text-slate-800 hover:bg-slate-50/50 transition">
+                                            <div class="d-flex align-items-center gap-3 min-w-0">
+                                                <img src="{{ asset('storage/' . $oi->product->image) }}"
+                                                    alt="Sparx Running Shoes"
+                                                    class="w-14 h-18 sm:w-16 sm:h-20 object-cover rounded-xl bg-slate-50 border border-slate-200/80 flex-shrink-0">
+                                                <div class="min-w-0">
+                                                    <span class="text-xs font-extrabold text-slate-900 d-block mb-0.5">
+                                                        {{ $oi->product->brand }}
+                                                    </span>
+                                                    <h5 class="text-xs text-slate-600 truncate mb-1 font-normal">
+                                                        {{ $oi->product->name }}
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="ps-2 flex-shrink-0">
+                                                <i class="bi bi-chevron-right text-slate-400 text-sm">Per Product Price :
+                                                    {{ $oi->unit_price }}</i>
+                                            </div>
+                                        </a>
+                                    @endforeach
+
+                                    @if ($order->order_status != 'cancelled')
+                                        <div class="px-3 sm:px-3.5 pb-3.5 pt-1">
+                                            <div class="row g-2">
+                                                <div class="col-12">
+                                                    <a href="{{ route('order.cancel', $order->id) }}"
+                                                        class="btn btn-outline-secondary w-100 py-1.5 rounded-lg text-xs font-semibold text-slate-700 border-slate-300 hover:bg-slate-50 d-flex align-items-center justify-content-center gap-1 shadow-none">
+                                                        <i class="bi bi-x-circle text-slate-500"></i>
+                                                        <span>Cancel Order</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                    </div>
+                @endif
 
             </div>
-
+            
         </div>
     </div>
 @endsection
