@@ -6,6 +6,18 @@
 @endphp
 
 @section('hero-section')
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+        <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please fix the following
+            errors:</div>
+        <ul class="mb-0 ps-3">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 <section class="vk-auth-section">
     <div class="container">
         <div class="row justify-content-center">
@@ -185,14 +197,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Terms & Marketing Checkbox -->
-                                    <div class="mt-2 mb-3">
-                                        <label class="vk-form-check">
-                                            <input type="checkbox" name="terms" id="terms" required checked>
-                                            <span>I agree to Vastrkaya's <a href="#" class="text-decoration-underline text-dark">Terms of Use</a> and <a href="#" class="text-decoration-underline text-dark">Privacy Policy</a>.</span>
-                                        </label>
-                                    </div>
-
                                     <!-- Submit Button -->
                                     <button type="submit" class="vk-btn-auth-submit">
                                         <span>Create Vastrkaya Account</span>
@@ -247,6 +251,14 @@
     document.getElementById('reg_phone').addEventListener('input', function (e) {
         e.target.value = e.target.value.replace(/\D/g, '');
         e.target.value = e.target.value.slice(0, 10);
+    })
+    
+    document.getElementById('reg_password').addEventListener('input', function (e) {
+        e.target.value = e.target.value.slice(0, 8);
+    })
+        
+    document.getElementById('password_confirmation').addEventListener('input', function (e) {
+        e.target.value = e.target.value.slice(0, 8);
     })
 </script>
 @endsection

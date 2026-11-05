@@ -14,6 +14,7 @@ class LoginController extends Controller
     public function register(Request $request){
 
         $data = $request->validate([
+            'phone' => 'required|string|max:10|unique:users',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:5|confirmed',
@@ -72,7 +73,7 @@ class LoginController extends Controller
                 return redirect()->route('admin.dashboard')->with('success', 'You are logged in successfully');
             }
             
-            return redirect()->route('dashboard')->with('success', 'You are logged in successfully');
+            return redirect()->route('dashboard');
         }
 
         return redirect()->route('login')->with('error', 'Invalid credentials');

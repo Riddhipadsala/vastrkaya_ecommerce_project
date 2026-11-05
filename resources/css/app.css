@@ -1475,19 +1475,6 @@ main {
     cursor: pointer;
 }
 
-.vk-forgot-link {
-    font-size: 0.84rem;
-    font-weight: 600;
-    color: #e11d48;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.vk-forgot-link:hover {
-    color: #be123c;
-    text-decoration: underline;
-}
-
 /* Submit Button */
 .vk-btn-auth-submit {
     width: 100%;

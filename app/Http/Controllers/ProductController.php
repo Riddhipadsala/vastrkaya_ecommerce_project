@@ -272,9 +272,7 @@ class ProductController extends Controller
                 ->update(['status' => 0]);
         }
 
-        return redirect()
-            ->route('admin.products.index')
-            ->with('success', 'Product updated successfully');
+        return redirect()->back()->with('success', 'Product updated successfully');
     }
 
     /**
@@ -427,4 +425,33 @@ class ProductController extends Controller
         
         return view('customer.products', compact('products','categories','brands'));
     }
+
+    
+    public function deleteProductOption(Request $request) {
+
+        $productOption = ProductOption::where('product_id', $request->product_id)->where('option_id', $request->option_id)->first();
+
+        if ($productOption) {
+
+            $deleteItem = $productOption->delete();
+
+            if($deleteItem) {
+                return response()->json([
+                    'success'=> true,
+                    'message'=> 'product & option Deleted successfully'
+                ]);
+            }
+
+            return response()->json([
+                'success'=> false,
+                'message'=> 'product & option not Deleted'
+            ]);
+        }
+    
+        return response()->json([
+            'success'=> false,
+            'message'=> 'product Not Founded !'
+        ]);
+    }
+
 }

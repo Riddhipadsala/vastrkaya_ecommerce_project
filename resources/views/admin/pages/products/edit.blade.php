@@ -349,6 +349,12 @@
                                             onclick="selectAllValues('{{ $item->id }}')">
                                             <i class="bi bi-check-all"></i> Select All
                                         </button>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger p-1 rounded-2" 
+                                                title="Remove Option" 
+                                                onclick="removeOptionCard('{{ $product->id }}', '{{ $item->id }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded"
                                             onclick="deselectAllValues('{{ $item->id }}')">
@@ -378,9 +384,10 @@
                                             @php
                                                 $pov = $assignedOptionValueMap->get($val->id);
                                                 $isChecked = $pov && $pov->status == 1;
+                                                $notChecked = $pov && $pov->status == 0;
                                                 $valPrice = $pov && $pov->price > 0 ? $pov->price : '';
                                             @endphp
-                                            <div class="variant-item-box rounded-3 border transition-all p-2.5 {{ $isChecked ? 'border-primary shadow-xs bg-white' : 'border-light bg-surface-subtle' }}"
+                                            <div class="variant-item-box rounded-3 border transition-all p-2.5 {{ $isChecked ? 'border-primary shadow-xs bg-white' : ($notChecked ? 'border-grey shadow-xs bg-white' : 'border-light bg-surface-subtle') }}"
                                                 id="variant_box_{{ $item->id }}_{{ $val->id }}"
                                                 style="min-width: 210px; flex: 1 1 210px; max-width: 270px;">
 
@@ -412,7 +419,7 @@
                                                 </div>
 
                                                 <!-- Price Section: Appears when checkbox is selected -->
-                                                <div class="variant-price-wrap mt-2 pt-2 border-top border-light {{ $isChecked ? '' : 'd-none' }}"
+                                                <div class="variant-price-wrap mt-2 pt-2 border-top border-light {{ $isChecked || $notChecked ? '' : 'd-none' }}"
                                                     id="price_wrap_{{ $item->id }}_{{ $val->id }}">
                                                     <div class="d-flex align-items-center justify-content-between mb-1">
                                                         <label class="font-11 text-muted fw-semibold mb-0"
@@ -477,6 +484,8 @@
 
             optionPicker.addEventListener('change', function() {
                 const selectedOption = this.value;
+                console.log(selectedOption);
+                
                 if (!selectedOption) return;
 
                 // Check if card is already added
@@ -531,17 +540,16 @@
                                             <i class="bi bi-check-all"></i> Select All
                                         </button>
                                         <button type="button" 
+                                                class="btn btn-sm btn-outline-danger p-1 rounded-2" 
+                                                title="Remove Option" 
+                                                onclick="tempRemoveOptionCard('${item.id}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <button type="button" 
                                                 class="btn btn-sm btn-outline-secondary py-1 px-2 font-12 rounded" 
                                                 onclick="deselectAllValues('${item.id}')">
                                             <i class="bi bi-x"></i> Clear
                                         </button>
-                                        <select name="options[${item.id}][status]" 
-                                                class="form-select form-select-sm py-1 px-2 font-12 rounded fw-medium" 
-                                                style="width: auto; min-width: 95px;"
-                                                onchange="handleOptionStatusChange(this, '${item.id}','{{ $product->id }}')">
-                                            <option value="1" selected>Active</option>
-                                            <option value="0">Inactive</option>
-                                        </select>
                                     </div>
                                 </div>
 
@@ -705,6 +713,40 @@
                 }
             });
             updateSelectedCountBadge(optionId);
+        }
+
+        function removeOptionCard(productId, optionId) {
+            axios.delete('/admin/product/option/delete', {
+                params: {
+                    product_id: productId,
+                    option_id: optionId
+                }
+            }).then(function(response) {
+                if(response.data.success) {
+                    $('#option_card_' + optionId).fadeOut(function() {
+                        $('.opt-val-cb-' + optionId).prop('checked', false);
+                        if ($('.option-card:visible').length === 0) {
+                            $('#noOptionsNotice').show();
+                        }
+                        $('#option_card_'+ optionId).remove();
+                    });
+                
+                }
+                window.showToast(response.data.message, 'success');
+            }).catch(function(error) {
+                console.error(error);
+            });
+        }
+
+        function tempRemoveOptionCard(optionId) {
+            $('#option_card_' + optionId).fadeOut(function() {
+                $('.opt-val-cb-' + optionId).prop('checked', false);
+                if ($('.option-card:visible').length === 0) {
+                    $('#noOptionsNotice').show();
+                }
+                $('#option_card_'+ optionId).remove();
+            });
+
         }
 
         // Deselect all values for an option

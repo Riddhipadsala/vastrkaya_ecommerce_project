@@ -107,7 +107,6 @@
                                     <div class="vk-form-group">
                                         <label for="password" class="vk-form-label">
                                             <span>Password</span>
-                                            <a href="#" class="vk-forgot-link">Forgot password?</a>
                                         </label>
                                         <div class="vk-input-group">
                                             <i class="bi bi-lock vk-input-icon"></i>

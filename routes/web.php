@@ -55,7 +55,11 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::resource('main-categories', MainCategoryController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+
+    //option
     Route::resource('options', OptionController::class);
+    Route::delete('product/option/delete', [ProductController::class,'deleteProductOption'])->name('product.option.delete');
+    
     Route::resource('stock', StockController::class);
     Route::resource('profile', AdminProfileController::class);
 
