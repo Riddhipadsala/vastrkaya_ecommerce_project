@@ -297,41 +297,10 @@
                             <span class="text-xs">Loading products...</span>
                         </div>
                     </div>
-
-                    <!-- Pagination Navigation (Myntra Standard Look) -->
-                    <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 pt-5 mt-4 border-t border-slate-200">
-                        <span class="text-xs text-slate-500" style="font-size: 12px;">
-                            Showing <strong class="text-slate-900" id="productCountPagination"></strong> products
-                        </span>
-
-                        <nav aria-label="Products Pagination">
-                            <ul class="pagination pagination-sm mb-12 gap-1">
-                                <li class="page-item disabled">
-                                    <a class="page-link rounded-lg text-xs font-semibold px-3 py-1.5 border-slate-200" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                </li>
-                                <li class="page-item active" aria-current="page">
-                                    <a class="page-link rounded-lg text-xs font-bold px-3 py-1.5 bg-slate-900 border-slate-900 text-white" href="#">1</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link rounded-lg text-xs font-semibold px-3 py-1.5 border-slate-200 text-slate-700" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link rounded-lg text-xs font-semibold px-3 py-1.5 border-slate-200 text-slate-700" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link rounded-lg text-xs font-semibold px-3 py-1.5 border-slate-200 text-slate-700" href="#">4</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link rounded-lg text-xs font-semibold px-3 py-1.5 border-slate-200 text-slate-700" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-
                 </div>
 
-                {{ $products->links() }}
-
+                <div id="pagination" class="d-flex justify-content-end align-items-center gap-2 pt-4">
+                </div>
             </div>
 
         </div>
@@ -358,9 +327,18 @@
             <div class="mb-3.5">
                 <span class="text-xs font-bold text-slate-800 uppercase tracking-wider d-block mb-2">Category</span>
                 <div class="space-y-1.5 text-xs text-slate-600">
-                    <label class="d-flex align-items-center gap-2"><input type="checkbox" checked style="accent-color:#ff3f6c;"> Sarees</label>
-                    <label class="d-flex align-items-center gap-2"><input type="checkbox" style="accent-color:#ff3f6c;"> Kurta for Men</label>
-                    <label class="d-flex align-items-center gap-2"><input type="checkbox" style="accent-color:#ff3f6c;"> Girls Casual Wear</label>
+                    @foreach ( $categories as $category)
+                        <label class="d-flex align-items-center gap-2"><input type="checkbox" checked style="accent-color:#ff3f6c;"> {{ $category->name }}</label>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="mb-3.5">
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider d-block mb-2">Brand</span>
+                <div class="space-y-1.5 text-xs text-slate-600">
+                    @foreach ( $brands as $brand)
+                        <label class="d-flex align-items-center gap-2"><input type="checkbox" checked style="accent-color:#ff3f6c;"> {{ $brand->name }}</label>
+                    @endforeach
                 </div>
             </div>
 
@@ -424,7 +402,7 @@
         fetchData({});
     }
 
-    function fetchData(filters) {
+    function fetchData(filters,page=1) {
 
         let filterData = filters || {};
         let urlParams = new URLSearchParams(window.location.search);
@@ -434,7 +412,8 @@
                         {
                             filters: filterData,
                             category: urlParams.get('category'),
-                            main_category: urlParams.get('main_category')
+                            main_category: urlParams.get('main_category'),
+                            page: page
                         }
                     }
             )
@@ -517,6 +496,7 @@
                 });
 
             container.html(html);
+            renderPagination(res.data.products);
         })
         .catch((err) => {
             console.error('Error fetching products:', err);
@@ -527,6 +507,29 @@
             `);
         });
     }
+
+    
+    function renderPagination(data) {
+        
+        let html='';
+        
+        data.links.forEach(function(link) {
+            let page = null;
+
+            if(link.url) {
+                page = new URL(link.url).searchParams.get('page');
+            }
+
+            html += `
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData('',${page})" ${!link.url ? 'disabled' : ''}>
+                        ${link.label}
+                    </button>
+                `;
+        })
+        
+        document.getElementById('pagination').innerHTML = html;
+    }    
+
 </script>
 @endsection
 

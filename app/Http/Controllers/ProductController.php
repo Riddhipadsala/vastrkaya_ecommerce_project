@@ -29,7 +29,7 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->name . '%');
         }
 
-        $products = $query->with('category')->get();
+        $products = $query->with('category')->paginate(10);
 
         if(request()->ajax()){
             return response()->json([
@@ -128,31 +128,6 @@ class ProductController extends Controller
 
         return view('customer.product-detail', compact('product'));
     }
-
-    public function productDetail(int $id)
-    {
-        $query = Product::with([
-            'category',
-            'productOptions' => function ($q) {
-                $q->where('status', 1);
-            },
-            'productOptions.option',
-            'productOptionValues' => function ($q) {
-                $q->where('status', 1);
-            },
-            'productOptionValues.optionValue'
-        ]);
-
-        $product = $query->findOrFail($id);
-
-        $relatedProducts = Product::where('id', '!=', $product->id)
-            ->where('status', 1)
-            ->take(5)
-            ->get();
-
-        return view('customer.product-detail', compact('product', 'relatedProducts'));
-    }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -294,6 +269,30 @@ class ProductController extends Controller
         }
     }
     
+    public function productDetail(int $id)
+    {
+        $query = Product::with([
+            'category',
+            'productOptions' => function ($q) {
+                $q->where('status', 1);
+            },
+            'productOptions.option',
+            'productOptionValues' => function ($q) {
+                $q->where('status', 1);
+            },
+            'productOptionValues.optionValue'
+        ]);
+
+        $product = $query->findOrFail($id);
+
+        $relatedProducts = Product::where('id', '!=', $product->id)
+            ->where('status', 1)
+            ->take(5)
+            ->get();
+
+        return view('customer.product-detail', compact('product', 'relatedProducts'));
+    }
+    
     public function optionStatusChange(Request $request) {
         
         $productOption = ProductOption::where('option_id', $request->optionId)->where('product_id', $request->productId)->first();
@@ -409,7 +408,7 @@ class ProductController extends Controller
             $query->where('category_id', $request->category);
         }
 
-        $products = $query->paginate(20);
+        $products = $query->paginate(10);
         
         
         if ($request->ajax() || $request->wantsJson()) {

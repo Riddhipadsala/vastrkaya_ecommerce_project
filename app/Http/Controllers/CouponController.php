@@ -34,7 +34,7 @@ class CouponController extends Controller
         $query->where('status', $request->filter_status);
         }
 
-        $coupons = $query->orderBy('id', 'desc')->get();
+        $coupons = $query->orderBy('id', 'desc')->paginate(10);
 
         if($request->ajax()) {
             return response()->json([

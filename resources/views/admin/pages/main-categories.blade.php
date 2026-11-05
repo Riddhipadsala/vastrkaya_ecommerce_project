@@ -57,6 +57,8 @@
             </table>
         </div>
     </div>
+    <div id="pagination" class="d-flex justify-content-end align-items-center gap-2 pt-4">
+    </div>
 </div>
 
 <!-- ========================================================================
@@ -167,18 +169,19 @@
         fetchData();
     });
 
-    function fetchData() {
+    function fetchData(page = 1) {
         let filter_id = $('#filter_id').val();
         let filter_name = $('#filter_name').val();
 
         axios.get('{{ route("admin.main-categories.index") }}', {
             params: {
                 id: filter_id,
-                name: filter_name
+                name: filter_name,
+                page: page
             }
         })
         .then((res) => {
-            let categories = res.data.mainCategories || [];
+            let categories = res.data.mainCategories.data || [];
             let html = '';
 
             if (categories.length === 0) {
@@ -223,13 +226,32 @@
                     `;
                 });
             }
-
             $('#mainCategoryTableBody').html(html);
+            renderPagination(res.data.mainCategories);
         })
         .catch((error) => {
             console.error('Error fetching main categories:', error);
             window.showToast?.('Failed to load main categories', 'error');
         });
+    }
+
+    function renderPagination(data) {
+        let html='';
+        
+        data.links.forEach(function(link) {
+            let page = null;
+
+            if(link.url) {
+                page = new URL(link.url).searchParams.get('page');
+            }
+
+            html += `
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData(${page})" ${!link.url ? 'disabled' : ''}>
+                        ${link.label}
+                    </button>
+                `;
+        })
+        document.getElementById('pagination').innerHTML = html;
     }
 
     function clearFilter() {

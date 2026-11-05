@@ -26,7 +26,7 @@ class MainCategoryController extends Controller
             $query->where('status', $request->status);
         }
 
-        $mainCategories = $query->orderBy('id', 'desc')->get();
+        $mainCategories = $query->orderBy('id', 'desc')->paginate(10);
 
         if ($request->ajax()) {
             return response()->json([

@@ -55,6 +55,9 @@
             </table>
         </div>
     </div>
+    
+    <div id="pagination" class="d-flex justify-content-end align-items-center gap-2 pt-4">
+    </div>
 </div>
 @endsection
 
@@ -79,7 +82,7 @@
         
     });
 
-    function fetchData() {
+    function fetchData(page = 1) {
         var optionId = $('#filter_option_id').val();
         var optionName = $('#filter_option_name').val();
 
@@ -88,14 +91,15 @@
             type: 'GET',
             data: {
                 option_id: optionId,
-                option_name: optionName
+                option_name: optionName,
+                page: page
             },
             dataType: 'json',
             success: function(res) {
                 var data = '';
 
-                if (res.options && res.options.length > 0) {
-                    $.each(res.options, function(index, o) {
+                if (res.options.data && res.options.data.length > 0) {
+                    $.each(res.options.data, function(index, o) {
                         data += `
                             <tr>
                                 <td class="ps-3 text-secondary">${o.id}</td>
@@ -123,6 +127,7 @@
                 }
 
                 $('.optionstbl').html(data);
+                renderPagination(res.options);
             },
             error: function(err) {
                 console.error(err);
@@ -136,7 +141,26 @@
             }
         });
     }
+    
+    function renderPagination(data) {
+        
+        let html='';
+        
+        data.links.forEach(function(link) {
+            let page = null;
 
+            if(link.url) {
+                page = new URL(link.url).searchParams.get('page');
+            }
+
+            html += `
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData(${page})" ${!link.url ? 'disabled' : ''}>
+                        ${link.label}
+                    </button>
+                `;
+        })
+        document.getElementById('pagination').innerHTML = html;
+    }    
 
 </script>
 @endsection

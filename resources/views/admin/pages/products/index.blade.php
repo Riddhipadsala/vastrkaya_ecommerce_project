@@ -58,6 +58,10 @@
             </table>
         </div>
     </div>
+
+    <div id="pagination" class="d-flex justify-content-end align-items-center gap-2 pt-4">
+    </div>
+
 </div>
 @endsection
 
@@ -67,7 +71,7 @@
         fetchData();
     });
 
-    function fetchData() {
+    function fetchData(page = 1) {
 
         let filter_id = $('#filter_product_id').val();
         let filter_name = $('#filter_product_name').val();
@@ -77,11 +81,14 @@
         axios.get('/admin/products', {
             params: {
                 'id':filter_id,
-                'name':filter_name
+                'name':filter_name,
+                'page': page
             }
         })
         .then((res)=> {
-            res.data.products.forEach((product,index)=> {
+            console.log(res);
+            
+            res.data.products.data.forEach((product,index)=> {
                 data += `    
                     <tr>
                         <td class="ps-3 text-secondary fw-semibold font-13">${index+1}</td>
@@ -116,11 +123,31 @@
                 ;
             })
             $('.productstbl').html(data);
+            renderPagination(res.data.products);
         })
         .catch((err)=> {
 
         })
     } 
+
+    function renderPagination(data) {
+        let html='';
+        
+        data.links.forEach(function(link) {
+            let page = null;
+
+            if(link.url) {
+                page = new URL(link.url).searchParams.get('page');
+            }
+
+            html += `
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData(${page})" ${!link.url ? 'disabled' : ''}>
+                        ${link.label}
+                    </button>
+                `;
+        })
+        document.getElementById('pagination').innerHTML = html;
+    }
 
     function clearFilter(){
         $('#filter_product_id').val('');

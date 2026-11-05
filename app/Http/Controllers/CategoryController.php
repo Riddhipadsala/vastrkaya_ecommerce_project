@@ -34,7 +34,7 @@ class CategoryController extends Controller
                 });
             }
             
-            $categories = $query->get();
+            $categories = $query->paginate(10);
             
             return response()->json([
                 'success' => true,

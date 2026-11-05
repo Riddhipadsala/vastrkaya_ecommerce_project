@@ -40,7 +40,7 @@ class OptionController extends Controller
             });
         }
 
-        $options = $query->orderby('id', 'desc')->get();
+        $options = $query->orderby('id', 'desc')->paginate(10);
 
         if ($request->ajax()) {
             return response()->json([

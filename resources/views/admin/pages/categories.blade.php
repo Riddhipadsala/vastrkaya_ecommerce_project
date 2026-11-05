@@ -58,6 +58,8 @@
         </div>
     </div>
 </div>
+<div id="pagination" class="d-flex justify-content-end align-items-center gap-2 pt-4">
+</div>
 
 <!-- ========================================================================
      ADD CATEGORY MODAL
@@ -219,18 +221,19 @@
         fetchData();
     });
 
-    function fetchData() {
+    function fetchData(page = 1) {
         let filter_id = $('#filter_category_id').val();
         let filter_name = $('#filter_category_name').val();
 
         axios.get('/admin/categories', {
             params: {
                 id: filter_id,
-                name: filter_name
+                name: filter_name,
+                page: page
             }
         })
         .then((res) => {
-            let categories = res.data.categories;
+            let categories = res.data.categories.data;
             let data = '';
 
             if (categories.length === 0) {
@@ -283,10 +286,31 @@
             }
 
             $('.categorytbl').html(data);
+            renderPagination(res.data.categories);
+
         })
         .catch((error) => {
             console.error(error);
         });
+    }
+
+    function renderPagination(data) {
+        let html='';
+        
+        data.links.forEach(function(link) {
+            let page = null;
+
+            if(link.url) {
+                page = new URL(link.url).searchParams.get('page');
+            }
+
+            html += `
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData(${page})" ${!link.url ? 'disabled' : ''}>
+                        ${link.label}
+                    </button>
+                `;
+        })
+        document.getElementById('pagination').innerHTML = html;
     }
 
     function clearFilter() {

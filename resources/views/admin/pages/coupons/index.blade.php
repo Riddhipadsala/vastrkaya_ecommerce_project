@@ -75,6 +75,9 @@
             </table>
         </div>
     </div>
+    
+    <div id="pagination" class="d-flex justify-content-end align-items-center gap-2 pt-4">
+    </div>
 
 </div>
 
@@ -200,7 +203,6 @@
     </div>
 </div>
 
-
 <!-- ============================================================
      EDIT COUPON MODAL
      ============================================================ -->
@@ -310,7 +312,7 @@
         fetchData();
     });
 
-    function fetchData() {
+    function fetchData(page = 1) {
         const params = {
             id:     $('#filter_id').val(),
             name:   $('#filter_name').val(),
@@ -321,7 +323,7 @@
 
         axios.get('/admin/coupons', { params })
             .then(function (res) {
-                const coupons = res.data.coupons || [];
+                const coupons = res.data.coupons.data || [];
 
                 const total = coupons.length;
                  
@@ -393,12 +395,35 @@
                 }
 
                 $('#couponTbl').html(rows);
+                renderPagination(res.data.coupons);
             })
             .catch(function (err) {
                 console.error(err);
                 window.showToast?.('Failed to load coupons', 'error');
             });
     }
+
+    
+    function renderPagination(data) {
+        
+        let html='';
+        
+        data.links.forEach(function(link) {
+            let page = null;
+
+            if(link.url) {
+                page = new URL(link.url).searchParams.get('page');
+            }
+
+            html += `
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData(${page})" ${!link.url ? 'disabled' : ''}>
+                        ${link.label}
+                    </button>
+                `;
+        })
+        
+        document.getElementById('pagination').innerHTML = html;
+    }    
 
     function clearFilter() {
         $('#filter_name, #filter_code').val('');
