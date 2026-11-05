@@ -4,6 +4,15 @@
 
 @section('content')
 <!-- Admin Hero Card -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <div class="vk-profile-hero">
     <div class="row align-items-center g-4">
         <div class="col-md-auto text-center text-md-start">
@@ -17,7 +26,7 @@
         </div>
         <div class="col">
             <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                <h3 class="h4 fw-bold mb-0 text-white dynamic-admin-name">{{ Auth::user()->name ?? 'Administrator' }}</h3>
+                <h3 class="h4 fw-bold mb-0 text-white dynamic-admin-name">{{ $admin->name ?? 'Administrator' }}</h3>
                 <span class="badge bg-danger rounded-pill px-3 py-1 font-12 fw-bold">Super Admin</span>
                 <span class="badge bg-success bg-opacity-25 text-white rounded-pill px-3 py-1 font-12"><i class="bi bi-shield-check"></i> Verified</span>
             </div>
@@ -26,8 +35,6 @@
             </p>
             <div class="d-flex flex-wrap gap-3 font-13 text-light text-opacity-75">
                 <div><i class="bi bi-envelope me-1"></i> {{ Auth::user()->email ?? 'admin@gmail.com' }}</div>
-                <div><i class="bi bi-geo-alt me-1"></i> Surat, Gujarat, India</div>
-                <div><i class="bi bi-clock-history me-1"></i> Joined: {{ date('M Y') }}</div>
             </div>
         </div>
     </div>
@@ -36,7 +43,7 @@
 <!-- Profile Edit Tabs -->
 <div class="row g-4">
     <!-- Left: Form Settings -->
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="vk-card p-4">
             <ul class="nav vk-nav-tabs" id="profileTab" role="tablist">
                 <li class="nav-item">
@@ -47,11 +54,6 @@
                 <li class="nav-item">
                     <button class="vk-tab-btn" id="security-tab" data-bs-toggle="tab" data-bs-target="#security-tab-pane" type="button" role="tab">
                         <i class="bi bi-shield-lock-fill"></i> Password & Security
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="vk-tab-btn" id="permissions-tab" data-bs-toggle="tab" data-bs-target="#permissions-tab-pane" type="button" role="tab">
-                        <i class="bi bi-key-fill"></i> Role Permissions
                     </button>
                 </li>
             </ul>
@@ -73,11 +75,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="vk-form-label">Phone Number</label>
-                                <input type="tel" name="phone" class="vk-form-control" value="+91 98765 43210" placeholder="+91 XXXXX XXXXX">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="vk-form-label">Designation / Role Title</label>
-                                <input type="text" class="vk-form-control" value="Chief E-Commerce Administrator" readonly>
+                                <input type="tel" name="phone" class="vk-form-control" value="{{ Auth::user()->phone }}" placeholder="+91 XXXXX XXXXX">
                             </div>
                             <div class="col-12">
                                 <label class="vk-form-label">Admin Bio & Store Notes</label>
@@ -99,10 +97,6 @@
                         @method('PUT')
                         <input type="hidden" name="action" value="update_password">
                         <div class="row g-3">
-                            <div class="col-12">
-                                <label class="vk-form-label">Current Password</label>
-                                <input type="password" name="current_password" class="vk-form-control" placeholder="Enter current password" required>
-                            </div>
                             <div class="col-md-6">
                                 <label class="vk-form-label">New Password</label>
                                 <input type="password" name="password" class="vk-form-control" placeholder="Min. 8 characters" required>
@@ -123,66 +117,9 @@
                     </form>
                 </div>
 
-                <!-- Tab 3: Permissions List -->
-                <div class="tab-pane fade" id="permissions-tab-pane" role="tabpanel">
-                    <div class="p-3 rounded-3 bg-surface-subtle mb-3">
-                        <div class="fw-bold text-heading mb-1">Active Role: <span class="text-danger">Admin</span></div>
-                        <small class="text-muted">Synchronized directly with Spatie Laravel Permission Guard</small>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> view-dashboard</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> view-categories</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> create-categories</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> edit-categories</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> delete-categories</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> view-products</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> create-products</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> edit-products</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> delete-products</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> manage-inventory</span>
-                        <span class="badge bg-success bg-opacity-10 text-success p-2"><i class="bi bi-check-circle me-1"></i> manage-settings</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Right: Admin Activity & System Status Card -->
-    <div class="col-lg-4">
-        <div class="vk-card p-4">
-            <h5 class="fw-bold mb-3 text-heading">Security & Sessions</h5>
-            
-            <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3 bg-surface-subtle">
-                <div class="vk-stat-icon-wrap bg-success bg-opacity-10 text-success">
-                    <i class="bi bi-laptop fs-4"></i>
-                </div>
-                <div>
-                    <div class="fw-bold text-heading font-14">Current Session</div>
-                    <small class="text-muted">Chrome on Windows &bull; IP: 127.0.0.1</small>
-                </div>
-            </div>
-
-            <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-3 bg-surface-subtle">
-                <div class="vk-stat-icon-wrap bg-info bg-opacity-10 text-info">
-                    <i class="bi bi-shield-lock fs-4"></i>
-                </div>
-                <div>
-                    <div class="fw-bold text-heading font-14">Two-Factor Authentication</div>
-                    <small class="text-muted">Recommended for high-privilege admins</small>
-                </div>
-            </div>
-
-            <hr class="border-light">
-
-            <h6 class="fw-bold mb-2 text-heading">Display Preferences</h6>
-            <div class="d-flex align-items-center justify-content-between p-2">
-                <span class="font-14 text-heading">Dark Theme Mode</span>
-                <button type="button" class="vk-btn vk-btn-sm vk-btn-secondary" onclick="toggleTheme()">
-                    <i class="bi bi-circle-half"></i> Toggle Theme
-                </button>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection

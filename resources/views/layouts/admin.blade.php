@@ -59,12 +59,6 @@
                 </div>
 
                 <div class="vk-topbar-right">
-                    <!-- Global Search input -->
-                    <div class="vk-search-box d-none d-md-block">
-                        <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Search products, categories...">
-                    </div>
-
                     <!-- Light / Dark Theme Switcher -->
                     <button type="button" class="vk-theme-toggle" id="themeToggleBtn" title="Toggle Light / Dark Mode">
                         <i class="bi bi-moon-stars-fill text-secondary"></i>

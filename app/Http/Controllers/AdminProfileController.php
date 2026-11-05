@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminProfile;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminProfileController extends Controller
 {
@@ -12,7 +15,11 @@ class AdminProfileController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.profile');
+        $checkUser = Auth::user()->roles()->first();
+
+        if($checkUser->name == 'admin') {
+            return view('admin.pages.profile');
+        }
     }
 
     /**
@@ -34,7 +41,7 @@ class AdminProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AdminProfile $adminProfile)
+    public function show(Request $adminProfile)
     {
         //
     }
@@ -42,24 +49,42 @@ class AdminProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AdminProfile $adminProfile)
-    {
+    public function edit(Request $request)
+    {dd('gfdgd');
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AdminProfile $adminProfile)
+    public function update(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'email' => 'unique:users,email,'.Auth::user()->id,
+            'phone' => 'max:10|unique:users,phone,'.Auth::user()->id,
+            'password' => 'confirmed|min:6',
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+
+        if ($request->filled('password')) {
+            $validate['password'] = Hash::make($request->password);
+        }
+
+        $user->update($validate);
+
+        return redirect()->back()->with(
+            'success',
+            'Admin profile updated successfully'
+        );
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AdminProfile $adminProfile)
+    public function destroy(Request $request)
     {
-        //
+        
     }
 }
