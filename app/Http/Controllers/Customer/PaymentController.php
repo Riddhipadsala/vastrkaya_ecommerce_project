@@ -1,17 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Customer;
 
+use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
-use App\Models\OptionValue;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
-use App\Models\Product;
-use App\Models\ProductOption;
-use App\Models\ProductOptionValue;
-use App\Models\Setting;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +24,7 @@ class PaymentController extends Controller
         $selectedAddress = CartContactInformation::where('cart_id',$cart->id)->latest()->first();
 
         $priceCount = $cartService->getPriceCount()->getData(true);
-        
+
         return view('customer.cart-payment', compact('selectedAddress','priceCount'));
     
     }

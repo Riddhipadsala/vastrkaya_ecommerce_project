@@ -143,7 +143,6 @@
                                         </label>
                                         <input type="tel" id="contact_number" name="contact_number"
                                             value="{{ old('contact_number', $editAddress->contact_number ?? '') }}"
-                                            maxlength="10" pattern="[0-9]{10}"
                                             class="form-control text-xs sm:text-sm border-slate-300 rounded-md py-2.5 px-3 shadow-none @error('contact_number') is-invalid @enderror"
                                             placeholder="Enter 10-digit mobile number" required>
                                         @error('contact_number')
@@ -166,7 +165,6 @@
                                         </label>
                                         <input type="text" id="pincode" name="pincode"
                                             value="{{ old('pincode', $editAddress->pincode ?? '') }}" maxlength="6"
-                                            pattern="[0-9]{6}"
                                             class="form-control text-xs sm:text-sm border-slate-300 rounded-md py-2.5 px-3 shadow-none @error('pincode') is-invalid @enderror"
                                             placeholder="Enter 6-digit PIN code" required>
                                         @error('pincode')
@@ -399,7 +397,7 @@
 
                             <!-- Dashed Button: + Add New Address (Reference Style) -->
                             <a href="{{ route('contact.index', ['add' => 1]) }}"
-                                class="bg-white border text-center p-3.5 rounded-md transition mb-4 shadow-2xs hover:shadow-xs text-decoration-none d-block"
+                                class="bg-white border text-center p-3.5 rounded-md transition mb-4 shadow-2xs hover:shadow-xs text-decoration-none d-block add-address"
                                 style="border: 1px dashed #d4d5d9; border-radius: 6px;">
                                 <span
                                     class="text-sm font-bold d-inline-flex align-items-center justify-content-center gap-1"
@@ -407,14 +405,15 @@
                                     + Add New Address
                                 </span>
                             </a>
-
+                            
+                            <p class="text-danger err-msg d-none"><i class="bi bi-exclamation-triangle text-danger p-1"></i> Please select an address</p>
                             <!-- Continue to Payment Button -->
                             <div class="pt-2">
-                                <a href="{{ route('checkout.payment') }}"
-                                    class="btn w-100 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-sm transition border-0 d-flex align-items-center justify-content-center"
+                                <button type="button"
+                                    class="btn w-100 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-sm transition border-0 d-flex align-items-center justify-content-center deliver-btn"
                                     style="background-color: #ff3f6c; letter-spacing: 0.5px; text-decoration: none;">
                                     Deliver To This Address &nbsp;<i class="bi bi-arrow-right"></i>
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -518,4 +517,39 @@
             border-color: #ff3f6c !important;
         }
     </style>
+@endsection
+
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+        $(document).on('click','.deliver-btn',function(e) {
+            e.preventDefault();
+            
+            axios.get('/checkout/check-contact')
+            .then((res)=> {
+                console.log(res);
+                if(res.data.success == false) {
+                    $('.err-msg').removeClass('d-none');
+             }
+             else {
+                window.location.href = res.data.redirect;
+             }
+            })
+            .catch((err)=> {
+                console.log(err);
+            })
+       }); 
+
+       $('#contact_number').on('input',function(e) {
+            e.target.value = e.target.value.replace(/\D/g,'').slice(0,10);
+       })
+       
+       $('#pincode').on('input',function(e) {
+            e.target.value = e.target.value.replace(/\D/g,'').slice(0,6);
+       })
+
+    });
+</script>
+
 @endsection

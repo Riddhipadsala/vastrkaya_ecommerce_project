@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Customer;
 
+use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
 use App\Models\Setting;
@@ -125,5 +126,27 @@ class CartContactInformationController extends Controller
         $contactInfo->delete();
 
         return redirect()->route('contact.index')->with('success', 'Address removed successfully!');
+    }
+
+    /**
+     * Check contact information
+     */
+    public function checkContact() {
+
+        $cart = Cart::where('user_id', Auth::id())->first();
+
+        $contactInformation = CartContactInformation::where('cart_id', $cart->id)->first();
+
+        if (!$contactInformation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please fill contact information first!'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'redirect' => route('checkout.payment')
+        ]);
     }
 }

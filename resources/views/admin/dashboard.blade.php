@@ -87,11 +87,6 @@
                         <h3 class="h4 fw-bold text-heading mt-1 mb-0 stock-count"></h3>
                     </div>
                 </div>
-                <div class="mt-auto text-end font-12 pt-2 border-top border-light">
-                    <a href="{{ route('admin.stock.index') }}" class="text-decoration-none text-muted">
-                        Stock Hub &rarr;
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -176,14 +171,6 @@
                         <div class="d-flex align-items-center gap-2">
                             <i class="bi bi-sliders2 text-info"></i>
                             <span class="fw-semibold text-heading">Option Module</span>
-                        </div>
-                        <i class="bi bi-chevron-right text-muted font-11"></i>
-                    </a>
-
-                    <a href="{{ route('admin.stock.index') }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-stack text-warning"></i>
-                            <span class="fw-semibold text-heading">Stock Inventory Manager</span>
                         </div>
                         <i class="bi bi-chevron-right text-muted font-11"></i>
                     </a>
@@ -280,8 +267,6 @@
             }).catch(error => {
                 console.log(error);
             });
-
-
         }
     </script>
 @endsection

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Option;
@@ -18,7 +19,7 @@ class AdminDashboardController extends Controller
         $options = Option::all();
         $optionCount = Option::count();
         $stock = Product::sum('stock');
-        $UrgentStock = Product::where('stock','<=',5)->get();
+        $UrgentStock = Product::where('stock','<=',10)->get();
 
         if(request()->ajax()) {
             return response()->json([

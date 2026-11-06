@@ -37,12 +37,6 @@
                                         </li>
                                         <li class="vk-auth-perk-item">
                                             <span class="vk-auth-perk-icon">
-                                                <i class="bi bi-gift-fill"></i>
-                                            </span>
-                                            <span>Flat ₹500 Off with Code: <strong>VASTRA500</strong></span>
-                                        </li>
-                                        <li class="vk-auth-perk-item">
-                                            <span class="vk-auth-perk-icon">
                                                 <i class="bi bi-truck"></i>
                                             </span>
                                             <span>Express 48h Dispatch & Easy 7-Day Returns</span>

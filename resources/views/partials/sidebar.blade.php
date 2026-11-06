@@ -76,18 +76,18 @@
         <li class="vk-menu-section-title">Account & Settings</li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.profile.index') }}"
-                class="vk-nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
-                <i class="bi bi-person-badge-fill vk-nav-icon"></i>
-                <span>Admin Profile</span>
+            <a href="{{ route('admin.settings.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                <i class="bi bi-gear-fill vk-nav-icon"></i>
+                <span>Customer Store Settings</span>
             </a>
         </li>
 
         <li class="vk-nav-item">
-            <a href="{{ route('admin.settings.index') }}"
-                class="vk-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                <i class="bi bi-gear-fill vk-nav-icon"></i>
-                <span>Store Settings</span>
+            <a href="{{ route('admin.profile.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                <i class="bi bi-person-badge-fill vk-nav-icon"></i>
+                <span>Admin Profile</span>
             </a>
         </li>
 

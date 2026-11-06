@@ -63,7 +63,7 @@
                         </div>
                         <div>
                             <h6 class="vk-value-title">Free Express Shipping</h6>
-                            <p class="vk-value-subtitle">On all orders above ₹999</p>
+                            <p class="vk-value-subtitle">On all orders above ₹{{$setting->minimum_order_amount}}</p>
                         </div>
                     </div>
                 </div>

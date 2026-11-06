@@ -1,21 +1,19 @@
 <?php
 
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminProfileController;
-use App\Http\Controllers\CartContactInformationController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CouponController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\MainCategoryController;
+use App\Http\Controllers\Admin\OptionController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Customer\CartContactInformationController;
+use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\DashboardController;
+use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\PaymentController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MainCategoryController;
-use App\Http\Controllers\OptionController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\StockController;
-use App\Http\Controllers\WishListController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [LoginController::class, 'register'])->name('register');
@@ -52,22 +50,19 @@ Route::post('option-value/price/change',[ProductController::class,'optionValuePr
 //admin
 Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->group(function() {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('profile', AdminProfileController::class);
     Route::resource('main-categories', MainCategoryController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('coupons', CouponController::class);
 
     //option
     Route::resource('options', OptionController::class);
     Route::delete('product/option/delete', [ProductController::class,'deleteProductOption'])->name('product.option.delete');
-    
-    Route::resource('stock', StockController::class);
-    Route::resource('profile', AdminProfileController::class);
 
     //setting
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
-
-    Route::resource('coupons', CouponController::class);
     
     //product
     Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
@@ -79,9 +74,10 @@ Route::middleware('auth')->group(function() {
 
     //customer address
     Route::resource('checkout/contact', CartContactInformationController::class);
+    Route::get('/checkout/check-contact', [CartContactInformationController::class, 'checkContact']);
 
     //payment
-    Route::get('/chcekout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
+    Route::get('/checkout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
     Route::post('/checkout/payment', [PaymentController::class,'store'])->name('checkout.payment.store');
     Route::get('/checkout/success', [PaymentController::class, 'paymentSuccess'])->name('checkout.payment.success');
 
