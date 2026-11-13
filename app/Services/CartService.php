@@ -6,8 +6,6 @@ use App\Models\Coupon;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\isEmpty;
-
 class CartService {
 
     public function getPriceCount() {

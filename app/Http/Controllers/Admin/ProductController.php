@@ -30,6 +30,10 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->name . '%');
         }
 
+        if($request->brand){
+            $query->where('brand', 'like', '%' . $request->brand . '%');
+        }
+
         $products = $query->with('category')->paginate(10);
 
         if(request()->ajax()){
@@ -274,30 +278,7 @@ class ProductController extends Controller
         }
     }
     
-    public function productDetail(int $id)
-    {
-        $query = Product::with([
-            'category',
-            'productOptions' => function ($q) {
-                $q->where('status', 1);
-            },
-            'productOptions.option',
-            'productOptionValues' => function ($q) {
-                $q->where('status', 1);
-            },
-            'productOptionValues.optionValue'
-        ]);
-
-        $product = $query->findOrFail($id);
-
-        $relatedProducts = Product::where('id', '!=', $product->id)
-            ->where('status', 1)
-            ->take(5)
-            ->get();
-
-        return view('customer.product-detail', compact('product', 'relatedProducts'));
-    }
-    
+ 
     public function optionStatusChange(Request $request) {
         
         $productOption = ProductOption::where('option_id', $request->optionId)->where('product_id', $request->productId)->first();
@@ -323,113 +304,6 @@ class ProductController extends Controller
             ]);
         }
     }
-
-    public function optionValuePriceChange(Request $request) {
-        
-        $productOptionValue = ProductOptionValue::whereIn('id', $request->povId)->get();
-
-        if (!$productOptionValue) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product option value not found'
-            ], 404);
-        }
-
-        $product = Product::whereHas('productOptionValues', function ($q) use ($request) {
-            $q->whereIn('id', $request->povId);
-        })->first();
-     
-        $basePrice = $product->price + $productOptionValue->sum('price');
-
-        $finalPrice = $basePrice - ($basePrice *  $product->discount_percentage / 100);
-
-        $discount_price = $basePrice - $finalPrice;
-
-        if($productOptionValue) {
-            return response()->json([
-                'success'=> true,
-                'basePrice'=> Round($basePrice),
-                'productOptionValue'=> $productOptionValue,
-                'finalPrice'=> Round($finalPrice),
-                'discount_price'=> Round($discount_price,2)
-            ]);
-        }
-        else {
-            return response()->json([
-                'success'=> false,
-            ]);
-        }
-    }
-
-    public function productsPage(Request $request) {
-        
-        $query = Product::with('category.main_category')->where('status',1)->whereHas('category',function($query){
-            $query->where('status',1);
-        })->whereHas('category.main_category',function ($query) {
-            $query->where('status',1);
-        });
-
-        if($request->has('filters')) {
-            $filters = $request->filters;
-           
-            $query->when(!empty($filters['main_category_id']), function ($q) use ($filters) {
-                $q->whereHas('category', function ($qu) use ($filters) {
-                    $qu->whereIn('main_category_id', $filters['main_category_id']);
-                });
-            });
-
-            $query->when(!empty($filters['category_id']), function ($q) use ($filters) {
-                $q->whereIn('category_id', $filters['category_id']);
-            });
-
-            $query->when(!empty($filters['brand']), function ($q) use ($filters) {
-                $q->whereIn('brand', $filters['brand']);
-            });
-
-            $query->when(!empty($filters['price']), function ($q) use ($filters) {
-                $price = explode('-', $filters['price'][0]);
-               
-                if ($price[1] == 'above') {
-                    $q->where('price', '>=', $price[0]);
-                } else {
-                    $q->whereBetween('price', $price);
-                }
-            });
-
-            $query->when(!empty($filters['discount_percentage']), function ($q) use ($filters) {
-                $discount_percentage = explode('-', $filters['discount_percentage'][0]);
-                $q->whereBetween('discount_percentage', $discount_percentage);
-            });
-
-        }
-
-        if($request->main_category) {
-            $query->whereHas('category', function($q) use ($request) {
-                $q->where('main_category_id', $request->main_category);
-            });
-        }
-
-        if($request->category) {
-            $query->where('category_id', $request->category);
-        }
-
-        $products = $query->paginate(10);
-        
-        
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'success'=> true,
-                'products'=> $products
-            ]); 
-        }
-        
-        $categories = Category::with('main_category')->where('status',1)->get();
-
-        $brands = Product::get('brand');
-        
-        return view('customer.products', compact('products','categories','brands'));
-    }
-
     
     public function deleteProductOption(Request $request) {
 

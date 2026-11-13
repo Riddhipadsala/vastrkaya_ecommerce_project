@@ -184,15 +184,13 @@
                                 <i class="bi bi-chevron-down text-slate-400 text-[10px]"></i>
                             </div>
                             <div class="space-y-1.5 text-xs text-slate-600 max-h-40 overflow-y-auto" style="scrollbar-width: thin;">
-                               @if (!empty($main_category_id))
-                                
-                                    @foreach($categories->unique('main_category_id') as $category)
+                                @if (!empty($main_categories))
+                                    @foreach($main_categories as $main_category)
                                         <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900 py-0.5">
-                                            <input type="checkbox" name="main_category_id" value="{{$category->main_category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
-                                            <span class="flex-grow-1 truncate">{{$category->main_category->name}}</span>
+                                            <input type="checkbox" name="main_category_id" value="{{$main_category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
+                                            <span class="flex-grow-1 truncate">{{$main_category->name}}</span>
                                         </label>
                                     @endforeach
-                                
                                 @endif
                             </div>
                         </div>
@@ -324,7 +322,7 @@
         <div class="offcanvas-body p-3">
             <div class="d-flex justify-content-between mb-3 pb-2 border-b border-slate-100">
                 <span class="text-xs font-bold text-slate-500">Refine Results</span>
-                <a href="javascript:void(0)" class="text-[11px] font-bold text-[#ff3f6c] text-decoration-none">Reset All</a>
+                <a href="javascript:void(0)" class="text-[11px] font-bold text-[#ff3f6c] text-decoration-none" onclick="clearAll()">Reset All</a>
             </div>
 
             <!-- Categories -->
@@ -332,7 +330,7 @@
                 <span class="text-xs font-bold text-slate-800 uppercase tracking-wider d-block mb-2">Category</span>
                 <div class="space-y-1.5 text-xs text-slate-600">
                     @foreach ( $categories as $category)
-                        <label class="d-flex align-items-center gap-2"><input type="checkbox" checked style="accent-color:#ff3f6c;"> {{ $category->name }}</label>
+                        <label class="d-flex align-items-center gap-2"><input type="checkbox" class="custom-checkbox" style="accent-color:#ff3f6c;" name="category_id" value="{{$category->id}}"> {{ $category->name }}</label>
                     @endforeach
                 </div>
             </div>
@@ -341,24 +339,14 @@
                 <span class="text-xs font-bold text-slate-800 uppercase tracking-wider d-block mb-2">Brand</span>
                 <div class="space-y-1.5 text-xs text-slate-600">
                     @foreach ( $brands as $brand)
-                        <label class="d-flex align-items-center gap-2"><input type="checkbox" checked style="accent-color:#ff3f6c;"> {{ $brand->name }}</label>
+                        <label class="d-flex align-items-center gap-2"><input type="checkbox" class="custom-checkbox" style="accent-color:#ff3f6c;" name="brand" value="{{$brand->brand}}"> {{ $brand->brand }}</label>
                     @endforeach
-                </div>
-            </div>
-
-            <!-- Price -->
-            <div class="mb-3.5">
-                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider d-block mb-2">Price</span>
-                <div class="space-y-1.5 text-xs text-slate-600">
-                    <label class="d-flex align-items-center gap-2"><input type="checkbox" style="accent-color:#ff3f6c;"> Under ₹999</label>
-                    <label class="d-flex align-items-center gap-2"><input type="checkbox" style="accent-color:#ff3f6c;"> ₹1,000 to ₹1,999</label>
-                    <label class="d-flex align-items-center gap-2"><input type="checkbox" style="accent-color:#ff3f6c;"> ₹2,000 &amp; Above</label>
                 </div>
             </div>
         </div>
         <div class="offcanvas-footer p-3 border-top d-flex gap-2 bg-slate-50">
             <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1 text-xs font-semibold rounded-lg" data-bs-dismiss="offcanvas">Close</button>
-            <button type="button" class="btn btn-dark btn-sm flex-grow-1 text-xs font-semibold rounded-lg bg-slate-900 border-slate-900" data-bs-dismiss="offcanvas">Apply Filters</button>
+            <button type="button" class="btn btn-dark btn-sm flex-grow-1 text-xs font-semibold rounded-lg bg-slate-900 border-slate-900" data-bs-dismiss="offcanvas" onclick="fetchData()">Apply Filters</button>
         </div>
     </div>
 @endsection
@@ -393,10 +381,10 @@
             $(`input[name="category_id"][value="${urlCat}"]`).prop('checked', true);
         }
 
-        fetchData(collectFilters());
+        fetchData();
         
         $('.custom-checkbox').on('change', function() {
-            fetchData(collectFilters());
+            fetchData();
         });
     });
 
@@ -406,9 +394,9 @@
         fetchData({});
     }
 
-    function fetchData(filters,page=1) {
+    function fetchData(page=1) {
 
-        let filterData = filters || {};
+        let filterData = collectFilters();
         let urlParams = new URLSearchParams(window.location.search);
 
         axios.get('/products',
@@ -525,7 +513,7 @@
             }
 
             html += `
-                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData('',${page})" ${!link.url ? 'disabled' : ''}>
+                    <button class="btn ${link.active ? 'btn-primary' : 'btn-outline-primary'}" onclick="fetchData(${page})" ${!link.url ? 'disabled' : ''}>
                         ${link.label}
                     </button>
                 `;

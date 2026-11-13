@@ -57,11 +57,27 @@ class CartController extends Controller
             ]);
         }
 
-        $cartItem = null;
-        $itemproOptValIds = null;
         $existingCartItems = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $product_id)
             ->get();
+
+        $ProductStock = (int) Product::where('id', $product_id)->first()->stock ?? 0;
+        $cartStock = CartItem::where('cart_id', $cart->id)->where('product_id', $product_id)->sum('quantity');
+
+        $remainingStock = $ProductStock - $cartStock;
+
+        if ($remainingStock <= 0) {
+            return response()->json([
+                'success' => false,
+                'ProductStock' => $ProductStock,
+                'remainingStock'=> $remainingStock,
+                'quantity' => $cartStock,
+                'message' => 'Product is out of stock',
+            ]);
+        }
+
+        $cartItem = null;
+        $itemproOptValIds = null;
 
         $selectedproOptValIds = (array) $proOptValIds;
         sort($selectedproOptValIds);
@@ -110,6 +126,51 @@ class CartController extends Controller
         ]);
     }
 
+    public function update(Request $request, int $id)
+    {
+        $cartItem = CartItem::find($id);
+
+        if (! $cartItem) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cart item not found',
+            ], 404);
+        }
+
+        $newQuantity = (int) $request->quantity;
+
+        if ($newQuantity < 1) {
+            $newQuantity = 1;
+        }
+
+        $productStock = (int) ($cartItem->product->stock ?? 0);
+        $remainingStock = $productStock - $newQuantity;
+
+        if ($remainingStock <= 0) {
+            return response()->json([
+                'success' => false,
+                'remainingStock' => $remainingStock,
+                'productStock' => $productStock,
+                'quantity' => $cartItem->quantity,
+                'message' => 'Product is out of stock',
+            ]);
+        }
+
+        $cartItem->quantity = $newQuantity;
+        $cartItem->new_price = $cartItem->price * $newQuantity;
+        $cartItem->save();
+
+        return response()->json([
+            'success' => true,
+            'unit_price' => $cartItem->price,
+            'new_price' => $cartItem->new_price,
+            'quantity' => $newQuantity,
+            'productStock' => $productStock,
+            'remaining_stock' => $remainingStock,
+            'is_out_of_stock' => ($remainingStock <= 0 || $productStock <= 0),
+        ]);
+    }
+
     public function delete(int $id)
     {
 
@@ -141,51 +202,6 @@ class CartController extends Controller
                 'success' => false,
             ]);
         }
-    }
-
-    public function update(Request $request, int $id)
-    {
-        $cartItem = CartItem::find($id);
-
-        if (! $cartItem) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cart item not found',
-            ], 404);
-        }
-
-        $newQuantity = (int) $request->quantity;
-
-        if ($newQuantity < 1) {
-            $newQuantity = 1;
-        }
-
-        $stock = (int) ($cartItem->product->stock ?? 0);
-        $remainingStock = $stock - $newQuantity;
-
-        if ($remainingStock < 0) {
-            return response()->json([
-                'success' => false,
-                'cartItem' => $cartItem->id,
-                'stock' => $stock,
-                'quantity' => $cartItem->quantity,
-                'message' => 'Product is out of stock',
-            ]);
-        }
-
-        $cartItem->quantity = $newQuantity;
-        $cartItem->new_price = $cartItem->price * $newQuantity;
-        $cartItem->save();
-
-        return response()->json([
-            'success' => true,
-            'unit_price' => $cartItem->price,
-            'new_price' => $cartItem->new_price,
-            'quantity' => $newQuantity,
-            'stock' => $stock,
-            'remaining_stock' => $remainingStock,
-            'is_out_of_stock' => ($remainingStock <= 0 || $stock <= 0),
-        ]);
     }
 
     public function getPriceCount(CartService $cartService)

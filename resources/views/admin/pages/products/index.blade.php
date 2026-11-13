@@ -16,15 +16,20 @@
     <div class="card border rounded-2 bg-white mb-3 shadow-none">
         <div class="card-body p-3">
             <div class="row g-3 align-items-end">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-2 col-sm-3">
                     <label for="filter_product_id" class="form-label fw-bold font-13 text-secondary mb-1">Product ID</label>
                     <input type="text" class="form-control form-control-sm" id="filter_product_id" placeholder="Product ID">
                 </div>
-                <div class="col-md-4 col-sm-6">
+                <div class="col-md-4 col-sm-12">
                     <label for="filter_product_name" class="form-label fw-bold font-13 text-secondary mb-1">Product Name</label>
                     <input type="text" class="form-control form-control-sm" id="filter_product_name" placeholder="Product Name">
                 </div>
-                <div class="col-md-5 col-12 d-flex justify-content-md-end gap-2">
+                
+                <div class="col-md-3 col-sm-12">
+                    <label for="filter_product_brand" class="form-label fw-bold font-13 text-secondary mb-1">Brand</label>
+                    <input type="text" class="form-control form-control-sm" id="filter_product_brand" placeholder="Product Brand">
+                </div>
+                <div class="col-md-2 col-12 d-flex justify-content-md-end gap-2">
                     <button type="button" onclick="clearFilter()" class="btn btn-sm btn-danger px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1" id="btnClearFilter">
                         <i class="bi bi-x-lg"></i> Clear Filter
                     </button>
@@ -45,6 +50,7 @@
                         <th style="width: 10%;" class="ps-3">ProductID</th>
                         <th style="width: 10%;">Image</th>
                         <th style="width: 25%;">Product Name</th>
+                        <th style="width: 15%;">Brand</th>
                         <th style="width: 15%;">Category</th>
                         <th style="width: 12%;">Price</th>
                         <th style="width: 10%;">Stock</th>
@@ -75,6 +81,7 @@
 
         let filter_id = $('#filter_product_id').val();
         let filter_name = $('#filter_product_name').val();
+        let filter_brand = $('#filter_product_brand').val();
 
         let data = '';
 
@@ -82,6 +89,7 @@
             params: {
                 'id':filter_id,
                 'name':filter_name,
+                'brand':filter_brand,
                 'page': page
             }
         })
@@ -101,9 +109,10 @@
                             <div class="fw-semibold text-heading font-14">${product.name}</div>
                             <small class="text-muted font-12">${product.brand}</small>
                         </td>
+                        <td class="text-secondary font-13">${product.brand}</td>
                         <td class="text-secondary font-13">${product.category.name}</td>
                         <td><span class="fw-bold text-heading">&#8377;${product.price}</span></td>
-                        <td><span class="badge text-dark px-2 py-1 font-12">${product.stock}</span></td>
+                        <td><span class="badge ${product.stock < 10 ? 'text-danger' : 'text-dark'} px-2 py-1 font-12">${product.stock}</span></td>
                         <td>
                             <span class="badge text-${product.status ? 'success' : 'danger'} border border-${product.status ? 'success' : 'danger'} border-opacity-25 rounded-pill px-2 py-1 font-12">
                                 ${product.status ? 'Active' : 'Inactive'}
@@ -150,8 +159,7 @@
     }
 
     function clearFilter(){
-        $('#filter_product_id').val('');
-        $('#filter_product_name').val('');
+        $('.form-control-sm').val('');
         fetchData();
     }
 

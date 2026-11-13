@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\PaymentController;
+use App\Http\Controllers\Customer\ProductController as CustomerProductController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,8 +32,8 @@ Route::post('/main-search',[DashboardController::class, 'mainSearch'])->name('ma
 // Route::resource('wishlist', WishListController::class)->only(['index', 'update']);
 
 //product
-Route::get('/products/{id}', [ProductController::class, 'productDetail'])->name('customer.products.show');
-Route::get('/products', [ProductController::class,'productsPage'])->name('customer.product.page');
+Route::get('/products/{id}', [CustomerProductController::class, 'productDetail'])->name('customer.products.show');
+Route::get('/products', [CustomerProductController::class,'productsPage'])->name('customer.product.page');
 
 //cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -43,8 +44,6 @@ Route::put('cart/update/{id}', [CartController::class, 'update'])->name('cart.up
 Route::get('/cart/price-count', [CartController::class, 'getPriceCount'])->name('cart.price-count');
 Route::get('/cart/checkout/stock/{id}', [CartController::class, 'checkoutStock'])->name('cart.checkout.stock');
 
-//customer option change ,that time price change
-Route::post('option-value/price/change',[ProductController::class,'optionValuePriceChange'])->name('option-value.price.change');
 
 
 

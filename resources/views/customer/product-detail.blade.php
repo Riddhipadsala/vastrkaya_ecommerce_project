@@ -150,9 +150,9 @@
                                 &bull; {{ $product->category->name }}
                             @endif
                         </span>
-                        @if ($product->stock > 0)
+                        @if ($product->stock >= 0)
                             <span
-                                class="badge text-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-0.5 text-[10px] font-semibold rounded">
+                                class="badge text-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-0.5 text-[10px] font-semibold rounded stock">
                                 In Stock
                             </span>
                         @else
@@ -693,7 +693,6 @@
                     prooptvalId.push(valId);
                 }
             });
-            console.log(prooptvalId);
 
             axios.post('{{ route('cart.add') }}', {
                     product: product,
@@ -710,6 +709,12 @@
                             window.location.href = '{{ route('cart.index') }}';
                         }
 
+                    }
+                    else {
+                        $('#addToCartBtn').prop('disabled', true);
+                        $('.stock').text('Out of Stock');
+                        $('.stock').removeClass('text-success border border-success');
+                        $('.stock').addClass('text-danger border border-danger');
                     }
                 })
                 .catch((err) => {
