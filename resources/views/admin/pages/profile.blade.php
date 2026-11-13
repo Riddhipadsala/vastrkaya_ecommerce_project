@@ -75,7 +75,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="vk-form-label">Phone Number</label>
-                                <input type="tel" name="phone" class="vk-form-control" value="{{ Auth::user()->phone }}" placeholder="+91 XXXXX XXXXX">
+                                <input type="tel" name="phone" id="phone" class="vk-form-control" value="{{ Auth::user()->phone }}" placeholder="+91 XXXXX XXXXX">
                             </div>
                             <div class="col-12">
                                 <label class="vk-form-label">Admin Bio & Store Notes</label>
@@ -122,4 +122,16 @@
     </div>
 
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+        
+        document.getElementById('phone').addEventListener('input', function (e) {
+            e.target.value=e.target.value.replace(/\D/g, '');
+            
+            e.target.value=e.target.value.slice(0,10);
+        });
+
+    </script>
 @endsection

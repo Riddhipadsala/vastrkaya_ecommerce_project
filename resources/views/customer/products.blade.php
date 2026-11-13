@@ -184,13 +184,16 @@
                                 <i class="bi bi-chevron-down text-slate-400 text-[10px]"></i>
                             </div>
                             <div class="space-y-1.5 text-xs text-slate-600 max-h-40 overflow-y-auto" style="scrollbar-width: thin;">
-                                @foreach($categories->unique('main_category_id') as $category)
-                                    <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900 py-0.5">
-                                        <input type="checkbox" name="main_category_id" value="{{$category->main_category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
-                                        <span class="flex-grow-1 truncate">{{$category->main_category->name}}</span>
-                                    </label>
-                                @endforeach
-
+                               @if (!empty($main_category_id))
+                                
+                                    @foreach($categories->unique('main_category_id') as $category)
+                                        <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900 py-0.5">
+                                            <input type="checkbox" name="main_category_id" value="{{$category->main_category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
+                                            <span class="flex-grow-1 truncate">{{$category->main_category->name}}</span>
+                                        </label>
+                                    @endforeach
+                                
+                                @endif
                             </div>
                         </div>
 
@@ -201,13 +204,14 @@
                                 <i class="bi bi-chevron-down text-slate-400 text-[10px]"></i>
                             </div>
                             <div class="space-y-1.5 text-xs text-slate-600 max-h-40 overflow-y-auto" style="scrollbar-width: thin;">
-                                
-                                @foreach($categories as $category)
-                                    <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900 py-0.5">
-                                        <input type="checkbox" name="category_id" value="{{$category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
-                                        <span class="flex-grow-1 truncate">{{$category->name}}</span>
-                                    </label>
-                                @endforeach
+                                @if (!empty($categories))
+                                    @foreach($categories as $category)
+                                        <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900 py-0.5">
+                                            <input type="checkbox" name="category_id" value="{{$category->id}}" class="form-check-input mt-0 custom-checkbox" style="accent-color: #ff3f6c;">
+                                            <span class="flex-grow-1 truncate">{{$category->name}}</span>
+                                        </label>
+                                    @endforeach
+                                @endif
 
                             </div>
                         </div>

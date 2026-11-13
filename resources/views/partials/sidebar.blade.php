@@ -73,6 +73,14 @@
             </a>
         </li>
 
+        <li class="vk-nav-item">
+            <a href="{{ route('admin.banners.index') }}"
+                class="vk-nav-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
+                <i class="bi bi-images vk-nav-icon"></i>
+                <span>Customer Store Posters</span>
+            </a>
+        </li>
+
         <li class="vk-menu-section-title">Account & Settings</li>
 
         <li class="vk-nav-item">

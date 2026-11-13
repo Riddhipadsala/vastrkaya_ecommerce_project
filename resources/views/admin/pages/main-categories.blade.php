@@ -84,6 +84,15 @@
                             placeholder="e.g. Men, Women, Kids, Ethnic Wear" required>
                         <small class="text-muted font-12 mt-1 d-block">This acts as the top-level grouping for sub-categories.</small>
                     </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold font-13 text-secondary mb-1">
+                            Status <span class="text-danger">*</span>
+                        </label>
+                        <select name="status" id="add_category_status" class="form-select form-select-sm" required>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer border-top bg-light bg-opacity-25 py-2">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>

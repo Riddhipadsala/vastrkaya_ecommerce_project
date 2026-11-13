@@ -9,27 +9,27 @@
     <!-- 1. FULL WIDTH HERO POSTER SLIDER -->
     <section class="vk-hero-slider-section w-100 p-0 mb-0">
         <div class="container-fluid p-0">
+            
             <div id="heroPosterCarousel" class="carousel slide carousel-fade vk-hero-carousel w-100" data-bs-ride="carousel"
-                data-bs-interval="4500">
+                data-bs-interval="4500" data-bs-pause="false">
 
                 <!-- Indicators -->
                 <div class="carousel-indicators vk-carousel-indicators mb-3">
-                    <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="0" class="active"
-                        aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
+                    @foreach ($mainPosters as $mainposter)
+                        <button type="button" data-bs-target="#heroPosterCarousel" data-bs-slide-to="{{ $loop->index }}"
+                            class="{{ $loop->first ? 'active' : '' }}" aria-current="{{ $loop->first ? 'aria-current=true' : '' }}"
+                            aria-label="Slide {{ $loop->index + 1 }}"></button>
+                    @endforeach
                 </div>
 
                 <!-- Carousel Slides (Full Edge-to-Edge Width) -->
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{{ asset('main-poster/main-poster1.png') }}" class="d-block w-100 vk-slider-img"
-                            alt="Vastrkaya Festive Collection">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ asset('main-poster/main-poster2.png') }}" class="d-block w-100 vk-slider-img"
-                            alt="Vastrkaya Contemporary Apparel">
-                    </div>
+                    @foreach ($mainPosters as $mainposter)
+                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                            <img src="{{ asset('storage/' . $mainposter->image) }}" class="d-block w-100 vk-slider-img"
+                                alt="Vastrkaya Festive Collection">
+                        </div>
+                    @endforeach
                 </div>
 
                 <!-- Next / Previous Controls -->

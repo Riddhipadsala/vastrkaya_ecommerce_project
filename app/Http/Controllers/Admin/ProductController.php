@@ -248,7 +248,7 @@ class ProductController extends Controller
                 ->update(['status' => 0]);
         }
 
-        return redirect()->back()->with('success', 'Product updated successfully');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
     }
 
     /**
@@ -256,9 +256,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product = $product->delete();
+        if($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
 
-        if($product) {
+        $deletedProduct = $product->delete();
+
+        if($deletedProduct) {
             return response()->json([
                     'success'=> true,
             ]);

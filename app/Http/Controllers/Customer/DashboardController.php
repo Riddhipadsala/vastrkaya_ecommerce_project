@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\MainPoster;
 use App\Models\Product;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -36,8 +37,10 @@ class DashboardController extends Controller
 
         $coupons = Coupon::where('status',1)->where('start_date','<=',now()->toDateString())->where('end_date','>=',now()->toDateString())->where('uses_total','>=', 'used_total')->first();
         $setting = Setting::get('minimum_order_amount')->first();
+        $mainPosters = MainPoster::where('status',1)->get();
 
-        return view('customer.dashboard', compact('categories', 'products', 'coupons', 'setting'));
+
+        return view('customer.dashboard', compact('categories', 'products', 'coupons', 'setting', 'mainPosters'));
     }
 
     public function mainSearch(Request $request) {

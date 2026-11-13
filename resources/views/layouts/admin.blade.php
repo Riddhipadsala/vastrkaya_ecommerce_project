@@ -64,40 +64,6 @@
                         <i class="bi bi-moon-stars-fill text-secondary"></i>
                     </button>
 
-                    <!-- Notifications Dropdown -->
-                    <div class="dropdown">
-                        <button class="vk-topbar-action" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-bell"></i>
-                            <span class="vk-action-dot"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 vk-card" aria-labelledby="notifDropdown" style="width: 300px;">
-                            <li class="px-3 py-2 border-bottom border-light">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold">Notifications</h6>
-                                    <span class="badge bg-danger rounded-pill">2 New</span>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="dropdown-item py-2 d-flex align-items-start gap-2" href="#stock" data-module-target="module-stock">
-                                    <i class="bi bi-exclamation-triangle-fill text-warning mt-1"></i>
-                                    <div>
-                                        <p class="mb-0 font-13 fw-semibold">Low Stock Alert</p>
-                                        <small class="text-muted">Silk Anarkali Suit has only 2 units left</small>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item py-2 d-flex align-items-start gap-2" href="#stock" data-module-target="module-stock">
-                                    <i class="bi bi-x-circle-fill text-danger mt-1"></i>
-                                    <div>
-                                        <p class="mb-0 font-13 fw-semibold">Out of Stock</p>
-                                        <small class="text-muted">Banarasi Silk Saree is out of stock</small>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
                     <!-- Admin User Dropdown -->
                     <div class="dropdown">
                         <div class="vk-admin-dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false" role="button">

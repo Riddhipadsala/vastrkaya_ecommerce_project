@@ -195,7 +195,7 @@
                             <div class="flex-grow-1">
                                 <input type="file" name="image" id="productImageInput"
                                     class="form-control vk-form-control @error('image') is-invalid @enderror"
-                                    accept="image/*" onchange="previewImage(this)">
+                                    accept="image/*" onchange="previewImage(this)" required>
                                 <small class="text-muted font-12 d-block mt-1">Recommended: JPG, PNG, WEBP (Max:
                                     2MB)</small>
                                 @error('image')

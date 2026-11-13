@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\MainCategoryController;
+use App\Http\Controllers\Admin\MainPosterController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
@@ -56,6 +57,13 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     Route::resource('products', ProductController::class);
     Route::resource('coupons', CouponController::class);
 
+    // Main Store Poster / Banner UI Module
+    Route::get('/banners', [MainPosterController::class, 'index'])->name('banners.index');
+    Route::post('/banners', [MainPosterController::class, 'store'])->name('banners.store');
+    Route::delete('/banners/{id}', [MainPosterController::class, 'destroy'])->name('banners.delete');
+    Route::get('/banners/{id}/edit',[MainPosterController::class,'edit'])->name('banners.edit');
+    Route::put('/banners/{id}/update',[MainPosterController::class,'update'])->name('banners.update');
+    
     //option
     Route::resource('options', OptionController::class);
     Route::delete('product/option/delete', [ProductController::class,'deleteProductOption'])->name('product.option.delete');
