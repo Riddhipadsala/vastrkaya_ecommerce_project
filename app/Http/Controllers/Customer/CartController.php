@@ -24,19 +24,22 @@ class CartController extends Controller
             $cart = Cart::with('cartItems.product.category', 'cartItems.product.productOptions.option.optionValues')->where('user_id', null)->where('session', session()->getId())->first();
         }
 
-        $cartItem = $cart ? $cart->cartItems : collect();
+        $cartItems = $cart ? $cart->cartItems : collect();
 
+        foreach($cartItems as $cartItem) {
+            $cartItem->proVal = ProductOptionValue::with('option', 'optionValue')->where('product_id', $cartItem->product_id)->whereIn('id', $cartItem->pro_opt_val)->get();
+        }
         $total_quantity = $cart ? $cart->cartItems->sum('quantity') : 0;
 
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'cartItem' => $cartItem,
+                'cartItems' => $cartItems,
                 'total_quantity' => $total_quantity,
             ]);
         }
 
-        return view('customer.cart', compact('cartItem'));
+        return view('customer.cart', compact('cartItems'));
     }
 
     public function add(Request $request)

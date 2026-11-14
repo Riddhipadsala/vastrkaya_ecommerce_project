@@ -46,7 +46,7 @@
                 </div>
             </div>
             
-            @if (!$cartItem->isEmpty())
+            @if (!$cartItems->isEmpty())
                 <div class="row g-3 g-lg-4 cart-view">
 
                     <!-- LEFT COLUMN: Cart Items List -->
@@ -159,7 +159,7 @@
                                     <div class="d-flex justify-content-between text-slate-600">
                                         <span>Delivery Charges</span>
                                         <div class="text-end">
-                                        +  <span class="text-danger font-bold uppercase text-[10px]"
+                                        +  <span class="text-danger font-bold uppercase"
                                                 id="deliveryCharges">FREE</span>
                                         </div>
                                     </div>
@@ -229,7 +229,7 @@
         function fetchData() {
             axios.get('/cart')
                 .then((res) => {
-                    let data = res.data.cartItem || [];
+                    let data = res.data.cartItems || [];
 
                     $('#cartCountHeader').text(data.length);
                     $('#summaryCount').text(data.length);
@@ -242,122 +242,106 @@
                     }
                     
                     data.forEach(item => {
+
                         records += `
-                    <div class="cart-item-card bg-white border border-slate-200 rounded-xl p-3 shadow-2xs transition-all duration-200 hover:border-slate-300" id="cartItem_${item.id}" data-unit-price="${item.price}">
-                        
-                        <!-- Top Section: Image & Main Info -->
-                        <div class="d-flex gap-3">
-                            <a href='{{ url('/products/${item.product.id}') }}'>
-                                <!-- Elegant Portrait Ratio Thumbnail (80px x 104px) -->
-                                <div class="rounded-lg bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative flex items-center justify-center p-1" style="width: 80px; height: 104px;">
-                                    <img src="/storage/${item.product.image}" 
-                                            alt="${item.product.name}" 
-                                            class="w-full h-full object-cover rounded"
-                                            onerror="this.src='/storage/${item.product.image}'">
-                                </div>
-                            </a>
+                            <div class="cart-item-card bg-white border border-slate-200 rounded-xl p-3 shadow-2xs transition-all duration-200 hover:border-slate-300" id="cartItem_${item.id}" data-unit-price="${item.price}">
+                                
+                                <!-- Top Section: Image & Main Info -->
+                                <div class="d-flex gap-3">
+                                    <a href='{{ url('/products/${item.product.id}') }}'>
+                                        <!-- Elegant Portrait Ratio Thumbnail (80px x 104px) -->
+                                        <div class="rounded-lg bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative flex items-center justify-center p-1" style="width: 80px; height: 104px;">
+                                            <img src="/storage/${item.product.image}" 
+                                                    alt="${item.product.name}" 
+                                                    class="w-full h-full object-cover rounded"
+                                                    onerror="this.src='/storage/${item.product.image}'">
+                                        </div>
+                                    </a>
 
-                            <!-- Info Column -->
-                            <div class="flex-grow min-w-0 flex flex-col justify-between">
-                                <div>
-                                    <!-- Brand & Delete Button -->
-                                    <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
-                                        <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                                            VASTRKAYA &bull; ${item.product?.category?.name}
-                                        </span>
-                                        <button type="button" class="btn btn-link p-0 text-slate-400 hover:text-rose-600 shadow-none border-0 text-xs" 
-                                                title="Remove Item" onclick="removeCartItem('${item.id}')">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
+                                    <!-- Info Column -->
+                                    <div class="flex-grow min-w-0 flex flex-col justify-between">
+                                        <div>
+                                            <!-- Brand & Delete Button -->
+                                            <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+                                                <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                                                    VASTRKAYA &bull; ${item.product?.category?.name}
+                                                </span>
+                                                <button type="button" class="btn btn-link p-0 text-slate-400 hover:text-rose-600 shadow-none border-0 text-xs" 
+                                                        title="Remove Item" onclick="removeCartItem('${item.id}')">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </div>
 
-                                    <!-- Title -->
-                                    <h4 class="text-sm sm:text-sm font-semibold text-slate-900 mb-1.5 capitalize text-truncate" title="${item.product.name}">
-                                        ${item.product.name}
-                                    </h4>
+                                            <!-- Title -->
+                                            <h4 class="text-sm sm:text-sm font-semibold text-slate-900 mb-1.5 capitalize text-truncate" title="${item.product.name}">
+                                                ${item.product.name}
+                                            </h4>
 
-                                    <!-- Attributes Pills -->
-                                    <div class="d-flex flex-wrap align-items-center gap-1.5 mb-2">
-                                        ${(() => {
-                                            if (Array.isArray(item.options) && item.options.length > 0) {
-                                                return item.options.map(valId => {
-                                                    let optName = '';
-                                                    let optValName = valId;
-                                                    const productOptions = item.product?.product_options || item.product?.productOptions || [];
-                                                    for (const po of productOptions) {
-                                                        const values = po.option?.option_values || po.option?.optionValues || [];
-                                                        const foundVal = values.find(v => v.id == valId || v.name == valId);
-                                                        if (foundVal) {
-                                                            optName = po.option?.name || '';
-                                                            optValName = foundVal.name;
-                                                            break;
-                                                        }
-                                                    }
-                                                    return `<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200">${optName ? `<strong class="uppercase text-slate-900">${optName}:</strong> ` : ''}${optValName}</span>`;
-                                                }).join('');
-                                            } else if (item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0) {
-                                                return Object.entries(item.options).map(([name, val]) => 
-                                                    `<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium border border-slate-200"><strong class="uppercase text-slate-900">${name}:</strong> ${val}</span>`
-                                                ).join('');
-                                            }
-                                            return '';
-                                        })()}
-                                        ${(item.product.stock > 0 || item.product.decrease_stock > 0) ?
-                                        `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
+                                            <!-- Attributes Pills -->
+                                            <div class="d-flex flex-wrap align-items-center gap-1.5 mb-2">
+                                            
+                                                ${item?.proVal?.map(proval=> 
+                                                    `<span class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-[11px] font-medium border border-dark">${proval?.option?.name} : ${proval?.option_value?.name}</span>`
+                                                ).join('') ?? ''}
+                                                        
+                                                ${(item.product.stock > 0 ) ?
+                                                        `<span class="text-emerald-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
                                                             <i class="bi bi-check-circle-fill text-[10px]"></i> In Stock
                                                         </span>`
-                                    :  `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
+                                                    :  
+                                                        `<span class="text-red-700 text-[11px] font-semibold d-inline-flex align-items-center gap-1 stock_${item.id}">
                                                             <i class="bi bi-x-circle-fill text-[10px]"></i> Out of Stock
                                                         </span>`
-                                    }
-                                        
+                                                }
+                                                
+                                            </div>
+                                        </div>
+
+                                        <!-- Price Line -->
+                                        <div class="d-flex align-items-baseline gap-2">
+                                            <span class="text-base font-bold text-slate-900">&#8377;<span id="price_${item.id}">${item.new_price}</span></span>
+                                        ${item.product.discount_price > 0
+                                                ? `<span class="text-xs text-slate-500">Discount per product</span>
+                                                                <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
+                                                                <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
+                                                : ''
+                                            }
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Price Line -->
-                                <div class="d-flex align-items-baseline gap-2">
-                                    <span class="text-base font-bold text-slate-900">&#8377;<span id="price_${item.id}">${item.new_price}</span></span>
-                                ${item.product.discount_price > 0
-                                        ? `<span class="text-xs text-slate-500">Discount per product</span>
-                                                        <span class="text-xs text-slate-400 text-decoration-line-through">&#8377;${ item.product.discount_price}</span>
-                                                        <span class="text-xs font-bold text-emerald-600">${item.product.discount_percentage}% OFF</span>`
-                                        : ''
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                                <!-- Bottom Action Bar (Quantity Stepper + Action Links) -->
+                                <div class="d-flex align-items-center justify-content-between pt-2.5 mt-2.5 border-t border-slate-100">
+                                    <!-- Compact Quantity Stepper -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="text-xs text-slate-500 font-medium">Qty:</span>
+                                        <div class="d-inline-flex align-items-center border border-slate-200 rounded-md bg-white h-7 overflow-hidden">
+                                            <button type="button" class="btn btn-link text-slate-600 px-2.5 py-0 h-full border-0 shadow-none hover:bg-slate-100" 
+                                                    onclick="updateItemQty('${item.id}', -1, ${item.price})">
+                                                <i class="bi bi-dash text-xs"></i>
+                                            </button>
+                                            <span id="qty_${item.id}" class="text-xs font-bold text-slate-800 px-2 min-w-[22px] text-center">
+                                                ${item.quantity}
+                                            </span>
+                                            <button type="button" class="btn btn-link text-slate-600 px-2.5 py-0 h-full border-0 shadow-none hover:bg-slate-100" 
+                                                    onclick="updateItemQty('${item.id}', 1, ${item.price})">
+                                                <i class="bi bi-plus text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
 
-                        <!-- Bottom Action Bar (Quantity Stepper + Action Links) -->
-                        <div class="d-flex align-items-center justify-content-between pt-2.5 mt-2.5 border-t border-slate-100">
-                            <!-- Compact Quantity Stepper -->
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-xs text-slate-500 font-medium">Qty:</span>
-                                <div class="d-inline-flex align-items-center border border-slate-200 rounded-md bg-white h-7 overflow-hidden">
-                                    <button type="button" class="btn btn-link text-slate-600 px-2.5 py-0 h-full border-0 shadow-none hover:bg-slate-100" 
-                                            onclick="updateItemQty('${item.id}', -1, ${item.price})">
-                                        <i class="bi bi-dash text-xs"></i>
-                                    </button>
-                                    <span id="qty_${item.id}" class="text-xs font-bold text-slate-800 px-2 min-w-[22px] text-center">
-                                        ${item.quantity}
-                                    </span>
-                                    <button type="button" class="btn btn-link text-slate-600 px-2.5 py-0 h-full border-0 shadow-none hover:bg-slate-100" 
-                                            onclick="updateItemQty('${item.id}', 1, ${item.price})">
-                                        <i class="bi bi-plus text-xs"></i>
-                                    </button>
+                                    <!-- Action Buttons -->
+                                    <div class="d-flex align-items-center gap-3">
+                                        <button type="button" class="btn btn-link p-0 text-xs text-slate-500 hover:text-rose-600 font-medium text-decoration-none shadow-none border-0 d-inline-flex align-items-center gap-1"
+                                                onclick="removeCartItem('${item.id}')">
+                                            <i class="bi bi-trash3 text-xs"></i>
+                                            <span>Remove</span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="d-flex align-items-center gap-3">
-                                <button type="button" class="btn btn-link p-0 text-xs text-slate-500 hover:text-rose-600 font-medium text-decoration-none shadow-none border-0 d-inline-flex align-items-center gap-1"
-                                        onclick="removeCartItem('${item.id}')">
-                                    <i class="bi bi-trash3 text-xs"></i>
-                                    <span>Remove</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-                })
+                            </div>`
+                        ;
+                    })
 
                     $('#cartItemsList').html(records);
                     mainPriceBox();
