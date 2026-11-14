@@ -108,9 +108,6 @@
 
             let row = '';
 
-            console.log( $(this).val());
-            
-            
             $('#searchDropdown').removeClass('d-none');
             
             axios.post('/main-search',{search: e.target.value})

@@ -15,6 +15,7 @@ class CartContactInformation extends Model
         'city',
         'state',
         'pincode',
+        'is_selected',
     ];
 
     public function cart()

@@ -26,12 +26,12 @@
                 <div class="col-lg-8 col-xl-8">
 
                         <!-- 3. ALL ORDERED PRODUCTS LIST -->
-                        @if((isset($products) && $products->isNotEmpty()) || $items->isNotEmpty())
+                        @if(isset($products) && $products->isNotEmpty())
                             <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs">
                                 <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-b border-slate-100">
                                     <h4 class="text-xs sm:text-sm font-bold text-slate-900 mb-0 font-sans">
-                                        Ordered Items ({{ isset($products) && $products->isNotEmpty() ? $products->count() : $items->count() }})
-                                    </h4>
+                                        Ordered Items ({{ isset($products) && $products->isNotEmpty() ?? $products->count()  }})
+                                    </h4>   
                                     @if ($order->order_status)
                                         <span class="badge {{($order->order_status == 'pending')? 'bg-warning' : (($order->order_status == 'cancelled')? 'bg-danger' : 'bg-success')}} border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
                                             {{ $order->order_status }}

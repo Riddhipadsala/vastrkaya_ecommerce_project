@@ -484,7 +484,6 @@
 
             optionPicker.addEventListener('change', function() {
                 const selectedOption = this.value;
-                console.log(selectedOption);
                 
                 if (!selectedOption) return;
 

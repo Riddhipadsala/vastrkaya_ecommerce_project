@@ -21,7 +21,7 @@ class PaymentController extends Controller
         
         $cart = Cart::where('user_id', Auth::id())->first();
 
-        $selectedAddress = CartContactInformation::where('cart_id',$cart->id)->latest()->first();
+        $selectedAddress = CartContactInformation::where('cart_id',$cart->id)->where('is_selected',1)->latest()->first();
 
         $priceCount = $cartService->getPriceCount()->getData(true);
 

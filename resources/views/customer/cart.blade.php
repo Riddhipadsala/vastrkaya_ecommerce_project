@@ -240,7 +240,6 @@
                         document.getElementById('emptyCartView').style.display = 'block';
                         return;
                     }
-                    console.log(data.length);
                     
                     data.forEach(item => {
                         records += `
@@ -518,7 +517,7 @@
         function removeCartItem(key) {
 
             const itemCard = document.getElementById('cartItem_' + key);
-            console.log(key);
+
             if (!itemCard) return;
 
             itemCard.style.transition = 'all 0.2s ease';

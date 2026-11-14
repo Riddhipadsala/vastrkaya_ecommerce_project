@@ -59,18 +59,6 @@
                 </div>
             </div>
 
-            @if (session('success'))
-                <div
-                    class="alert alert-success border-0 bg-emerald-50 text-emerald-800 rounded-xl p-3 text-xs mb-3 d-flex align-items-center justify-content-between shadow-2xs">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-check-circle-fill text-emerald-600"></i>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                    <button type="button" class="btn-close text-[10px] shadow-none" data-bs-dismiss="alert"
-                        aria-label="Close"></button>
-                </div>
-            @endif
-
             @if ($errors->any())
                 <div class="alert alert-danger border-0 bg-rose-50 text-rose-800 rounded-xl p-3 text-xs mb-3 shadow-2xs">
                     <div class="d-flex align-items-center gap-2 mb-1 font-bold">
@@ -322,11 +310,6 @@
                                     style="color: #282c3f;">
                                     Select Delivery Address
                                 </h2>
-                                <a href="{{ route('contact.index', ['add' => 1]) }}"
-                                    class="btn text-xs font-bold uppercase tracking-wider px-3.5 py-2 rounded bg-white hover:bg-slate-50 transition shadow-none text-decoration-none"
-                                    style="border: 1px solid #282c3f; color: #282c3f; font-size: 11px; letter-spacing: 0.5px;">
-                                    ADD NEW ADDRESS
-                                </a>
                             </div>
 
                             <!-- List of Saved Addresses -->
@@ -525,10 +508,11 @@
       
         $(document).on('click','.deliver-btn',function(e) {
             e.preventDefault();
-            
-            axios.get('/checkout/check-contact')
+
+            let addressId = $('.custom-pink-radio:checked').val();
+          
+            axios.get('/checkout/check-contact',{ params :{ address_id: addressId }})
             .then((res)=> {
-                console.log(res);
                 if(res.data.success == false) {
                     $('.err-msg').removeClass('d-none');
              }

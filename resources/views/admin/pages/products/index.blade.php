@@ -94,7 +94,6 @@
             }
         })
         .then((res)=> {
-            console.log(res);
             
             res.data.products.data.forEach((product,index)=> {
                 data += `    

@@ -186,7 +186,6 @@
             axios.get(`/admin/banners?page=${page}&poster_id=${posterId}`)
             .then(res => {
                 let posters = res.data.posters.data;
-                console.log(posters);
                 
                 if (posters.length === 0) {
                     row += `

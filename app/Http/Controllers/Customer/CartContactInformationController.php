@@ -128,14 +128,12 @@ class CartContactInformationController extends Controller
         return redirect()->route('contact.index')->with('success', 'Address removed successfully!');
     }
 
-    /**
-     * Check contact information
-     */
-    public function checkContact() {
 
+    public function checkContact(Request $request) {
+        
         $cart = Cart::where('user_id', Auth::id())->first();
 
-        $contactInformation = CartContactInformation::where('cart_id', $cart->id)->first();
+        $contactInformation = CartContactInformation::where('id', $request->address_id)->first();
 
         if (!$contactInformation) {
             return response()->json([
@@ -144,9 +142,22 @@ class CartContactInformationController extends Controller
             ]);
         }
 
-        return response()->json([
-            'success' => true,
-            'redirect' => route('checkout.payment')
+        $updateRecord = $contactInformation->update([
+            'is_selected' => 1
         ]);
+
+        if($updateRecord) {
+
+            $updateCartContactInformations = CartContactInformation::whereNot('id', $request->address_id)->where('cart_id', $cart->id)->update([
+                'is_selected'=> 0
+            ]);
+
+            if($updateCartContactInformations) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => route('checkout.payment')
+                ]);
+            }
+        }
     }
 }

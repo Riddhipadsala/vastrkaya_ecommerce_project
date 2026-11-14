@@ -68,7 +68,7 @@ class OrderController extends Controller
 
         session()->forget('applied_coupon');
 
-        $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->latest()->first();
+        $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->where('is_selected', 1)->latest()->first();
 
         $setting = Setting::first();
 
