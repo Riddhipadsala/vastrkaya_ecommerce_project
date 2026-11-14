@@ -10,116 +10,7 @@
 @section('hero-section')
     <style>
         /* Exact Myntra Product Grid & Card Styling */
-        .myntra-card {
-            background: #ffffff;
-            border: 1px solid #f5f5f6;
-            border-radius: 0;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            text-align: left;
-            transition: box-shadow 0.2s ease, transform 0.15s ease;
-            overflow: hidden;
-        }
-        .myntra-card:hover {
-            box-shadow: 0 4px 16px rgba(40, 44, 63, 0.12);
-        }
-        .myntra-img-wrap {
-            position: relative;
-            display: block;
-            width: 100%;
-            aspect-ratio: 1 / 0.9;
-            background-color: #f7f7f8;
-            overflow: hidden;
-            text-decoration: none;
-        }
-        .myntra-img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-            display: block;
-            transition: transform 0.35s ease;
-        }
-        .myntra-card:hover .myntra-img-wrap img {
-            transform: scale(1.03);
-        }
-        .myntra-rating-pill {
-            position: absolute;
-            bottom: 8px;
-            left: 8px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(2px);
-            padding: 2px 6px;
-            border-radius: 2px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #282c3f;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            line-height: 1.2;
-        }
-        .myntra-rating-pill i {
-            color: #14958f;
-            font-size: 9px;
-        }
-        .myntra-rating-pill .rating-count {
-            color: #7e818c;
-            font-weight: 400;
-            font-size: 10px;
-            margin-left: 2px;
-        }
-        .myntra-info {
-            padding: 13px 12px 16px 12px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            min-height: 100px;
-            background: #ffffff;
-        }
-        .myntra-brand {
-            font-size: 14px;
-            font-weight: 400;
-            color: #282c3f;
-            margin-bottom: 3px;
-            line-height: 1.25;
-            letter-spacing: 0.1px;
-        }
-        .myntra-title {
-            font-size: 16px;
-            font-weight: 900;
-            color: #535766;
-            margin-bottom: 8px;
-            line-height: 1.35;
-        }
-        .myntra-price-row {
-            display: flex;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: auto;
-            padding-top: 2px;
-            line-height: 1.2;
-        }
-        .myntra-final-price {
-            font-size: 14px;
-            font-weight: 700;
-            color: #282c3f;
-        }
-        .myntra-mrp {
-            font-size: 12px;
-            font-weight: 400;
-            color: #7e818c;
-            text-decoration: line-through;
-        }
-        .myntra-discount {
-            font-size: 12px;
-            font-weight: 500;
-            color: #ff905a;
-        }
+        
     </style>
 
     <div class="bg-white min-h-screen text-slate-800 font-sans" style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
@@ -449,12 +340,6 @@
                                 <a href="/products/${p.id}" class="myntra-img-wrap">
                                     <img src="${image}" alt="${name}" loading="lazy">
                                     
-                                    <!-- Rating Pill (Bottom Left over image) -->
-                                    <div class="myntra-rating-pill">
-                                        <span>4.2</span>
-                                        <i class="bi bi-star-fill"></i>
-                                        <span class="rating-count">| 120</span>
-                                    </div>
                                 </a>
 
                                 <!-- Product Info Body -->

@@ -169,14 +169,6 @@
                                 <span class="vk-product-category">{{ $product->category->name ?? 'Collection' }}</span>
                                 <a href="{{ url('products/' . $product->id) }}"
                                     class="vk-product-title">{{ $product->name }}</a>
-                                <div class="vk-product-rating">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-half"></i>
-                                    <span class="vk-rating-count">(4.8)</span>
-                                </div>
                                 <div class="vk-product-price">
                                     <span class="vk-price-current">₹{{ $product->price }}</span>
                                     <span class="vk-price-mrp">₹{{ $product->discount_price }}</span>

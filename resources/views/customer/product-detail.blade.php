@@ -150,14 +150,14 @@
                                 &bull; {{ $product->category->name }}
                             @endif
                         </span>
-                        @if ($product->stock >= 0)
+                        @if ($product->stock > 0)
                             <span
                                 class="badge text-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-0.5 text-[10px] font-semibold rounded stock">
                                 In Stock
                             </span>
                         @else
                             <span
-                                class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-0.5 text-[10px] font-semibold rounded">
+                                class="badge bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-0.5 text-[10px] font-semibold rounded stock">
                                 Out of Stock
                             </span>
                         @endif
@@ -167,20 +167,6 @@
                     <h1 class="h5 fw-bold text-slate-900 mb-2 capitalize text-xl leading-snug product_id" data-id="{{ $product->id }}">
                         {{ $product->name }}
                     </h1>
-
-                    <!-- Rating & Reviews -->
-                    <div class="d-flex align-items-center gap-2 mb-2.5 text-xs text-slate-500">
-                        <span
-                            class="badge bg-success text-white px-1.5 py-0.5 rounded text-[10px] font-semibold d-inline-flex align-items-center gap-1">
-                            4.9 <i class="bi bi-star-fill text-[9px]"></i>
-                        </span>
-                        <span>124 ratings</span>
-                        <span>&bull;</span>
-                        <a href="#collapseReviews" class="text-slate-500 hover:text-slate-900 text-decoration-none"
-                            onclick="document.querySelector('#headingReviews button')?.click();">
-                            85 reviews
-                        </a>
-                    </div>
 
                     <!-- Pricing Section -->
                     <div class="d-flex align-items-baseline gap-2.5 mb-1 flex-wrap">
@@ -377,54 +363,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- 4. Customer Reviews -->
-                        <div class="accordion-item border border-slate-200 rounded mb-2 overflow-hidden"
-                            id="reviewsAccordionSection">
-                            <h2 class="accordion-header" id="headingReviews">
-                                <button
-                                    class="accordion-button collapsed text-xs font-semibold text-slate-800 bg-slate-50 py-2.5 px-3.5 shadow-none"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseReviews"
-                                    aria-expanded="false" aria-controls="collapseReviews">
-                                    <i class="bi bi-star me-2 text-warning"></i> Customer Reviews (4.9 / 5)
-                                </button>
-                            </h2>
-                            <div id="collapseReviews" class="accordion-collapse collapse"
-                                aria-labelledby="headingReviews">
-                                <div class="accordion-body text-xs text-slate-600 p-3.5 bg-white">
-                                    <div class="d-flex align-items-center gap-2.5 p-2 bg-slate-50 rounded mb-2.5">
-                                        <span class="font-bold text-slate-900 text-lg">4.9</span>
-                                        <div class="text-warning text-xs">
-                                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
-                                                class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
-                                                class="bi bi-star-fill"></i>
-                                        </div>
-                                        <span class="text-xs text-slate-400 ms-auto">Based on 124 ratings</span>
-                                    </div>
-
-                                    <div class="d-flex flex-column gap-2">
-                                        <div class="p-2 border border-slate-200 rounded bg-white text-xs">
-                                            <div class="d-flex justify-content-between mb-1">
-                                                <strong class="text-slate-800">Pooja S. <span
-                                                        class="badge text-success bg-opacity-15 text-success text-[9px]">Verified</span></strong>
-                                                <span class="text-slate-400 text-[10px]">3 days ago</span>
-                                            </div>
-                                            <p class="text-slate-600 mb-0">Good fabric quality, matches the photo nicely.
-                                            </p>
-                                        </div>
-                                        <div class="p-2 border border-slate-200 rounded bg-white text-xs">
-                                            <div class="d-flex justify-content-between mb-1">
-                                                <strong class="text-slate-800">Ananya V. <span
-                                                        class="badge text-success bg-opacity-15 text-success text-[9px]">Verified</span></strong>
-                                                <span class="text-slate-400 text-[10px]">1 week ago</span>
-                                            </div>
-                                            <p class="text-slate-600 mb-0">Nice packaging and fast delivery.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
@@ -492,7 +430,7 @@
                                                 </div>
                                                 <span
                                                     class="text-xs font-semibold text-slate-800 d-inline-flex align-items-center gap-1">
-                                                    <i class="bi bi-star-fill text-warning text-[10px]"></i> 4.8
+                                                    <i class="text-[10px] font-bold tracking-wider text-amber-700 p-1 border">Brand  </i> {{ $rel->brand }}
                                                 </span>
                                             </div>
                                         </div>

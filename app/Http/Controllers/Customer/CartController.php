@@ -144,13 +144,21 @@ class CartController extends Controller
         }
 
         $productStock = (int) ($cartItem->product->stock ?? 0);
-        $remainingStock = $productStock - $newQuantity;
+        
+        $otherItemsStock = CartItem::where('cart_id', $cartItem->cart_id)
+        ->where('product_id', $cartItem->product_id)
+        ->where('id', '!=', $cartItem->id)
+        ->sum('quantity');
 
-        if ($remainingStock <= 0) {
+        $totalStock = $newQuantity + $otherItemsStock;
+
+        $remainingStock = $productStock - $totalStock;
+
+        if ($remainingStock < 0) {
             return response()->json([
                 'success' => false,
                 'remainingStock' => $remainingStock,
-                'productStock' => $productStock,
+                'stock' => $productStock,
                 'quantity' => $cartItem->quantity,
                 'message' => 'Product is out of stock',
             ]);
@@ -165,7 +173,7 @@ class CartController extends Controller
             'unit_price' => $cartItem->price,
             'new_price' => $cartItem->new_price,
             'quantity' => $newQuantity,
-            'productStock' => $productStock,
+            'stock' => $productStock,
             'remaining_stock' => $remainingStock,
             'is_out_of_stock' => ($remainingStock <= 0 || $productStock <= 0),
         ]);
