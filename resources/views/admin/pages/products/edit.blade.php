@@ -10,8 +10,6 @@
                 <div class="d-flex align-items-center gap-3">
                     <div>
                         <h4 class="h5 fw-bold mb-0 text-heading">Edit Product: {{ $product->name }}</h4>
-                        <span class="font-12 text-muted"> &bull; Last updated:
-                            {{ $product->updated_at ? $product->updated_at->diffForHumans() : 'N/A' }}</span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2">

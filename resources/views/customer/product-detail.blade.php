@@ -11,8 +11,7 @@
     $discountPrice = (float) ($product->discount_price ?? 0);
     $discountPercent = (float) ($product->discount_percentage ?? 0);
     $finalPrice = (float) ($product->final_price ?? 0);
-   
-    $savings = max(0, $sellingPrice - $finalPrice);
+
 @endphp
 
 @section('hero-section')
@@ -58,8 +57,8 @@
                             <div class="order-2 order-md-1 d-flex flex-md-column gap-2 overflow-auto"
                                 style="max-height: 440px;">
                                 <!-- Main Image Thumb -->
-                                <div class="vk-gallery-thumb active w-[52px] h-[64px] shrink-0 border border-slate-200 rounded p-0.5 cursor-pointer bg-white transition hover:border-slate-400 [&.active]:border-slate-900 [&.active]:shadow-[0_0_0_1px_#0f172a]"
-                                    onclick="switchShowcaseImage('{{ asset('storage/' . $product->image) }}', this)">
+                                <div
+                                    class="vk-gallery-thumb active w-[52px] h-[64px] shrink-0 border border-slate-200 rounded p-0.5 cursor-pointer bg-white transition hover:border-slate-400 [&.active]:border-slate-900 [&.active]:shadow-[0_0_0_1px_#0f172a]">
                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                                         class="w-full h-full object-cover rounded">
                                 </div>
@@ -86,33 +85,6 @@
                                             class="bi bi-heart{{ $product->wishLists->isNotEmpty() ? '-fill text-danger' : '' }} wishbtn"></i>
                                     </button>
                                 </div>
-
-                                <!-- Navigation Arrows -->
-                                <button type="button"
-                                    class="position-absolute start-2 top-50 -translate-y-1/2 w-8 h-8 bg-white/90 border border-slate-200 text-slate-900 transition hover:bg-white hover:shadow-sm rounded-circle d-flex align-items-center justify-content-center p-0 z-10"
-                                    onclick="cycleGallery(-1)" title="Previous">
-                                    <i class="bi bi-chevron-left text-xs"></i>
-                                </button>
-                                <button type="button"
-                                    class="position-absolute end-2 top-50 -translate-y-1/2 w-8 h-8 bg-white/90 border border-slate-200 text-slate-900 transition hover:bg-white hover:shadow-sm rounded-circle d-flex align-items-center justify-content-center p-0 z-10"
-                                    onclick="cycleGallery(1)" title="Next">
-                                    <i class="bi bi-chevron-right text-xs"></i>
-                                </button>
-
-                                <!-- Slide Counter -->
-                                @php
-                                    $activePovs = $product->productOptionValues
-                                        ? $product->productOptionValues->where('status', 1)
-                                        : collect();
-                                    $totalPhotos =
-                                        1 +
-                                        ($activePovs->whereNotNull('image')->count() +
-                                            $activePovs->whereNotNull('optionValue.option_value_image')->count());
-                                @endphp
-                                <span id="vkSlideCounterBadge"
-                                    class="position-absolute bottom-2.5 end-2.5 badge bg-slate-900/80 rounded px-2 py-0.5 text-[10px] text-white z-10">
-                                    1 / {{ max(1, $totalPhotos) }}
-                                </span>
 
                                 <!-- Main Image -->
                                 <img id="mainDisplayPhoto" src="{{ asset('storage/' . $product->image) }}"
@@ -141,7 +113,8 @@
                 </div>
 
                 <!-- RIGHT COLUMN: Product Details & Purchase Actions -->
-                <div class="col-lg-7 col-xl-7 product-details" data-id="{{ $product->id }}" data-price={{ $finalPrice }}>
+                <div class="col-lg-7 col-xl-7 product-details" data-id="{{ $product->id }}"
+                    data-price={{ $finalPrice }}>
 
                     <!-- Category / Brand Line -->
                     <div class="d-flex align-items-center justify-content-between mb-1">
@@ -164,20 +137,23 @@
                     </div>
 
                     <!-- Product Name -->
-                    <h1 class="h5 fw-bold text-slate-900 mb-2 capitalize text-xl leading-snug product_id" data-id="{{ $product->id }}">
+                    <h1 class="h5 fw-bold text-slate-900 mb-2 capitalize text-xl leading-snug product_id"
+                        data-id="{{ $product->id }}">
                         {{ $product->name }}
                     </h1>
 
                     <!-- Pricing Section -->
                     <div class="d-flex align-items-baseline gap-2.5 mb-1 flex-wrap">
                         <span class="h4 fw-bold text-slate-900 mb-0 text-2xl">
-                            &#8377;<span class="price">{{ number_format($product->price - $product->discount_price) }}</span>
+                            &#8377;<span class="price">{{ number_format($product->final_price) }}</span>
                         </span>
-                        @if ($savings > 0)
+                        @if ($discountPercent > 0)
                             <span class="text-muted text-decoration-line-through text-xs">
-                                &#8377;<span class="base-price">{{ number_format($product->price ) }}</span>
+                                &#8377;<span class="base-price">{{ number_format($product->price) }}</span>
                             </span>
-                            <span class="text-xs font-bold text-success px-1.5 py-0.5 text-success bg-opacity-10 rounded">
+                            <span
+                                class="text-xs font-bold text-success px-1.5 py-0.5 text-success bg-opacity-10 rounded discount-percentage"
+                                data-percentage="{{ $discountPercent }}">
                                 {{ round($discountPercent) }}% OFF
                             </span>
                         @endif
@@ -207,8 +183,7 @@
                                         </label>
                                         @if (strtolower($optModel->name) === 'size')
                                             <button type="button"
-                                                class="btn btn-link text-decoration-none p-0 text-xs text-danger"
-                                                data-bs-toggle="modal" data-bs-target="#sizeGuideModal">
+                                                class="btn btn-link text-decoration-none p-0 text-xs text-danger">
                                                 <i class="bi bi-rulers me-1"></i>Size Chart
                                             </button>
                                         @endif
@@ -231,7 +206,7 @@
                                                         data-pov-id="{{ $pov->id }}"
                                                         data-option-id="{{ $optModel->id }}"
                                                         data-price="{{ $pov->price }}"
-                                                        onchange="handleOptionChange('{{ $optModel->id }}', '{{ $optVal->name }}', '{{ $valImg ? asset('storage/' . $valImg) : '' }}', {{ $pov->id }})"
+                                                        onchange="handleOptionChange('{{ $optModel->id }}', '{{ $optVal->name }}')"
                                                         {{ $isFirst ? 'checked' : '' }}>
 
                                                     @if ($valImg)
@@ -287,7 +262,8 @@
                                     <i class="bi bi-info-circle me-2 text-primary"></i> Specifications & Details
                                 </button>
                             </h2>
-                            <div id="collapseSpecs" class="accordion-collapse collapse show" aria-labelledby="headingSpecs">
+                            <div id="collapseSpecs" class="accordion-collapse collapse show"
+                                aria-labelledby="headingSpecs">
                                 <div class="accordion-body p-0">
                                     <table class="table table-sm table-bordered mb-2 text-xs">
                                         <tbody>
@@ -423,14 +399,16 @@
                                                 <div class="d-flex align-items-baseline gap-1.5">
                                                     <span
                                                         class="font-bold text-slate-900 text-sm md:text-base">&#8377;{{ number_format($rel->price) }}</span>
-                                                    @if ($rel->discount_price)
+                                                    @if ($rel->discount_price > 0)
                                                         <span
                                                             class="text-slate-400 text-decoration-line-through text-xs">&#8377;{{ number_format($rel->discount_price + $rel->price) }}</span>
                                                     @endif
                                                 </div>
                                                 <span
                                                     class="text-xs font-semibold text-slate-800 d-inline-flex align-items-center gap-1">
-                                                    <i class="text-[10px] font-bold tracking-wider text-amber-700 p-1 border">Brand  </i> {{ $rel->brand }}
+                                                    <i
+                                                        class="text-[10px] font-bold tracking-wider text-amber-700 p-1 border">Brand
+                                                    </i> {{ $rel->brand }}
                                                 </span>
                                             </div>
                                         </div>
@@ -478,128 +456,17 @@
             </button>
         </div>
     </div>
-    
-    <!-- Scoped Option Swatch Selection Styles -->
-    <style>
-        .vk-option-item {
-            position: relative;
-            display: inline-flex;
-        }
-
-        .vk-option-item input[type="radio"]:checked+label {
-            border-color: #0f172a !important;
-            box-shadow: 0 0 0 1px #0f172a !important;
-        }
-
-        .vk-option-item.has-img input[type="radio"]:checked+label {
-            background-color: #f8fafc !important;
-            color: #0f172a !important;
-            font-weight: 600 !important;
-        }
-
-        .vk-option-item.has-text input[type="radio"]:checked+label {
-            background-color: #0f172a !important;
-            color: #ffffff !important;
-            font-weight: 600 !important;
-        }
-    </style>
 
 @endsection
 
 @section('script')
     <script>
-        // All available gallery photos for cycling
-        const allGalleryImages = [
-            '{{ asset('storage/' . $product->image) }}',
-            @if ($product->productOptionValues)
-                @foreach ($product->productOptionValues->where('status', 1) as $pov)
-                    @php $valImg = $pov->image ?: ($pov->optionValue->option_value_image ?? null); @endphp
-                    @if ($valImg)
-                        '{{ asset('storage/' . $valImg) }}',
-                    @endif
-                @endforeach
-            @endif
-        ];
-
-        let currentGalleryIdx = 0;
-
-        function switchShowcaseImage(imageUrl, thumbEl) {
-            if (!imageUrl) return;
-            const mainImg = document.getElementById('mainDisplayPhoto');
-
-            if (mainImg) {
-                mainImg.style.opacity = '0.35';
-                mainImg.src = imageUrl;
-                setTimeout(() => {
-                    mainImg.style.opacity = '1';
-                }, 120);
-            }
-
-            // Sync slide counter badge if matched
-            const idx = allGalleryImages.indexOf(imageUrl);
-            if (idx !== -1) {
-                currentGalleryIdx = idx;
-                const badge = document.getElementById('vkSlideCounterBadge');
-                if (badge) {
-                    badge.textContent = `${currentGalleryIdx + 1} / ${Math.max(1, allGalleryImages.length)}`;
-                }
-            }
-
-            let activeThumb = thumbEl;
-            if (!activeThumb && imageUrl) {
-                document.querySelectorAll('.vk-gallery-thumb').forEach(el => {
-                    const img = el.querySelector('img');
-                    if (img && img.src.includes(imageUrl)) {
-                        activeThumb = el;
-                    }
-                });
-            }
-            if (activeThumb) {
-                document.querySelectorAll('.vk-gallery-thumb').forEach(el => {
-                    el.classList.remove('active');
-                });
-                activeThumb.classList.add('active');
-            }
-        }
-
-        // Cycle images through previous and next navigation arrows
-        function cycleGallery(delta) {
-            if (!allGalleryImages || allGalleryImages.length <= 1) return;
-            currentGalleryIdx = (currentGalleryIdx + delta + allGalleryImages.length) % allGalleryImages.length;
-            const targetUrl = allGalleryImages[currentGalleryIdx];
-
-            // Find matching thumbnail element to highlight
-            const thumbs = document.querySelectorAll('.vk-gallery-thumb');
-            let matchingThumb = null;
-            thumbs.forEach(t => {
-                const img = t.querySelector('img');
-                if (img && img.src.includes(targetUrl)) {
-                    matchingThumb = t;
-                }
-            });
-
-            switchShowcaseImage(targetUrl, matchingThumb);
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-
-            let option_price = 0;
-
-            $('.input-radio:checked').each(function () {
-                option_price += parseFloat($(this).attr("data-price"));
-            });
-
-            let main_price = parseFloat($('.product-details').attr('data-price'));
-            
-            let final_price = parseInt(option_price + main_price);
-
-            $('.price').text(final_price);
-
+        document.addEventListener('DOMContentLoaded', function() {
+            handleOptionChange();
         });
 
-
-        function handleOptionChange(optionId, valName, valImage, povId) {
-
+        function handleOptionChange(optionId, valName) {
+            
             const lbl = document.getElementById('labelOption_' + optionId);
 
             if (lbl) {
@@ -608,18 +475,22 @@
 
             let option_price = 0;
 
-             $('.input-radio:checked').each(function () {
+            $('.input-radio:checked').each(function() {
                 option_price += parseFloat($(this).attr("data-price"));
             });
-           
+
             let main_price = parseFloat($('.product-details').attr('data-price'));
             let final_price = parseInt(option_price + main_price);
+            let percentage = $('.discount-percentage').attr('data-percentage');
+
+            let calculateBasePrice = Math.round(final_price + (final_price * percentage / 100));
 
             $('.price').text(final_price);
-        
+            $('.base-price').text(calculateBasePrice);
+
         }
 
-        let toastTimeout = null;
+        // let toastTimeout = null;
 
         // Handle Add to Cart Button UI interaction
         function handleAddToCart(product, action) {
@@ -642,13 +513,11 @@
 
                         if (action == 'addTocart') {
                             showCartToast();
-                        }
-                        else if (action == 'buyNow') {
+                        } else if (action == 'buyNow') {
                             window.location.href = '{{ route('cart.index') }}';
                         }
 
-                    }
-                    else {
+                    } else {
                         $('#addToCartBtn').prop('disabled', true);
                         $('.stock').text('Out of Stock');
                         $('.stock').removeClass('text-success border border-success');
@@ -668,7 +537,7 @@
             toast.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
             toast.classList.add('opacity-100', 'translate-y-0');
 
-            if (toastTimeout) clearTimeout(toastTimeout);
+            // if (toastTimeout) clearTimeout(toastTimeout);
             toastTimeout = setTimeout(closeCartToast, 1500);
         }
 

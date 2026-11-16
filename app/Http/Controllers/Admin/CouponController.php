@@ -17,22 +17,20 @@ class CouponController extends Controller
     {
         $query = Coupon::query();
 
-        $query = Coupon::query();
-
-        if ($request->filled('filter_name')) {
-        $query->where('coupon_name', 'LIKE', '%' . $request->filter_name . '%');
+        if ($request->filled('name')) {
+        $query->where('coupon_name', 'LIKE', '%' . $request->name . '%');
         }
 
-        if ($request->filled('filter_code')) {
-        $query->where('code', 'LIKE', '%' . $request->filter_code . '%');
+        if ($request->filled('code')) {
+        $query->where('code', 'LIKE', '%' . $request->code . '%');
         }
 
-        if ($request->filled('filter_type')) {
-        $query->where('type', $request->filter_type);
+        if ($request->filled('type')) {
+        $query->where('type', $request->type);
         }
 
-        if ($request->filled('filter_status')) {
-        $query->where('status', $request->filter_status);
+        if ($request->filled('status')) {
+        $query->where('status', $request->status);
         }
 
         $coupons = $query->orderBy('id', 'desc')->paginate(10);

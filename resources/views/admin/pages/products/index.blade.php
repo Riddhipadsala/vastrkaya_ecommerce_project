@@ -29,7 +29,7 @@
                     <label for="filter_product_brand" class="form-label fw-bold font-13 text-secondary mb-1">Brand</label>
                     <input type="text" class="form-control form-control-sm" id="filter_product_brand" placeholder="Product Brand">
                 </div>
-                <div class="col-md-2 col-12 d-flex justify-content-md-end gap-2">
+                <div class="col-md-3 col-12 d-flex justify-content-md-end gap-2">
                     <button type="button" onclick="clearFilter()" class="btn btn-sm btn-danger px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1" id="btnClearFilter">
                         <i class="bi bi-x-lg"></i> Clear Filter
                     </button>
@@ -49,13 +49,13 @@
                     <tr class="text-secondary font-13">
                         <th style="width: 10%;" class="ps-3">ProductID</th>
                         <th style="width: 10%;">Image</th>
-                        <th style="width: 25%;">Product Name</th>
+                        <th style="width: 20%;">Product Name</th>
                         <th style="width: 15%;">Brand</th>
                         <th style="width: 15%;">Category</th>
                         <th style="width: 12%;">Price</th>
-                        <th style="width: 10%;">Stock</th>
+                        <th style="width: 8%;">Stock</th>
                         <th style="width: 10%;">Status</th>
-                        <th style="width: 8%;" class="text-end pe-3">Action</th>
+                        <th style="width: 10%;" class="text-end pe-3">Action</th>
                     </tr>
                 </thead>
                 <tbody class="productstbl">

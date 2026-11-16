@@ -360,7 +360,7 @@
                                     <div class="myntra-price-row">
                                         <span class="myntra-final-price">Rs. ${price - discountPrice}</span>
                                         ${discountPercent ? `
-                                            <span class="myntra-mrp">Rs. ${discountPrice}</span>
+                                            <span class="myntra-mrp">Rs. ${p.price}</span>
                                             <span class="myntra-discount">(${discountPercent}% OFF)</span>
                                         ` : ''}
                                     </div>

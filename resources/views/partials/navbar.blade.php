@@ -5,8 +5,7 @@
 
             <!-- 1. LOGO -->
             <a href="{{ url('/') }}" class="vk-brand d-flex align-items-center text-decoration-none">
-                <img src="{{ asset('logo.png') }}?v={{ file_exists(public_path('logo.png')) ? filemtime(public_path('logo.png')) : time() }}"
-                    alt="Vastrkaya Logo" class="vk-logo-img"
+                <img src="{{ Vite::asset('resources/image/logo.png') }}" alt="Vastrkaya Logo" class="vk-logo-img"
                     onerror="this.style.display='none'; document.getElementById('vk-fallback-logo').style.display='inline-flex';">
 
                 <!-- Fallback stylish text logo in case image is missing -->

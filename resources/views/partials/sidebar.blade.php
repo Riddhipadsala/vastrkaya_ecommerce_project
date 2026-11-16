@@ -8,7 +8,7 @@
     <!-- Sidebar Header -->
     <div class="vk-sidebar-header">
         <a href="{{ route('admin.dashboard') }}" class="vk-sidebar-brand">
-            <img src="{{ asset('logo.png') }}" alt="Vastrkaya Logo" style="max-height: 40px; width: auto;">
+            <img src="{{ Vite::asset('resources/image/logo.png') }}" alt="Vastrkaya Logo" style="max-height: 40px; width: auto;">
         </a>
     </div>
 

@@ -160,8 +160,10 @@
                     <div class="col">
                         <div class="vk-product-card">
                             <a href="{{ url('products/' . $product->id) }}" class="vk-product-thumb d-block text-decoration-none">
-                                <span class="vk-product-tag vk-tag-hot">{{ round($product->discount_percentage) }}%
-                                    OFF</span>
+                                @if ($product->discount_percentage > 0)
+                                    <span class="vk-product-tag vk-tag-hot">{{ round($product->discount_percentage) == 0 ? $product->discount_percentage : round($product->discount_percentage) }}%
+                                        OFF</span>
+                                @endif
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                                     class="vk-product-img" loading="lazy">
                             </a>

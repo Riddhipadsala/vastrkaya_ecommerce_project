@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Option extends Model
@@ -11,6 +12,12 @@ class Option extends Model
         'type',
         'sort_order'
     ]; 
+
+    public function name():Attribute {
+        return Attribute::make(
+            get: fn($value) => ucfirst($value)
+        ); 
+    }
 
     public function optionValues() {
         return $this->hasMany(OptionValue::class)->orderBy('sort_order', 'asc');

@@ -148,16 +148,15 @@ class CartContactInformationController extends Controller
 
         if($updateRecord) {
 
-            $updateCartContactInformations = CartContactInformation::whereNot('id', $request->address_id)->where('cart_id', $cart->id)->update([
+            CartContactInformation::whereNot('id', $request->address_id)->where('cart_id', $cart->id)->update([
                 'is_selected'=> 0
             ]);
 
-            if($updateCartContactInformations) {
-                return response()->json([
-                    'success' => true,
-                    'redirect' => route('checkout.payment')
-                ]);
-            }
+            return response()->json([
+                'success' => true,
+                'redirect' => route('checkout.payment')
+            ]);
+            
         }
     }
 }
