@@ -16,14 +16,6 @@ class SettingController extends Controller
     {
         $setting = Setting::first();
 
-        if (!$setting) {
-            $setting = new Setting([
-                'minimum_order_amount' => 1000,
-                'free_delivery_amount' => 0,
-                'delivery_charge'      => 0,
-            ]);
-        }
-
         return view('admin.pages.settings', compact('setting'));
     }
 

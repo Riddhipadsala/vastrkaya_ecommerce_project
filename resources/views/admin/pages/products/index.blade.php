@@ -94,42 +94,51 @@
             }
         })
         .then((res)=> {
-            
-            res.data.products.data.forEach((product,index)=> {
+            if(res.data.products.data.length === 0) {
                 data += `    
                     <tr>
-                        <td class="ps-3 text-secondary fw-semibold font-13">${index+1}</td>
-                        <td>
-                            <img src="/storage/${product.image}" 
-                                alt="Royal Banarasi Silk Saree" 
-                                style="width: 70px; height:70px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(0,0,0,0.08);">
+                        <td colspan="9" class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox fs-3 d-block mb-1"></i>
+                            No Products found.
                         </td>
-                        <td>
-                            <div class="fw-semibold text-heading font-14">${product.name}</div>
-                            <small class="text-muted font-12">${product.brand}</small>
-                        </td>
-                        <td class="text-secondary font-13">${product.brand}</td>
-                        <td class="text-secondary font-13">${product.category.name}</td>
-                        <td><span class="fw-bold text-heading">&#8377;${product.price}</span></td>
-                        <td><span class="badge ${product.stock < 10 ? 'text-danger' : 'text-dark'} px-2 py-1 font-12">${product.stock}</span></td>
-                        <td>
-                            <span class="badge text-${product.status ? 'success' : 'danger'} border border-${product.status ? 'success' : 'danger'} border-opacity-25 rounded-pill px-2 py-1 font-12">
-                                ${product.status ? 'Active' : 'Inactive'}
-                            </span>
-                        </td>
-                        <td class="text-end pe-3">
-                            <div class="d-inline-flex gap-1">
-                                <a href="/admin/products/${product.id}/edit" class="btn btn-sm btn-primary px-2 py-1 rounded" title="Edit Product">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <button type="button" class="btn btn-sm btn-danger px-2 py-1 rounded" title="Delete Product" onclick="confirmDeleteOption(${product.id})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`
-                ;
-            })
+                    </tr>`;
+            } else {
+                res.data.products.data.forEach((product,index)=> {
+                    data += `    
+                        <tr>
+                            <td class="ps-3 text-secondary fw-semibold font-13">${index+1}</td>
+                            <td>
+                                <img src="/storage/${product.image}" 
+                                    alt="Royal Banarasi Silk Saree" 
+                                    style="width: 70px; height:70px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(0,0,0,0.08);">
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-heading font-14">${product.name}</div>
+                                <small class="text-muted font-12">${product.brand}</small>
+                            </td>
+                            <td class="text-secondary font-13">${product.brand}</td>
+                            <td class="text-secondary font-13">${product.category.name}</td>
+                            <td><span class="fw-bold text-heading">&#8377;${product.price}</span></td>
+                            <td><span class="badge ${product.stock < 10 ? 'text-danger' : 'text-dark'} px-2 py-1 font-12">${product.stock}</span></td>
+                            <td>
+                                <span class="badge text-${product.status ? 'success' : 'danger'} border border-${product.status ? 'success' : 'danger'} border-opacity-25 rounded-pill px-2 py-1 font-12">
+                                    ${product.status ? 'Active' : 'Inactive'}
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="d-inline-flex gap-1">
+                                    <a href="/admin/products/${product.id}/edit" class="btn btn-sm btn-primary px-2 py-1 rounded" title="Edit Product">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger px-2 py-1 rounded" title="Delete Product" onclick="confirmDeleteOption(${product.id})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>`
+                    ;
+                })
+            }
             $('.productstbl').html(data);
             renderPagination(res.data.products);
         })

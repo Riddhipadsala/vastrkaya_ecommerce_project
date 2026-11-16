@@ -191,6 +191,7 @@
                     row += `
                             <tr>
                                 <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-3 d-block mb-1"></i>
                                     No Main Store Posters found.
                                 </td>
                             </tr>
