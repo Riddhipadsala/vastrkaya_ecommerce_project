@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Mail\SendOrderMail;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
 use App\Models\Order;
@@ -12,10 +11,9 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductOptionValue;
 use App\Models\Setting;
+use App\Services\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Stripe\Checkout\Session;
 use Stripe\Refund;
 use Stripe\Stripe;
 
@@ -24,11 +22,7 @@ class OrderController extends Controller
     
     public function orderDetail(Request $request)
     {
-        $order = Order::with('orderItems','user')->where('user_id', Auth::id())->latest()->first();
-
-        if($order) {
-            Mail::to($order->user->email)->queue(new SendOrderMail($order));
-        }
+        $order = Order::where('user_id', Auth::id())->latest()->first();
 
         if ($request->filled('payment_id')) {
             
@@ -82,7 +76,7 @@ class OrderController extends Controller
     }
 
 
-    public function orderCancel(int $id) {
+    public function orderCancel(int $id, SendEmail $sendEmail) {
         
         $order = Order::with('orderItems.product')->where('id',$id)->first();
       
@@ -122,6 +116,9 @@ class OrderController extends Controller
                 'payment_status'=> 'cancelled'
             ]);
         }
+       
+        $sendEmail->sendOrderEmail($order->id);
+        $sendEmail->sendNotification($order->id);
 
         return redirect()->back()->with('success', 'Order cancelled successfully.');
     }
@@ -130,7 +127,6 @@ class OrderController extends Controller
     public function myOrders(Request $request) {
 
         $orders = Order::with('orderItems.product','payment')->where('user_id',Auth::id())->latest()->get();
-        
         return view('customer.orders', compact('orders'));
 
     }

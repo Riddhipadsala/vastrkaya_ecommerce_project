@@ -41,14 +41,4 @@ class SendOrderMail extends Mailable implements ShouldQueue
             view: 'emails.customer.order-detail-mail',
         );
     }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
 }

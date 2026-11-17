@@ -101,28 +101,49 @@
                         </td>
                     </tr>
 
-                    <!-- 2. SUCCESS ICON & TITLE -->
+                    <!-- 2. SUCCESS / CANCELLED ICON & TITLE -->
                     <tr>
                         <td class="mobile-padding" align="center" style="padding: 40px 40px 20px; text-align: center;">
-                            <!-- Checkmark Circle -->
-                            <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 18px;">
-                                <tr>
-                                    <td align="center" valign="middle"
-                                        style="width: 58px; height: 58px; background-color: #ecfdf5; border: 2px solid #a7f3d0; border-radius: 50%; color: #059669; font-size: 26px; font-weight: bold; line-height: 58px;">
-                                        &#10003;
-                                    </td>
-                                </tr>
-                            </table>
+                            @if (($order->order_status ?? '') === 'cancelled')
+                                <!-- Cancelled Cross Icon -->
+                                <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 18px;">
+                                    <tr>
+                                        <td align="center" valign="middle"
+                                            style="width: 58px; height: 58px; background-color: #fef2f2; border: 2px solid #fecaca; border-radius: 50%; color: #dc2626; font-size: 24px; font-weight: bold; line-height: 58px;">
+                                            &#10005;
+                                        </td>
+                                    </tr>
+                                </table>
 
-                            <h2
-                                style="margin: 0 0 10px; font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">
-                                Thank You For Your Order!
-                            </h2>
-                            <p style="margin: 0; font-size: 15px; color: #475569; line-height: 24px;">
-                                Hi <strong
-                                    style="color: #0f172a;">{{ $order->user->name ?? 'Valued Customer' }}</strong>,
-                                we’ve successfully received your order and we're preparing it for shipment.
-                            </p>
+                                <h2
+                                    style="margin: 0 0 10px; font-size: 24px; font-weight: 800; color: #991b1b; letter-spacing: -0.5px;">
+                                    Your Order Has Been Cancelled
+                                </h2>
+                                <p style="margin: 0; font-size: 15px; color: #475569; line-height: 24px;">
+                                    Hi <strong
+                                        style="color: #0f172a;">{{ $order->user->name ?? 'Valued Customer' }}</strong>,
+                                    your Order has been cancelled. {{ $order->payment->payment_status == 'refund' ? ' Deducted payment will be refunded to your source account withing Day.' : '' }}
+                                </p>
+                            @else
+                                <!-- Checkmark Circle -->
+                                <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 18px;">
+                                    <tr>
+                                        <td align="center" valign="middle"
+                                            style="width: 58px; height: 58px; background-color: #ecfdf5; border: 2px solid #a7f3d0; border-radius: 50%; color: #059669; font-size: 26px; font-weight: bold; line-height: 58px;">
+                                            &#10003;
+                                        </td>
+                                    </tr>
+                                </table>
+                                <h2
+                                    style="margin: 0 0 10px; font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">
+                                    Thank You For Your Order!
+                                </h2>
+                                <p style="margin: 0; font-size: 15px; color: #475569; line-height: 24px;">
+                                    Hi <strong
+                                        style="color: #0f172a;">{{ $order->user->name ?? 'Valued Customer' }}</strong>,
+                                    we've successfully received your order and we're preparing it for shipment.
+                                </p>
+                            @endif
                         </td>
                     </tr>
 
@@ -160,10 +181,17 @@
                                                         style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
                                                         Status</div>
                                                     <div style="margin-top: 4px;">
-                                                        <span
-                                                            style="display: inline-block; background-color: #e0e7ff; color: #3730a3; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;">
-                                                            {{ $order->order_status ?? 'Processing' }}
-                                                        </span>
+                                                        @if (($order->order_status ?? '') === 'cancelled')
+                                                            <span
+                                                                style="display: inline-block; background-color: #fef2f2; color: #991b1b; border: 1px solid #fecaca; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                CANCELLED
+                                                            </span>
+                                                        @else
+                                                            <span
+                                                                style="display: inline-block; background-color: #e0e7ff; color: #3730a3; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                {{ $order->order_status ?? 'Processing' }}
+                                                            </span>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>
@@ -286,7 +314,7 @@
                                             <tr style="padding:15px">
                                                 <td
                                                     style="font-size: 15px; font-weight: 800; color: #0f172a; padding: 12px 0 4px;">
-                                                    Total Paid
+                                                    Total Bill
                                                 </td>
                                                 <td align="right"
                                                     style="font-size: 18px; font-weight: 800; color: #7a2c3e; padding: 12px 0 4px; border-top: 1px solid #e2e8f0; padding-bottom:12px">
@@ -300,18 +328,25 @@
                         </td>
                     </tr>
 
-                    <!-- 7. ACTION BUTTON (TRACK ORDER) -->
+                    <!-- 7. ACTION BUTTON (TRACK ORDER / BROWSE) -->
                     <tr>
                         <td class="mobile-padding" align="center"
                             style="padding: 10px 40px 35px; text-align: center;">
                             <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                                 <tr>
                                     <td align="center"
-                                        style="background-color: #7a2c3e; border-radius: 30px; box-shadow: 0 4px 15px rgba(255, 63, 108, 0.35);">
-                                        <a href="{{ url('/my-orders') }}" target="_blank"
-                                            style="display: inline-block; padding: 14px 36px; font-size: 14px; font-weight: 800; color: #ffffff; text-decoration: none; text-transform: uppercase; letter-spacing: 0.8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                                            Track Order &amp; Delivery &rarr;
-                                        </a>
+                                        style="background-color: #7a2c3e; border-radius: 30px; box-shadow: 0 4px 15px rgba(122, 44, 62, 0.25);">
+                                        @if (($order->order_status ?? '') === 'cancelled')
+                                            <a href="{{ url('/') }}" target="_blank"
+                                                style="display: inline-block; padding: 14px 36px; font-size: 14px; font-weight: 800; color: #ffffff; text-decoration: none; text-transform: uppercase; letter-spacing: 0.8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                Continue Shopping &rarr;
+                                            </a>
+                                        @else
+                                            <a href="{{ url('/my-orders') }}" target="_blank"
+                                                style="display: inline-block; padding: 14px 36px; font-size: 14px; font-weight: 800; color: #ffffff; text-decoration: none; text-transform: uppercase; letter-spacing: 0.8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                Track Order &amp; Delivery &rarr;
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             </table>

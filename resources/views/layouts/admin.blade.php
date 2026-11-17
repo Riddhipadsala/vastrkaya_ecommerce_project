@@ -59,6 +59,93 @@
                 </div>
 
                 <div class="vk-topbar-right">
+                    <!-- Notifications Dropdown -->
+                    <div class="dropdown">
+                        <button type="button" class="vk-topbar-action" id="notificationDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+                            <i class="bi bi-bell-fill"></i>
+                            <span class="vk-notification-badge">3</span>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-0 vk-notification-dropdown" aria-labelledby="notificationDropdownBtn">
+                            <!-- Header -->
+                            <div class="vk-notification-header">
+                                <div class="d-flex align-items-center gap-2">
+                                    <h6 class="mb-0 fw-bold text-heading font-14">Notifications</h6>
+                                    <span class="badge rounded-pill bg-danger-subtle text-danger font-11 px-2 py-0.5 fw-bold">3 New</span>
+                                </div>
+                                <button type="button" class="btn btn-link p-0 text-decoration-none font-12 text-muted" title="Mark all read" style="font-size: 0.75rem;">
+                                    Mark all read
+                                </button>
+                            </div>
+
+                            <!-- Scrollable Notification List -->
+                            <div class="vk-notification-list">
+                                <!-- 1. New Order Notification (Unread) -->
+                                <a href="{{ route('admin.dashboard') }}" class="vk-notification-item unread">
+                                    <div class="vk-notification-icon bg-success-subtle text-success">
+                                        <i class="bi bi-bag-check-fill"></i>
+                                    </div>
+                                    <div class="vk-notification-content">
+                                        <div class="vk-notification-title">New Order Received</div>
+                                        <div class="vk-notification-desc">Order #J84280P0 &bull; &#8377;1,690.00 by Customer</div>
+                                        <div class="vk-notification-time">
+                                            <i class="bi bi-clock"></i> 2 mins ago
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- 2. Order Cancelled Notification (Unread) -->
+                                <a href="{{ route('admin.dashboard') }}" class="vk-notification-item unread">
+                                    <div class="vk-notification-icon bg-danger-subtle text-danger">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </div>
+                                    <div class="vk-notification-content">
+                                        <div class="vk-notification-title">Order Cancelled</div>
+                                        <div class="vk-notification-desc">Order #4CHP2VCM was cancelled by user</div>
+                                        <div class="vk-notification-time">
+                                            <i class="bi bi-clock"></i> 15 mins ago
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- 3. Low Stock Notification (Unread) -->
+                                <a href="{{ route('admin.products.index') }}" class="vk-notification-item unread">
+                                    <div class="vk-notification-icon bg-warning-subtle text-warning">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                    </div>
+                                    <div class="vk-notification-content">
+                                        <div class="vk-notification-title">Low Stock Alert</div>
+                                        <div class="vk-notification-desc">Mul Chickan Kali Kurti has only 3 left in inventory</div>
+                                        <div class="vk-notification-time">
+                                            <i class="bi bi-clock"></i> 1 hour ago
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- 4. Payment Confirmed (Read) -->
+                                <a href="{{ route('admin.dashboard') }}" class="vk-notification-item">
+                                    <div class="vk-notification-icon bg-primary-subtle text-primary">
+                                        <i class="bi bi-credit-card-2-front-fill"></i>
+                                    </div>
+                                    <div class="vk-notification-content">
+                                        <div class="vk-notification-title">Payment Confirmed</div>
+                                        <div class="vk-notification-desc">Stripe payment received for Order #ORD-892</div>
+                                        <div class="vk-notification-time">
+                                            <i class="bi bi-clock"></i> 3 hours ago
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="vk-notification-footer">
+                                <a href="{{ route('admin.dashboard') }}" class="font-12 fw-bold text-decoration-none" style="color: var(--vk-primary); font-size: 0.8rem;">
+                                    View All Notifications <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Light / Dark Theme Switcher -->
                     <button type="button" class="vk-theme-toggle" id="themeToggleBtn" title="Toggle Light / Dark Mode">
                         <i class="bi bi-moon-stars-fill text-secondary"></i>

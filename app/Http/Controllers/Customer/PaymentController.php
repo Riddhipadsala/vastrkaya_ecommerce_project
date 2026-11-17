@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\GetOrderMail;
 use App\Mail\SendOrderMail;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\User;
 use App\Services\CartService;
+use App\Services\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -31,7 +34,7 @@ class PaymentController extends Controller
     
     }
 
-    public function store(Request $request) {
+    public function store(Request $request, SendEmail $sendEmail) {
        
         $validate = $request->validate([
             'payment_method' => 'required',
@@ -66,6 +69,10 @@ class PaymentController extends Controller
                 'payment_status'=> 'succeeded',
                 'payment_method'=> 'cod'
             ]);
+
+            $sendEmail->sendOrderEmail($order->id);
+            $sendEmail->sendNotification($order->id);
+
         }
         else if($validate['payment_method'] == 'online'){
             
@@ -105,7 +112,7 @@ class PaymentController extends Controller
         return redirect()->route('order.details',['payment_id'=> $payment->id,'order_id'=> $order->id])->with('success', 'Order placed successfully!');
     }
 
-    public function paymentSuccess(Request $request) {
+    public function paymentSuccess(Request $request,SendEmail $sendEmail) {
         
         Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -120,6 +127,10 @@ class PaymentController extends Controller
         ]);
 
         if ($payment) {
+
+            $sendEmail->sendOrderEmail($request->order_id);
+            $sendEmail->sendNotification($request->order_id);
+
             return redirect()->route('order.details',[
                 'payment_id'=> $payment->id,
                 'order_id'=> $request->order_id 
