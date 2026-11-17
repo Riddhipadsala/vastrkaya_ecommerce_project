@@ -289,7 +289,7 @@
                                         <div class="col-6">
                                             <button type="submit"
                                                 class="btn w-100 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white shadow-sm transition border-0"
-                                                style="background-color: #ff3f6c;">
+                                                style="background-color: #7a2c3e;">
                                                 {{ isset($editAddress) ? 'Update' : 'Save' }}
                                             </button>
                                         </div>
@@ -323,7 +323,7 @@
                                                 id="addr_radio_{{ $address->id }}" value="{{ $address->id }}"
                                                 {{ $index === 0 ? 'checked' : '' }}
                                                 class="form-check-input mt-0 custom-pink-radio"
-                                                style="accent-color: #ff3f6c; width: 17px; height: 17px; cursor: pointer;">
+                                                style="accent-color: #7a2c3e; width: 17px; height: 17px; cursor: pointer;">
                                         </div>
 
                                         <!-- Address Details -->
@@ -384,17 +384,18 @@
                                 style="border: 1px dashed #d4d5d9; border-radius: 6px;">
                                 <span
                                     class="text-sm font-bold d-inline-flex align-items-center justify-content-center gap-1"
-                                    style="color: #ff3f6c; font-weight: 700;">
+                                    style="color: #7a2c3e; font-weight: 700;">
                                     + Add New Address
                                 </span>
                             </a>
-                            
-                            <p class="text-danger err-msg d-none"><i class="bi bi-exclamation-triangle text-danger p-1"></i> Please select an address</p>
+
+                            <p class="text-danger err-msg d-none"><i
+                                    class="bi bi-exclamation-triangle text-danger p-1"></i> Please select an address</p>
                             <!-- Continue to Payment Button -->
                             <div class="pt-2">
                                 <button type="button"
                                     class="btn w-100 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-sm transition border-0 d-flex align-items-center justify-content-center deliver-btn"
-                                    style="background-color: #ff3f6c; letter-spacing: 0.5px; text-decoration: none;">
+                                    style="background-color: #7a2c3e; letter-spacing: 0.5px; text-decoration: none;">
                                     Deliver To This Address &nbsp;<i class="bi bi-arrow-right"></i>
                                 </button>
                             </div>
@@ -426,7 +427,8 @@
                                     <span>Coupon</span>
                                     <div class="text-end">
                                         @if ($priceCount['coupon_discount_price'] != 0)
-                                            <span class="font-medium text-success">&#8377;{{ number_format($priceCount['coupon_discount_price'] ?? 0) }}</span>
+                                            <span
+                                                class="font-medium text-success">&#8377;{{ number_format($priceCount['coupon_discount_price'] ?? 0) }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -448,7 +450,7 @@
                                 <div class="d-flex justify-content-between text-sm font-bold text-slate-900">
                                     <span>Total Amount</span>
                                     <span
-                                        class="text-lg font-extrabold text-slate-900">&#8377;{{ number_format(($priceCount['payable_price'] ?? 0)) }}</span>
+                                        class="text-lg font-extrabold text-slate-900">&#8377;{{ number_format($priceCount['payable_price'] ?? 0) }}</span>
                                 </div>
                             </div>
 
@@ -496,44 +498,47 @@
     <!-- Scoped Styles for Radio & Hover States -->
     <style>
         .custom-pink-radio:checked {
-            background-color: #ff3f6c !important;
-            border-color: #ff3f6c !important;
+            background-color: #7a2c3e !important;
+            border-color: #7a2c3e !important;
         }
     </style>
 @endsection
 
 @section('script')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      
-        $(document).on('click','.deliver-btn',function(e) {
-            e.preventDefault();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-            let addressId = $('.custom-pink-radio:checked').val();
-          
-            axios.get('/checkout/check-contact',{ params :{ address_id: addressId }})
-            .then((res)=> {
-                if(res.data.success == false) {
-                    $('.err-msg').removeClass('d-none');
-             }
-             else {
-                window.location.href = res.data.redirect;
-             }
+            $(document).on('click', '.deliver-btn', function(e) {
+                e.preventDefault();
+
+                let addressId = $('.custom-pink-radio:checked').val();
+
+                axios.get('/checkout/check-contact', {
+                        params: {
+                            address_id: addressId
+                        }
+                    })
+                    .then((res) => {
+                        if (res.data.success == false) {
+                            $('.err-msg').removeClass('d-none');
+                        } else {
+                            window.location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            });
+
+            $('#contact_number').on('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
             })
-            .catch((err)=> {
-                console.log(err);
+
+            $('#pincode').on('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
             })
-       }); 
 
-       $('#contact_number').on('input',function(e) {
-            e.target.value = e.target.value.replace(/\D/g,'').slice(0,10);
-       })
-       
-       $('#pincode').on('input',function(e) {
-            e.target.value = e.target.value.replace(/\D/g,'').slice(0,6);
-       })
-
-    });
-</script>
+        });
+    </script>
 
 @endsection

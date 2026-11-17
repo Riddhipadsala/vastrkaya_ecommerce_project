@@ -183,7 +183,7 @@
                                 <!-- Primary Checkout Button -->
                                 <div class="mt-3.5">
                                     <a href="{{ route('contact.index') }}"
-                                        class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-900 border-slate-900 hover:bg-slate-800 shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none">
+                                        class="btn btn-dark w-100 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm d-flex align-items-center justify-content-center gap-1.5 transition text-white text-decoration-none" style="background-color: #7a2c3e;">
                                         <span>PROCEED TO CHECKOUT</span>
                                         <i class="bi bi-arrow-right"></i>
                                     </a>

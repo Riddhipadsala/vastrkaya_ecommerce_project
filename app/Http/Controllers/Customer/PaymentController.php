@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendOrderMail;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use App\Models\Payment;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
 use Stripe\Stripe;
@@ -117,11 +119,6 @@ class PaymentController extends Controller
             'payment_method'=> 'online'
         ]);
 
-        $order = Order::where('id',$request->order_id)->first();
-        $order->update([
-            'status'=> 'processing'
-        ]);
-        
         if ($payment) {
             return redirect()->route('order.details',[
                 'payment_id'=> $payment->id,

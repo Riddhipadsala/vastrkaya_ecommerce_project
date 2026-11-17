@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendOrderMail;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
 use App\Models\Order;
@@ -13,6 +14,7 @@ use App\Models\ProductOptionValue;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
 use Stripe\Refund;
 use Stripe\Stripe;
@@ -22,7 +24,11 @@ class OrderController extends Controller
     
     public function orderDetail(Request $request)
     {
-        $order = Order::where('user_id', Auth::id())->latest()->first();
+        $order = Order::with('orderItems','user')->where('user_id', Auth::id())->latest()->first();
+
+        if($order) {
+            Mail::to($order->user->email)->queue(new SendOrderMail($order));
+        }
 
         if ($request->filled('payment_id')) {
             

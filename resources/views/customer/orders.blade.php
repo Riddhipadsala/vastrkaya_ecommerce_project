@@ -26,8 +26,8 @@
             <div class="row g-4">
 
                 <!-- ==========================================
-                         LEFT SIDEBAR (Account Menu)
-                         ========================================== -->
+                             LEFT SIDEBAR (Account Menu)
+                             ========================================== -->
                 <div class="col-lg-3 col-xl-3 d-none d-lg-block">
                     <div class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs sticky-top"
                         style="top: 90px;">
@@ -41,7 +41,7 @@
                         <!-- Section: Overview -->
                         <div class="py-2.5 border-b border-slate-100">
                             <a href="{{ route('dashboard') }}"
-                                class="text-xs font-semibold text-slate-700 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
+                                class="text-xs font-semibold text-slate-700 hover:text-[#7a2c3e] text-decoration-none d-block py-1">
                                 Home
                             </a>
                         </div>
@@ -65,7 +65,7 @@
                             </span>
                             <div class="space-y-1">
                                 <a href="/cart"
-                                    class="text-xs text-slate-600 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
+                                    class="text-xs text-slate-600 hover:text-[#7a2c3e] text-decoration-none d-block py-1">
                                     Coupons
                                 </a>
                             </div>
@@ -78,7 +78,7 @@
                             </span>
                             <div class="space-y-1">
                                 <a href="javascript:void(0)"
-                                    class="text-xs text-slate-600 hover:text-[#ff3f6c] text-decoration-none d-block py-1">
+                                    class="text-xs text-slate-600 hover:text-[#7a2c3e] text-decoration-none d-block py-1">
                                     Profile
                                 </a>
                             </div>
@@ -88,7 +88,8 @@
                 </div>
 
                 @if ($orders->isEmpty())
-                    <div id="emptyCartView" class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3 col-lg-9 col-xl-9">
+                    <div id="emptyCartView"
+                        class="bg-white border border-slate-200 rounded-2xl p-5 text-center my-3 col-lg-9 col-xl-9">
                         <div
                             class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 d-inline-flex align-items-center justify-content-center mb-3">
                             <i class="bi bi-bag-x text-2xl"></i>
@@ -102,7 +103,7 @@
                             Continue Shopping &rarr;
                         </a>
                     </div>
-                @else 
+                @else
                     <div class="col-lg-9 col-xl-9">
 
                         <div class="space-y-3.5">
@@ -141,6 +142,9 @@
                                                     <h5 class="text-xs text-slate-600 truncate mb-1 font-normal">
                                                         {{ $oi->product->name }}
                                                     </h5>
+                                                    <span class="text-xs text-slate-600 truncate mb-1 font-normal">
+                                                        Qty : {{ $oi->quantity }}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="ps-2 flex-shrink-0">
@@ -167,12 +171,12 @@
                                 </div>
                             @endforeach
                         </div>
-                        
+
                     </div>
                 @endif
 
             </div>
-            
+
         </div>
     </div>
 @endsection

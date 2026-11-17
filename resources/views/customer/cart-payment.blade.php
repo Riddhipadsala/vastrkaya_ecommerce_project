@@ -98,7 +98,7 @@
 
                 <a href="{{ route('contact.index') }}"
                     class="btn btn-sm text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded transition shadow-none flex-shrink-0"
-                    style="border: 1px solid #ff3f6c; color: #ff3f6c; text-decoration: none;">
+                    style="border: 1px solid #7a2c3e; color: #7a2c3e; text-decoration: none;">
                     Change Address
                 </a>
             </div>
@@ -131,14 +131,14 @@
                                 <input type="hidden" name="order_number" value="" id="order_number">
                                 <div class="payment-method-card border rounded-xl p-3.5 sm:p-4 transition cursor-pointer relative"
                                     id="codCardWrapper" onclick="selectPaymentMethod('cod')"
-                                    style="border: 2px solid #ff3f6c; background-color: #fffafb;">
+                                    style="border: 2px solid #7a2c3e; background-color: #fffafb;">
 
                                     <div class="d-flex align-items-start justify-content-between gap-3">
                                         <div class="d-flex align-items-start gap-3">
                                             <div class="pt-0.5">
                                                 <input type="radio" name="payment_method" id="payment_mode_cod"
                                                     value="cod" checked class="form-check-input custom-pink-radio mt-0"
-                                                    style="accent-color: #ff3f6c; width: 18px; height: 18px; cursor: pointer;">
+                                                    style="accent-color: #7a2c3e; width: 18px; height: 18px; cursor: pointer;">
                                             </div>
                                             <div>
                                                 <label for="payment_mode_cod"
@@ -152,7 +152,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="w-9 h-9 rounded-lg bg-rose-50 text-[#ff3f6c] d-flex align-items-center justify-content-center flex-shrink-0 text-base">
+                                            class="w-9 h-9 rounded-lg bg-rose-50 text-[#7a2c3e] d-flex align-items-center justify-content-center flex-shrink-0 text-base">
                                             <i class="bi bi-cash-stack"></i>
                                         </div>
                                     </div>
@@ -168,7 +168,7 @@
                                             <div class="pt-0.5">
                                                 <input type="radio" name="payment_method" id="payment_mode_online"
                                                     value="online" class="form-check-input custom-pink-radio mt-0"
-                                                    style="accent-color: #ff3f6c; width: 18px; height: 18px; cursor: pointer;">
+                                                    style="accent-color: #7a2c3e; width: 18px; height: 18px; cursor: pointer;">
                                             </div>
                                             <div>
                                                 <label for="payment_mode_online"
@@ -193,7 +193,7 @@
                             <div class="pt-1 mb-3" id="paymentBtnContainer">
                                 <button type="submit" id="paymentActionButton"
                                     class="btn w-100 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-sm transition border-0 d-flex align-items-center justify-content-center gap-2"
-                                    style="background-color: #ff3f6c; letter-spacing: 0.5px;">
+                                    style="background-color: #7a2c3e; letter-spacing: 0.5px;">
                                     <i class="bi bi-bag-check-fill" id="paymentBtnIcon"></i>
                                     <span id="paymentBtnText">Place Order Via Cash On Delivery</span>
                                 </button>
@@ -257,7 +257,7 @@
                                 <div class="d-flex justify-content-between text-sm font-bold text-slate-900">
                                     <span>Total Amount</span>
                                     <span class="text-lg font-extrabold text-slate-900" id="totalAmountText">
-                                        &#8377;{{ number_format(($priceCount['payable_price'] ?? 0)) }}
+                                        &#8377;{{ number_format($priceCount['payable_price'] ?? 0) }}
                                     </span>
                                 </div>
                             </div>
@@ -266,10 +266,10 @@
                             <div
                                 class="mt-3.5 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-slate-800 d-flex align-items-center justify-content-between">
                                 <span class="d-flex align-items-center gap-1.5 font-medium">
-                                    <i class="bi bi-check2-circle text-[#ff3f6c] font-bold"></i>
+                                    <i class="bi bi-check2-circle text-[#7a2c3e] font-bold"></i>
                                     <span>Paying via:</span>
                                 </span>
-                                <span class="font-bold text-[#ff3f6c]" id="summarySelectedMethodBadge">
+                                <span class="font-bold text-[#7a2c3e]" id="summarySelectedMethodBadge">
                                     Cash On Delivery
                                 </span>
                             </div>
@@ -345,8 +345,8 @@
     <!-- Scoped Styles -->
     <style>
         .custom-pink-radio:checked {
-            background-color: #ff3f6c !important;
-            border-color: #ff3f6c !important;
+            background-color: #7a2c3e !important;
+            border-color: #7a2c3e !important;
         }
 
         .online-subtab.active {
@@ -358,7 +358,7 @@
         .upi-app-pill.active,
         .bank-pill.active,
         .wallet-row.active {
-            border-color: #ff3f6c !important;
+            border-color: #7a2c3e !important;
             background-color: #fffafb !important;
         }
     </style>
@@ -387,7 +387,7 @@
 
             if (mode === 'cod') {
                 codRadio.checked = true;
-                codCard.style.border = '2px solid #ff3f6c';
+                codCard.style.border = '2px solid #7a2c3e';
                 codCard.style.backgroundColor = '#fffafb';
 
                 onlineRadio.checked = false;
@@ -399,7 +399,7 @@
                 if (btnIcon) btnIcon.className = 'bi bi-bag-check-fill';
             } else {
                 onlineRadio.checked = true;
-                onlineCard.style.border = '2px solid #ff3f6c';
+                onlineCard.style.border = '2px solid #7a2c3e';
                 onlineCard.style.backgroundColor = '#fffafb';
 
                 codRadio.checked = false;
