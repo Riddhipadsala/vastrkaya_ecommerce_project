@@ -7,35 +7,36 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Option;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 
 class AdminDashboardController extends Controller
 {
     public function index() {
         
-        $products = Product::with('category')->get();
-        $productCount = Product::count();
-        $categories = Category::all();
-        $categoryCount = Category::count();
-        $options = Option::all();
-        $optionCount = Option::count();
-        $stock = Product::sum('stock');
-        $UrgentStock = Product::where('stock','<=',10)->get();
-        
         if(request()->ajax()) {
+        
+           $dashboardData = Cache::tags(['product','category','option'])->remember('admin_dashboard_data', now()->addMinutes(10), function () {
+            return [
+                'products' => Product::with('category')->get(),
+                'productCount' => Product::count(),
+                'categories' => Category::all(),
+                'categoryCount' => Category::count(),
+                'options' => Option::all(),
+                'optionCount' => Option::count(),
+                'stock' => Product::sum('stock'),
+                'urgentStock' => Product::where('stock','<=',10)->get(),
+            ];
+        });
+        
             return response()->json([
-                'products' => $products,
-                'productCount' => $productCount,
-                'categories' => $categories,
-                'categoryCount' => $categoryCount,
-                'options' => $options,
-                'optionCount' => $optionCount,
-                'stock' => $stock,
-                'UrgentStock'=> $UrgentStock,
+                'dashboardData' => $dashboardData,
             ]);
         }
-        return view('admin.dashboard', compact('products', 'categories', 'options', 'stock'));
-    }
+            
+        return view('admin.dashboard');
+
+     }
 
     public function notification() {
 

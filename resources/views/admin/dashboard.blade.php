@@ -245,28 +245,20 @@
 
         });
 
-        function updateNotificationCount() {
-
-            const unreadCount = $('.vk-notification-item.unread').length;
-
-            $('#notificationCount').text(unreadCount);
-
-            $('#notificationNewCount').text(`${unreadCount} New`);
-
-        }
-
         function fetchData() {
             axios.get('/admin/dashboard')
             .then(response => {
             
-                const productData = response.data.products;
+                const productData = response.data.dashboardData.products;
+                const record = response.data.dashboardData;
 
                 let data = ''
 
-                $('.product-count').text(response.data.productCount);
-                $('.category-count').text(response.data.categoryCount);
-                $('.option-count').text(response.data.optionCount);
-                $('.stock-count').text(response.data.stock);
+                $('.product-count').text(record.productCount);
+                $('.category-count').text(record.categoryCount);
+                $('.option-count').text(record.optionCount);
+                $('.stock-count').text(record.stock);
+                    console.log(record);
                 
                 productData.slice(0, 7).forEach((element, index) => {
                     data += `
@@ -307,7 +299,7 @@
                         </tr>
                     `;
 
-                    $('.urgent-stock').html(response.data.UrgentStock.map((element) => {
+                    $('.urgent-stock').html(record.urgentStock.map((element) => {
                         return `
                             <div class="d-flex align-items-center justify-content-between p-2 rounded bg-light border">
                                 <div>
@@ -320,9 +312,10 @@
                             </div>
                         `;
                     }).join(''));
-                    if(response.data.UrgentStock == 0){
+                    if(record.urgentStock == 0){
                         $('.urgent-stock').html(`<p class="text-center text-success fw-bold">No products left</p>`);
                     }
+                    
                     $('.producttbl').html(data);
                 })
 
@@ -331,6 +324,16 @@
             }).catch(err => {
                 console.log(err);
             });
+
+        }
+
+        function updateNotificationCount() {
+
+            const unreadCount = $('.vk-notification-item.unread').length;
+
+            $('#notificationCount').text(unreadCount);
+
+            $('#notificationNewCount').text(`${unreadCount} New`);
 
         }
 

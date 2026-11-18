@@ -11,6 +11,7 @@ use App\Models\ProductOption;
 use App\Models\ProductOptionValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -267,6 +268,9 @@ class ProductController extends Controller
         $deletedProduct = $product->delete();
 
         if($deletedProduct) {
+
+            Cache::tags(['product','category','option'])->flush();
+
             return response()->json([
                     'success'=> true,
             ]);
