@@ -9,7 +9,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="pe-lg-3">
                         <a href="{{ url('/') }}" class="d-inline-block text-decoration-none mb-3">
-                            <img src="{{ vite::asset('resources/image/logo.png') }}" 
+                            <img src="{{ Vite::asset('resources/image/logo.png') }}" 
                                  alt="Vastrkaya" 
                                  class="vk-footer-logo-img"
                                  onerror="this.style.display='none'; document.getElementById('vk-footer-fallback-logo').style.display='block';">

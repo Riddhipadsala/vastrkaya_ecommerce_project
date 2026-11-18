@@ -27,7 +27,8 @@ class SendEmail
     }
 
     public function sendNotification(int $orderId){
-        $order = Order::with('user','orderItems','payment')->findOrFail($orderId);
+
+        $order = Order::with('user')->findOrFail($orderId);
         $admin = User::role('admin')->first();
 
         $admin->notify(new OrderInfoNotification($order));

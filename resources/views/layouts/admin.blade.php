@@ -19,241 +19,26 @@
         })();
     </script>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Tailwind CSS & Vastrkaya Admin Custom CSS -->
+    @include('partials.header-links')
+    
     @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/admin-dashboard.js', 'resources/js/app.js'])
+    
     @yield('styles')
 </head>
 
 <body class="vk-admin-body">
+    
     <div class="vk-admin-wrapper">
 
         @include('partials.sidebar')
+        @include('partials.admin-main-content')
 
-        <!-- ====================================================================
-             MAIN CONTENT WRAPPER
-             ==================================================================== -->
-        <div class="vk-main-content">
-            
-            <!-- Sticky Top Navigation Bar -->
-            <header class="vk-topbar">
-                <div class="vk-topbar-left">
-                    <button type="button" class="vk-sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle Menu">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <div>
-                        <h1 class="h5 mb-0 fw-bold text-heading" id="pageTitleHeading">Admin Overview Dashboard</h1>
-                        <span class="font-13 text-muted">Vastrkaya E-Commerce Store Control Center</span>
-                    </div>
-                </div>
-
-                <div class="vk-topbar-right">
-                    <!-- Notifications Dropdown -->
-                    <div class="dropdown">
-                        <button type="button" class="vk-topbar-action" id="notificationDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
-                            <i class="bi bi-bell-fill"></i>
-                            <span class="vk-notification-badge">3</span>
-                        </button>
-
-                        <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-0 vk-notification-dropdown" aria-labelledby="notificationDropdownBtn">
-                            <!-- Header -->
-                            <div class="vk-notification-header">
-                                <div class="d-flex align-items-center gap-2">
-                                    <h6 class="mb-0 fw-bold text-heading font-14">Notifications</h6>
-                                    <span class="badge rounded-pill bg-danger-subtle text-danger font-11 px-2 py-0.5 fw-bold">3 New</span>
-                                </div>
-                                <button type="button" class="btn btn-link p-0 text-decoration-none font-12 text-muted" title="Mark all read" style="font-size: 0.75rem;">
-                                    Mark all read
-                                </button>
-                            </div>
-
-                            <!-- Scrollable Notification List -->
-                            <div class="vk-notification-list">
-                                <!-- 1. New Order Notification (Unread) -->
-                                <a href="{{ route('admin.dashboard') }}" class="vk-notification-item unread">
-                                    <div class="vk-notification-icon bg-success-subtle text-success">
-                                        <i class="bi bi-bag-check-fill"></i>
-                                    </div>
-                                    <div class="vk-notification-content">
-                                        <div class="vk-notification-title">New Order Received</div>
-                                        <div class="vk-notification-desc">Order #J84280P0 &bull; &#8377;1,690.00 by Customer</div>
-                                        <div class="vk-notification-time">
-                                            <i class="bi bi-clock"></i> 2 mins ago
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- 2. Order Cancelled Notification (Unread) -->
-                                <a href="{{ route('admin.dashboard') }}" class="vk-notification-item unread">
-                                    <div class="vk-notification-icon bg-danger-subtle text-danger">
-                                        <i class="bi bi-x-circle-fill"></i>
-                                    </div>
-                                    <div class="vk-notification-content">
-                                        <div class="vk-notification-title">Order Cancelled</div>
-                                        <div class="vk-notification-desc">Order #4CHP2VCM was cancelled by user</div>
-                                        <div class="vk-notification-time">
-                                            <i class="bi bi-clock"></i> 15 mins ago
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- 3. Low Stock Notification (Unread) -->
-                                <a href="{{ route('admin.products.index') }}" class="vk-notification-item unread">
-                                    <div class="vk-notification-icon bg-warning-subtle text-warning">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                    </div>
-                                    <div class="vk-notification-content">
-                                        <div class="vk-notification-title">Low Stock Alert</div>
-                                        <div class="vk-notification-desc">Mul Chickan Kali Kurti has only 3 left in inventory</div>
-                                        <div class="vk-notification-time">
-                                            <i class="bi bi-clock"></i> 1 hour ago
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- 4. Payment Confirmed (Read) -->
-                                <a href="{{ route('admin.dashboard') }}" class="vk-notification-item">
-                                    <div class="vk-notification-icon bg-primary-subtle text-primary">
-                                        <i class="bi bi-credit-card-2-front-fill"></i>
-                                    </div>
-                                    <div class="vk-notification-content">
-                                        <div class="vk-notification-title">Payment Confirmed</div>
-                                        <div class="vk-notification-desc">Stripe payment received for Order #ORD-892</div>
-                                        <div class="vk-notification-time">
-                                            <i class="bi bi-clock"></i> 3 hours ago
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <!-- Footer -->
-                            <div class="vk-notification-footer">
-                                <a href="{{ route('admin.dashboard') }}" class="font-12 fw-bold text-decoration-none" style="color: var(--vk-primary); font-size: 0.8rem;">
-                                    View All Notifications <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Light / Dark Theme Switcher -->
-                    <button type="button" class="vk-theme-toggle" id="themeToggleBtn" title="Toggle Light / Dark Mode">
-                        <i class="bi bi-moon-stars-fill text-secondary"></i>
-                    </button>
-
-                    <!-- Admin User Dropdown -->
-                    <div class="dropdown">
-                        <div class="vk-admin-dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false" role="button">
-                            <div class="vk-admin-avatar-sm">
-                                {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
-                            </div>
-                            <span class="vk-admin-header-name d-none d-sm-inline dynamic-admin-name">{{ Auth::user()->name ?? 'Admin' }}</span>
-                            <i class="bi bi-chevron-down text-muted font-13"></i>
-                        </div>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 vk-card">
-                            <li class="px-3 py-2 border-bottom border-light">
-                                <div class="fw-bold dynamic-admin-name">{{ Auth::user()->name ?? 'Administrator' }}</div>
-                                <small class="text-muted">{{ Auth::user()->email ?? 'admin@gmail.com' }}</small>
-                            </li>
-                            <li>
-                                <a class="dropdown-item py-2 d-flex align-items-center gap-2" href="{{ route('admin.profile.index') }}">
-                                    <i class="bi bi-person text-primary"></i>
-                                    <span>Admin Profile</span>
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item py-2 text-danger d-flex align-items-center gap-2" href="{{ route('logout') }}">
-                                    <i class="bi bi-box-arrow-right"></i>
-                                    <span>Log Out</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Page Body: Content Render Area -->
-            <main class="vk-page-body">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 shadow-sm rounded-3" role="alert">
-                        <i class="bi bi-check-circle-fill fs-5"></i>
-                        <div>{{ session('success') }}</div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 shadow-sm rounded-3" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-                        <div>{{ session('error') }}</div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                @yield('content')
-            </main>
-
-            <!-- Admin Footer -->
-            <footer class="py-3 px-4 border-top border-light text-muted font-13 d-flex flex-wrap justify-content-between align-items-center">
-                <div>
-                    &copy; {{ date('Y') }} <strong class="text-heading">Vastrkaya E-Commerce</strong>. All rights reserved.
-                </div>
-            </footer>
-        </div>
     </div>
 
-        <!-- ========================================================================
-         CONFIRM DELETE OPTION MODAL
-         ======================================================================== -->
-        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content border-0 rounded-4 shadow">
-
-                    <div class="modal-body text-center p-4">
-
-                        <i class="bi bi-trash3-fill text-danger fs-1"></i>
-
-                        <h5 class="fw-bold mt-3">Delete Option?</h5>
-
-                        <p class="text-muted small">
-                            Are you sure you want to delete
-                            <strong id="deleteOptionNameDisplay">this option</strong>?
-                        </p>
-
-                        <div class="d-flex justify-content-center gap-2">
-                            <button type="button" class="btn btn-light border"
-                                    data-bs-dismiss="modal">
-                                Cancel
-                            </button>
-
-                            <button type="button" class="btn btn-danger"
-                                    id="confirmDeleteBtn">
-                                <i class="bi bi-trash3"></i> Delete
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    @include('partials.delete-modal')
 
     @yield('scripts')
+
 </body>
 
 </html>

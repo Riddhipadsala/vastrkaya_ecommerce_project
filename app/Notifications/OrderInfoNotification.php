@@ -51,6 +51,8 @@ class OrderInfoNotification extends Notification implements ShouldQueue
             'message' => 'Your Order has been '. $this->order->order_status ,
             'order_id' => $this->order->id,
             'order_status' => $this->order->order_status,
+            'user'=> $this->order->user->name ?? 'Customer',
+            'order_date' => $this->order->order_date
         ];
     }
 }

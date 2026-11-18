@@ -558,6 +558,33 @@ body.vk-admin-body {
     box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
 }
 
+.vk-notification-delete-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--vk-text-light);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: var(--vk-transition);
+    opacity: 0.7;
+    flex-shrink: 0;
+    margin-left: 8px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.vk-notification-delete-btn:hover {
+    background: var(--vk-danger-subtle);
+    color: var(--vk-danger);
+    border-color: rgba(239, 68, 68, 0.2);
+    opacity: 1;
+    transform: scale(1.08);
+}
+
 .vk-notification-footer {
     padding: 10px 16px;
     background: var(--vk-surface-subtle);

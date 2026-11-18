@@ -45,8 +45,6 @@ Route::get('/cart/price-count', [CartController::class, 'getPriceCount'])->name(
 Route::get('/cart/checkout/stock/{id}', [CartController::class, 'checkoutStock'])->name('cart.checkout.stock');
 
 
-
-
 //admin
 Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->group(function() {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -73,6 +71,19 @@ Route::prefix('/admin')->name('admin.')->middleware(['auth','role:admin'])->grou
     
     //product
     Route::post('product/option/status',[ProductController::class,'optionStatusChange'])->name('option.status.change');
+
+    Route::prefix('notifications')->name('notifications.')->controller(AdminDashboardController::class)->group(function () {
+
+        Route::get('/', 'notification')->name('index');
+
+        Route::post('/{id}/read', 'markAsRead')->name('read');
+
+        Route::post('/read-all', 'markAllAsRead')->name('readAll');
+
+        Route::delete('/{id}', 'destroy')->name('destroy');
+
+    });
+
    });
 
 

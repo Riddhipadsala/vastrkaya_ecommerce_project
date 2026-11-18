@@ -192,7 +192,68 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             fetchData();
+
+            $(document).on('click', '.vk-notification-delete-btn', function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                const id = $(this).data('id');
+
+                deleteNotification(id);
+
+            });
+
+            $(document).on('click', '.vk-notification-item', async function (e) {
+
+                if (!$(this).hasClass('unread')) return;
+
+                const id = $(this).data('id');
+
+                try {
+
+                    await axios.post(`/admin/notifications/${id}/read`);
+
+                    $(this).removeClass('unread');
+
+                    updateNotificationCount();
+
+                } catch (error) {
+
+                    console.error('Notification read error:', error);
+
+                }
+
+            });
+
+            $(document).on('click','#markAllReadBtn', async function (e) {
+                e.preventDefault();
+                try {
+
+                    await axios.post('/admin/notifications/read-all');
+                    
+                    $('.vk-notification-item.unread').removeClass('unread');
+
+                    updateNotificationCount();
+
+                } catch (error) {
+                    console.error('Mark all read error:', error);
+                }
+
+            });
+
+
         });
+
+        function updateNotificationCount() {
+
+            const unreadCount = $('.vk-notification-item.unread').length;
+
+            $('#notificationCount').text(unreadCount);
+
+            $('#notificationNewCount').text(`${unreadCount} New`);
+
+        }
 
         function fetchData() {
             axios.get('/admin/dashboard')
@@ -263,10 +324,124 @@
                         $('.urgent-stock').html(`<p class="text-center text-success fw-bold">No products left</p>`);
                     }
                     $('.producttbl').html(data);
-                });
+                })
+
+                fetchNotification();
+
             }).catch(err => {
                 console.log(err);
             });
+
         }
+
+        function fetchNotification() {
+            
+            let data = '';
+            axios.get(`/admin/notifications`)
+            .then(res => {
+                let notifications = res.data.notifications;
+
+                $('#notificationCount').text(notifications.length);
+
+                if (notifications.length === 0) {
+
+                    data = `
+                        <div class="p-4 text-center text-muted font-13">
+                            <i class="bi bi-bell-slash fs-4 d-block mb-1 text-light"></i>
+                            No new notifications
+                        </div>
+                    `;
+
+                } else {
+
+                    notifications.forEach((n) => {
+
+                        let status = n.data.order_status ?? 'Update';
+
+                        let isCancelled = status.toLowerCase() === 'cancelled';
+
+                        let iconClass = isCancelled
+                            ? 'bg-danger-subtle text-danger'
+                            : 'bg-success-subtle text-success';
+
+                        let icon = isCancelled
+                            ? 'bi-x-circle-fill'
+                            : 'bi-check-circle-fill';
+
+                        let unreadClass = n.read_at === null ? 'unread' : '';
+
+                        let message = n.data.message ?? 'Notification details';
+
+                        let createdAt = new Date(n.created_at).toLocaleString();
+
+                        data += `
+                            <div class="vk-notification-item ${unreadClass} d-flex align-items-center justify-content-between"
+                                data-id="${n.id}">
+
+                                <a
+                                    class="d-flex align-items-start gap-3 text-decoration-none flex-grow-1 min-w-0 notify"
+                                    style="color: inherit;">
+
+                                    <div class="vk-notification-icon ${iconClass}">
+                                        <i class="bi ${icon}"></i>
+                                    </div>
+
+                                    <div class="vk-notification-content">
+
+                                        <div class="vk-notification-title">
+                                            Order ${status.charAt(0).toUpperCase() + status.slice(1)}
+                                        </div>
+
+                                        <div class="vk-notification-desc">
+                                            ${message}
+                                        </div>
+
+                                        <div class="vk-notification-time">
+                                            <i class="bi bi-clock"></i>
+                                            ${createdAt}
+                                        </div>
+
+                                    </div>
+                                </a>
+
+                                <button type="button"
+                                    class="vk-notification-delete-btn" 
+                                    data-id="${n.id}"
+                                    data-response='${res}'
+                                    title="Delete notification">
+
+                                    <i class="bi bi-trash3"></i>
+
+                                </button>
+
+                            </div>
+                        `;
+
+                    });
+                }
+                
+                $('#notificationList').html(data);
+                updateNotificationCount();
+            })
+            .catch((err)=> {
+                console.log(err);
+            });
+
+        }
+        
+        function deleteNotification(id) {
+            
+            axios.delete(`/admin/notifications/${id}`)
+            .then((res)=> {
+                if(res.data.success) {
+                    $(`.vk-notification-item[data-id="${id}"]`).remove();                    
+                    fetchNotification();
+                }
+            })
+            .catch((err)=> {
+                window.showToast?.('Error', 'Notification not deleted');
+            })
+        }
+
     </script>
 @endsection
