@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MainPoster;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class MainPosterController extends Controller
@@ -43,6 +44,7 @@ class MainPosterController extends Controller
         $store = MainPoster::create($validate);
 
         if ($store) {
+            Cache::tags('main_poster')->flush();
             return response()->json([
                 "success"=>true,
                 "message"=>"Poster Created Successfully",
@@ -77,6 +79,7 @@ class MainPosterController extends Controller
         $updated = $mainPoster->update($validate);
 
         if ($updated) {
+            Cache::tags('main_poster')->flush();
             return response()->json([
                 "success"=>true,
                 "message"=>"Poster Updated Successfully",
@@ -98,6 +101,7 @@ class MainPosterController extends Controller
         $deleted = $mainPoster->delete();
 
         if ($deleted) {
+            Cache::tags('main_poster')->flush();
             return response()->json([
                 'success'=> true,
             ]);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\MainCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
@@ -76,6 +77,7 @@ class CategoryController extends Controller
         $category = Category::create($validate);
 
         if($category) {
+            Cache::tags('category')->flush();
             return redirect()->back()->with('success', 'Category Created');
         }
         else {
@@ -131,6 +133,7 @@ class CategoryController extends Controller
         $category = $category->update($validate);
 
         if($category) {
+            Cache::tags('category')->flush();
             return response()->json([
                 'success'=> true,
             ]);
@@ -154,6 +157,7 @@ class CategoryController extends Controller
         }
 
         if($categories) {
+            Cache::tags('category')->flush();
             return response()->json([
                 'success'=> true,
                 'categories'=> $categories

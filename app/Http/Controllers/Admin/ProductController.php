@@ -88,13 +88,7 @@ class ProductController extends Controller
                 if(is_array($optionValue)){
                     foreach($optionValue as $value){
            
-                        // if($value['image']){
-                        //     $file = $value['image'];
-                        //     $filename = $file->getClientOriginalName();
-                        //     $value['image'] = $file->storeAs('product_option_images', $filename , 'public');
-                        // }
-           
-                        $productOptionValue = ProductOptionValue::create([
+                        ProductOptionValue::create([
                             'product_option_id'=> $productOption->id,
                             'option_value_id'=> (int) $value,
                             'option_id'=> (int) $option['option_id'],
@@ -108,6 +102,7 @@ class ProductController extends Controller
         }
 
         if($product){
+            Cache::tags(['product','product_option','product_option_value'])->flush();
             return redirect()->route('admin.products.index')->with('success', 'Product created successfully');
         }else{
             return redirect()->back()->with('error', 'Failed to create product');
@@ -253,6 +248,8 @@ class ProductController extends Controller
                 ->update(['status' => 0]);
         }
 
+        Cache::tags(['product','product_option_value','product_option'])->flush();
+
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
     }
 
@@ -269,7 +266,7 @@ class ProductController extends Controller
 
         if($deletedProduct) {
 
-            Cache::tags(['product','category','option'])->flush();
+            Cache::tags(['product','product_option_value','product_option'])->flush();
 
             return response()->json([
                     'success'=> true,
@@ -295,7 +292,7 @@ class ProductController extends Controller
         }
 
         $statusUpdate = $productOption->update(['status'=> $request->status]);
-
+        Cache::tags(['product_option'])->flush();
         if($statusUpdate) {
             return response()->json([
                 'success'=> true,
@@ -316,7 +313,7 @@ class ProductController extends Controller
         if ($productOption) {
 
             $deleteItem = $productOption->delete();
-
+            Cache::tags(['product_option'])->flush();
             if($deleteItem) {
                 return response()->json([
                     'success'=> true,

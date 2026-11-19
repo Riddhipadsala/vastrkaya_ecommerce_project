@@ -9,29 +9,34 @@ use App\Models\Product;
 use App\Models\ProductOptionValue;
 use App\Models\ProductPrice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
     public function productDetail(int $id)
     {
-        $query = Product::with([
-            'category',
-            'productOptions' => function ($q) {
-                $q->where('status', 1);
-            },
-            'productOptions.option',
-            'productOptionValues' => function ($q) {
-                $q->where('status', 1);
-            },
-            'productOptionValues.optionValue'
-        ]);
+        $product = Cache::tags(['product','category', 'product_option','product_option_value'])->remember('productDetail_'.$id , now()->addMinutes(10), function() use($id) {
+            return Product::with([
+                'category',
+                'productOptions' => function ($q) {
+                    $q->where('status', 1);
+                },
+                'productOptions.option',
+                'productOptionValues' => function ($q) {
+                    $q->where('status', 1);
+                },
+                'productOptionValues.optionValue'
+            ])->findOrFail($id);
+        });
 
-        $product = $query->findOrFail($id);
-
-        $relatedProducts = Product::where('id', '!=', $product->id)
-            ->where('status', 1)
-            ->take(5)
-            ->get();
+        $relatedProducts = Cache::tags(['product','category', 'main_category'])->remember('relatedProducts' , now()->addMinutes(10), function() use ($product) {
+            return  Product::with('category.main_category')->whereHas('category', function ($q) { $q->where('status', 1); })
+                        ->whereHas('category.main_category', function($q) { $q->where('status', 1); })
+                        ->where('id', '!=', $product->id)
+                        ->where('status', 1)
+                        ->take(5)
+                        ->get();
+        });
 
         return view('customer.product-detail', compact('product', 'relatedProducts'));
     }
@@ -97,13 +102,20 @@ class ProductController extends Controller
                 'products'=> $products
             ]); 
         }
-        
-        $categories = Category::with('main_category')->where('status',1)->get();
 
-        $main_categories = MainCategory::where('status',1)->get();
-
-        $brands = Product::select('brand')->distinct()->get();
+        $cat_main_cat_pro = Cache::tags(['category','main_category','product'])->remember('productPage', now()->addMinutes(10), function () {
+            return [
+                'categories' => Category::with('main_category')->where('status',1)->get(),
         
+                'main_categories' => MainCategory::where('status',1)->get(),
+        
+                'brands' => Product::with('category.main_category')->whereHas('category', function ($cat) { $cat->where('status', 1); })->whereHas('category.main_category', function($mc){ $mc->where('status', 1);})->where('status',1)->select('brand')->distinct()->pluck('brand')
+            ];
+        });
+        
+        $categories = $cat_main_cat_pro['categories'];
+        $main_categories = $cat_main_cat_pro['main_categories'];
+        $brands = $cat_main_cat_pro['brands'];
         return view('customer.products', compact('products','categories','main_categories','brands'));
     }
 

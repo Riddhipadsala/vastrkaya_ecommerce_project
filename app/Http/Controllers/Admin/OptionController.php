@@ -7,6 +7,7 @@ use App\Models\Option;
 use App\Models\OptionValue;
 use App\Models\ProductOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -86,9 +87,10 @@ class OptionController extends Controller
                     $image = $value['option_value_image'] ?? null;
 
                     if($image){
-                    $fileName = $image->getClientOriginalName();
-                    
-                    $value['option_value_image'] = $image->storeAs('option_value_images', $fileName, 'public');
+                        $fileName = time() . '_' . $image->getClientOriginalName();
+                        
+                        $value['option_value_image'] = $image->storeAs('option_value_images', $fileName, 'public');
+                    }
                 }
 
                 $optionValue = OptionValue::create([
@@ -99,9 +101,10 @@ class OptionController extends Controller
                 ]);
             }
         }
-    }
+    
 
         if( $option ){
+            Cache::tags('option')->flush();
             return redirect()->route('admin.options.index')->with('success','Option & Values create successfully');
         }
 
@@ -143,6 +146,8 @@ class OptionController extends Controller
         ]);
 
         $option->update($optionValidate);
+        Cache::tags('option')->flush();
+
 
         $keptValueIds = [];
 
@@ -203,6 +208,8 @@ class OptionController extends Controller
             $deletedVal->delete();
         }
 
+        Cache::tags(['option','product_option_value'])->flush();
+
         return redirect()->route('admin.options.index')->with('success', 'Option & Values updated successfully');
     }
  
@@ -221,6 +228,7 @@ class OptionController extends Controller
         }
         
         $option = $option->delete();
+        Cache::tags('option')->flush();
 
         return response()->json([
             'success' => true,

@@ -131,10 +131,10 @@
 
                                 @foreach ($brands as $brand)
                                     <label class="d-flex align-items-center gap-2 cursor-pointer hover:text-slate-900">
-                                        <input type="checkbox" name="brand" value="{{ $brand->brand }}"
+                                        <input type="checkbox" name="brand" value="{{ $brand }}"
                                             class="form-check-input mt-0 custom-checkbox py-0.5"
                                             style="accent-color: #7a2c3e;">
-                                        <span class="flex-grow-1 truncate">{{ $brand->brand }}</span>
+                                        <span class="flex-grow-1 truncate">{{ $brand }}</span>
                                     </label>
                                 @endforeach
 
@@ -273,8 +273,8 @@
                 <div class="space-y-1.5 text-xs text-slate-600">
                     @foreach ($brands as $brand)
                         <label class="d-flex align-items-center gap-2"><input type="checkbox" class="custom-checkbox"
-                                style="accent-color:#7a2c3e;" name="brand" value="{{ $brand->brand }}">
-                            {{ $brand->brand }}</label>
+                                style="accent-color:#7a2c3e;" name="brand" value="{{ $brand }}">
+                            {{ $brand }}</label>
                     @endforeach
                 </div>
             </div>

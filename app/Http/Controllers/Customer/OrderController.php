@@ -14,6 +14,7 @@ use App\Models\Setting;
 use App\Services\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Stripe\Refund;
 use Stripe\Stripe;
 
@@ -71,6 +72,8 @@ class OrderController extends Controller
         $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->where('is_selected', 1)->latest()->first();
 
         $setting = Setting::first();
+
+        Cache::tags(['product'])->flush();
 
         return view('customer.order-details', compact('selectedAddress', 'payment', 'products', 'order', 'setting','orderItems'));
     }

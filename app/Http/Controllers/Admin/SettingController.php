@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 class SettingController extends Controller
@@ -33,6 +34,7 @@ class SettingController extends Controller
             $validated
         );
 
+        Cache::tags('setting')->flush();
         return redirect()->route('admin.settings.index')->with('success', 'Store settings updated successfully!');
     }
 }

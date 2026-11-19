@@ -7,6 +7,7 @@ use App\Http\Requests\CouponRequest;
 use App\Http\Requests\CouponUpdateRequest;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CouponController extends Controller
 {
@@ -61,6 +62,7 @@ class CouponController extends Controller
         $coupon = Coupon::create($request->validated());
         
         if($coupon && $request->ajax()) {
+            Cache::tags('coupon')->flush();
             return response()->json([
                 'success'=> true,
                 'message' => 'Coupon added successfully'
@@ -96,6 +98,7 @@ class CouponController extends Controller
     {
         $couponUpdate = $coupon->update($request->validated());
         if($couponUpdate && $request->ajax()) {
+            Cache::tags('coupon')->flush();
             return response()->json([
                 'success'=> true,
                 'message' => 'Coupon updated successfully'
@@ -111,6 +114,7 @@ class CouponController extends Controller
         $couponDelete = $coupon->delete();
 
         if($couponDelete) {
+            Cache::tags('coupon')->flush();
             return response()->json([
                 'success'=> true,
                 'message' => 'Coupon deleted successfully'

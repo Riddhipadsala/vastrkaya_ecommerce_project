@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MainCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MainCategoryController extends Controller
 {
@@ -51,6 +52,7 @@ class MainCategoryController extends Controller
 
         $mainCategory = MainCategory::create($validated);
 
+        Cache::tags('main_category')->flush();
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -90,6 +92,7 @@ class MainCategoryController extends Controller
         $mainCategory->update($validated);
 
         if ($request->ajax()) {
+            Cache::tags('main_category')->flush();
             return response()->json([
                 'success' => true,
                 'message' => 'Main Category updated successfully'
@@ -107,6 +110,7 @@ class MainCategoryController extends Controller
         $mainCategory = MainCategory::findOrFail($id);
         $mainCategory->delete();
 
+        Cache::tags('main_category')->flush();
         return response()->json([
             'success' => true,
             'message' => 'Main Category deleted successfully'

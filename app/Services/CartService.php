@@ -5,6 +5,7 @@ use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CartService {
 
@@ -16,7 +17,9 @@ class CartService {
             $cart = Cart::with('cartItems.product')->where('session', session()->getId())->first();
         }
 
-        $setting = Setting::all();
+        $setting = Cache::tags('setting')->remember('setting', 60, function () {
+            return Setting::all();
+        });
 
         $total_price = $cart ? $cart->cartItems->sum('new_price') : 0;
 

@@ -173,8 +173,10 @@
                                     class="vk-product-title">{{ $product->name }}</a>
                                 <div class="vk-product-price">
                                     <span class="vk-price-current">₹{{ $product->price }}</span>
-                                    <span class="vk-price-mrp">₹{{ $product->discount_price }}</span>
-                                    <span class="vk-price-discount">{{ $product->discount_percentage }}% OFF</span>
+                                    @if ($product->discount_percentage > 0)
+                                        <span class="vk-price-mrp">₹{{ $product->discount_price }}</span>
+                                        <span class="vk-price-discount">{{ $product->discount_percentage }}% OFF</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
