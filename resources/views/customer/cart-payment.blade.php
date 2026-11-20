@@ -124,7 +124,7 @@
                         </div>
 
                         <!-- Main Payment Options (Cash on Delivery & Online Payment) -->
-                        <form action="{{ route('checkout.payment.store') }}" method="post">
+                        <form action="{{ route('checkout.payment.store') }}" method="post" id="paymentCheckoutForm">
                             @csrf
                             <div class="space-y-3.5 mb-4">
                                 <input type="hidden" name="total_price" value="{{ $priceCount['payable_price'] }}">
@@ -191,7 +191,10 @@
 
                             <!-- Payment Action Button -->
                             <div class="pt-1 mb-3" id="paymentBtnContainer">
-                                <button type="submit" id="paymentActionButton"
+                                <p class="text-center text-[12px] text-rose-600 font-medium mt-2.5 mb-2 d-none error">
+                                    Some products in your bag are out of stock. Please <a href="{{ route('cart.index') }}" class="text-rose-700 underline font-bold">edit your bag</a> to proceed.
+                                </p>
+                                <button id="paymentActionButton" onclick="checkStock()" type="button"
                                     class="btn w-100 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-sm transition border-0 d-flex align-items-center justify-content-center gap-2"
                                     style="background-color: #7a2c3e; letter-spacing: 0.5px;">
                                     <i class="bi bi-bag-check-fill" id="paymentBtnIcon"></i>
@@ -275,40 +278,18 @@
                             </div>
 
                             <!-- Cart Items Preview Collapse (Optional accordion) -->
-                            @if (isset($cart) && $cart->cartItems && $cart->cartItems->count() > 0)
                                 <div class="mt-3 pt-3 border-t border-slate-100">
                                     <div
                                         class="d-flex align-items-center justify-content-between text-xs text-slate-700 cursor-pointer">
-                                        <span class="font-bold d-flex align-items-center gap-1.5">
-                                            <i class="bi bi-bag text-slate-500"></i> View Items in this Order
-                                            ({{ $cart->cartItems->count() }})
+                                        <span class="font-bold d-flex align-items-center gap-1.5 cartItem-count">
                                         </span>
-                                        <i class="bi bi-chevron-down text-slate-400 text-[10px]"></i>
                                     </div>
                                     <div class="" id="orderItemsCollapse">
                                         <div class="space-y-2 max-h-48 overflow-y-auto pe-1">
-                                            @foreach ($cart->cartItems as $cItem)
-                                                <div
-                                                    class="d-flex align-items-center gap-2 p-1.5 rounded-lg bg-slate-50 border border-slate-100 text-xs">
-                                                    @if (isset($cItem->product->image))
-                                                        <img src="/storage/{{ $cItem->product->image }}"
-                                                            alt="{{ $cItem->product->name }}"
-                                                            class="w-9 h-11 object-cover rounded bg-white border border-slate-200">
-                                                    @endif
-                                                    <div class="flex-grow-1 min-w-0">
-                                                        <div class="font-semibold text-slate-900 truncate">
-                                                            {{ $cItem->product->name ?? 'Ethnic Product' }}</div>
-                                                        <div class="text-[11px] text-slate-500">Qty:
-                                                            {{ $cItem->quantity }} &bull;
-                                                            &#8377;{{ number_format($cItem->new_price ?? ($cItem->product->price ?? 0)) }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
+                                            
                                         </div>
                                     </div>
                                 </div>
-                            @endif
 
                             <div class="mt-3 text-center">
                                 <span class="text-[10px] text-slate-400">
@@ -342,28 +323,9 @@
         </div>
     </div>
 
-    <!-- Scoped Styles -->
-    <style>
-        .custom-pink-radio:checked {
-            background-color: #7a2c3e !important;
-            border-color: #7a2c3e !important;
-        }
-
-        .online-subtab.active {
-            background-color: #ffffff !important;
-            color: #0f172a !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
-        }
-
-        .upi-app-pill.active,
-        .bank-pill.active,
-        .wallet-row.active {
-            border-color: #7a2c3e !important;
-            background-color: #fffafb !important;
-        }
-    </style>
-
-    <!-- Client-Side UI Interactive Script -->
+@endsection
+    
+@section('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             $('#order_number').val(Math.random().toString(36).substring(2, 10).toUpperCase());
@@ -411,5 +373,65 @@
                 if (btnIcon) btnIcon.className = 'bi bi-shield-lock-fill';
             }
         }
+
+        function checkStock() {
+
+            axios.get('{{ route("checkStock") }}')
+            .then((res)=> {
+                if(res.data && res.data.success == false) {
+                    $('.error').removeClass('d-none');
+
+                    $('#paymentActionButton').prop('disabled', true);
+                    $('.cartItem-count').text(`View Items in this Order (${res.data.cartItems.length})`);
+                    
+                    let data = '';
+                    res.data.cartItems.forEach(item => {
+                        data += `
+                            <div class="d-flex align-items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-100 text-xs">
+                                <img src="/storage/${item.product.image}"
+                                    alt="${item.product.name}"
+                                    class="w-10 h-12 object-cover rounded bg-white border border-slate-200">
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="font-semibold text-slate-900 truncate">
+                                        ${item.product.name}
+                                    </div>
+                                    <div class="text-[11px] text-slate-500">Qty:
+                                        ${item.quantity} &bull;
+                                        &#8377; ${item.new_price}
+                                    </div>
+
+                                    {{-- Stock Badges --}}
+                                    ${item.product.stock === 0 ? 
+                                        `<div class="mt-1">
+                                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                                <i class="bi bi-x-circle-fill text-[9px]"></i> Out of Stock
+                                            </span>
+                                        </div>`
+                                        : 
+                                        `<div class="mt-1">
+                                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                                <i class="bi bi-exclamation-circle-fill text-[9px]"></i> Only ${item.product.stock} left in stock!
+                                            </span>
+                                        </div>`
+                                    }
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    $('#orderItemsCollapse').html(data);
+
+                } else {
+                    document.getElementById('paymentCheckoutForm').submit();
+                }
+            })
+            .catch((err)=> {
+                console.log(err);
+                
+                document.getElementById('paymentCheckoutForm').submit();
+            });
+        }
+
+
     </script>
 @endsection

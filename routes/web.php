@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/checkout/payment', [PaymentController::class, 'index'])->name('checkout.payment');
     Route::post('/checkout/payment', [PaymentController::class,'store'])->name('checkout.payment.store');
     Route::get('/checkout/success', [PaymentController::class, 'paymentSuccess'])->name('checkout.payment.success');
+    Route::get('/check/stock',[PaymentController::class, 'checkStock'])->name('checkStock');
 
     //all orders
     Route::get('/my-orders',[OrderController::class, 'myOrders'])->name('orders');

@@ -254,6 +254,24 @@ main {
     overflow: hidden;
 }
 
+.custom-pink-radio:checked {
+    background-color: #7a2c3e !important;
+    border-color: #7a2c3e !important;
+}
+
+.online-subtab.active {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+.upi-app-pill.active,
+.bank-pill.active,
+.wallet-row.active {
+    border-color: #7a2c3e !important;
+    background-color: #fffafb !important;
+}
+
 .vk-profile-menu.show {
     animation: fadeInDropdown 0.2s ease-out;
 }

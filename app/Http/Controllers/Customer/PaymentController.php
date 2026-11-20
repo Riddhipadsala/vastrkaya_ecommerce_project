@@ -7,9 +7,11 @@ use App\Mail\GetOrderMail;
 use App\Mail\SendOrderMail;
 use App\Models\Cart;
 use App\Models\CartContactInformation;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\Product;
 use App\Models\User;
 use App\Services\CartService;
 use App\Services\SendEmail;
@@ -24,18 +26,22 @@ class PaymentController extends Controller
 {
     public function index(CartService $cartService){
         
-        $cart = Cart::where('user_id', Auth::id())->first();
+        $cart = Cart::with('cartItems.product')->where('user_id', Auth::id())->first();
 
-        $selectedAddress = CartContactInformation::where('cart_id',$cart->id)->where('is_selected',1)->latest()->first();
+        $selectedAddress = CartContactInformation::where('cart_id', $cart->id)->where('is_selected', 1)->latest()->first();
 
         $priceCount = $cartService->getPriceCount()->getData(true);
 
-        return view('customer.cart-payment', compact('selectedAddress','priceCount'));
+        return view('customer.cart-payment', compact('selectedAddress', 'priceCount'));
     
     }
 
     public function store(Request $request, SendEmail $sendEmail) {
-       
+        $stockError = $this->checkStock();
+        if ($stockError !== null) {
+            return redirect()->route('checkout.payment');
+        }
+
         $validate = $request->validate([
             'payment_method' => 'required',
             'total_price'=> 'required',
@@ -127,7 +133,6 @@ class PaymentController extends Controller
         ]);
 
         if ($payment) {
-
             $sendEmail->sendOrderEmail($request->order_id);
             $sendEmail->sendNotification($request->order_id);
 
@@ -136,5 +141,43 @@ class PaymentController extends Controller
                 'order_id'=> $request->order_id 
             ])->with('success', 'Payment successful! Here are your order details.');
         }
+    }
+
+    public function checkStock() {
+        $cart = Cart::with('cartItems.product')->where('user_id', Auth::id())->latest()->first();
+    
+        $cartItems = $cart->cartItems;
+
+        $lowStockItemIds = [];
+
+        foreach($cartItems as $cartItem) {
+            $productStock = $cartItem->product->stock;
+            $cartItemStock = $cart->cartItems
+                ->where('product_id', $cartItem->product_id)
+                ->sum('quantity');            
+
+            if($cartItemStock > $productStock){
+                $lowStockItemIds[] = [
+                    'id'=>$cartItem->id,
+                    'product_stock'=>$productStock, 
+                    'product_name'=> $cartItem->product->name, 
+                    'extra_stock_apply'=> $cartItemStock - $productStock
+                ];
+            }
+        }
+
+        if($lowStockItemIds) {
+            $ids = array_column($lowStockItemIds, 'id');
+
+            return response()->json([
+                'success'=> false,
+                'stock'=> $lowStockItemIds,
+                'cartItems' => CartItem::with('product')->whereIn('id', $ids)->get(),
+                'message'=> 'Stock is not available'
+            ]);
+        }
+
+        return null;
+
     }
 }

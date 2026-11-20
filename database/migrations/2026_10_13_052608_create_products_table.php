@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(0)->comment('0 for inactive, 1 for active');
-            $table->integer('stock')->default(0);
+            $table->unsignedInteger('stock')->default(0);
             $table->integer('decrease_stock')->default(0);
             $table->decimal('price')->default(0);
             $table->decimal('discount_price')->nullable();
