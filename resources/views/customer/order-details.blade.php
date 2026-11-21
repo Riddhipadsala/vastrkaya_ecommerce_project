@@ -109,8 +109,8 @@
                     @endif
                     {{-- Savings Highlight Strip --}}
                     @if (
-                        $setting->minimum_order_amount <= $payment->amount &&
-                            ($payment->payment_status != 'cancelled' && $payment->payment_status != 'refund'))
+                        $setting->minimum_order_amount <= $order->payment->amount &&
+                            ($order->payment->payment_status != 'cancelled' && $order->payment->payment_status != 'refund'))
                         <div
                             class="p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 d-flex align-items-center gap-2 text-xs text-emerald-900">
 
@@ -130,7 +130,7 @@
                         </div>
                     @endif
 
-                    @if ($payment->payment_status == 'refund')
+                    @if ($order->payment->payment_status == 'refund')
                         <div
                             class="p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 d-flex align-items-center gap-2 text-xs text-emerald-900">
 
@@ -204,7 +204,7 @@
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 text-xs">
                             <div class="d-flex align-items-center gap-2 font-semibold text-slate-800">
                                 <i class="bi bi-check-circle-fill text-emerald-600 text-sm"></i>
-                                <span>{{ $payment->payment_method === 'online' ? 'Online Payment' : 'Cash on delivery' }}</span>
+                                <span>{{ $order->payment->payment_method === 'online' ? 'Online Payment' : 'Cash on delivery' }}</span>
                             </div>
                             <span class="text-rose-200 font-bold px-2.5 py-1 rounded-full text-[50px]">&#8377;
                                 {{ number_format($order->total_amount) }}

@@ -17,6 +17,7 @@ use App\Services\CartService;
 use App\Services\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
@@ -48,27 +49,37 @@ class PaymentController extends Controller
             'order_number'=> 'unique:orders,order_number,NULL,id'
         ]);
 
-        $order = Order::create([
-            'user_id'=> Auth::id(),
-            'order_number'=> $validate['order_number'],
-            'total_amount'=> $validate['total_price'],
-            'order_status'=> 'processing'
-        ]);
-
-        $cart = Cart::where('user_id',Auth::id())->first();
-
-        foreach($cart?->cartItems as $cartItem){
-            OrderItem::create([
-                'order_id'=> $order->id,
-                'product_id'=> $cartItem->product_id,
-                'quantity'=> $cartItem->quantity,
-                'unit_price'=> $cartItem->price,
-                'total_price'=> $cartItem->new_price,
-                'pro_opt_val'=> $cartItem->pro_opt_val
+        $order = DB::transaction(function() use ($validate) {
+            
+            $order = Order::create([
+                'user_id'=> Auth::id(),
+                'order_number'=> $validate['order_number'],
+                'total_amount'=> $validate['total_price'],
+                'order_status'=> 'processing'
             ]);
-        }
+            
+            $cart = Cart::where('user_id',Auth::id())->latest()->first();
 
-        if($validate['payment_method'] == 'cod'){
+            $sortedCartItems = $cart->cartItems->sortBy('product_id');
+    
+            foreach($sortedCartItems as $cartItem){
+                
+                $product = Product::where('id', $cartItem->product_id)->lockForUpdate()->firstOrFail(); 
+                $product->decrement('stock', $cartItem->quantity);
+                
+                OrderItem::create([
+                    'order_id'=> $order->id,
+                    'product_id'=> $cartItem->product_id,
+                    'quantity'=> $cartItem->quantity,
+                    'unit_price'=> $cartItem->price,
+                    'total_price'=> $cartItem->new_price,
+                    'pro_opt_val'=> $cartItem->pro_opt_val
+                ]);
+            }
+            return $order;
+        },5); 
+
+        if($validate['payment_method'] == 'cod' && $order){
             $payment = Payment::create([
                 'order_id'=> $order->id,
                 'amount'=> $validate['total_price'],
@@ -146,12 +157,14 @@ class PaymentController extends Controller
     public function checkStock() {
         $cart = Cart::with('cartItems.product')->where('user_id', Auth::id())->latest()->first();
     
-        $cartItems = $cart->cartItems;
+        $cartItems = $cart->cartItems->sortBy('product_id');
 
         $lowStockItemIds = [];
 
         foreach($cartItems as $cartItem) {
+            
             $productStock = $cartItem->product->stock;
+            
             $cartItemStock = $cart->cartItems
                 ->where('product_id', $cartItem->product_id)
                 ->sum('quantity');            
@@ -164,6 +177,7 @@ class PaymentController extends Controller
                     'extra_stock_apply'=> $cartItemStock - $productStock
                 ];
             }
+            
         }
 
         if($lowStockItemIds) {

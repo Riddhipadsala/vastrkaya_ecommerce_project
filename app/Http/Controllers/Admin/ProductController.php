@@ -12,6 +12,7 @@ use App\Models\ProductOptionValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -74,35 +75,38 @@ class ProductController extends Controller
 
         $product = Product::create($validate);
 
-        if($request->options){
-            foreach($request->options as $option){
-                $productOption = ProductOption::create([
-                    'product_id'=> $product->id,
-                    'option_id'=> (int) $option['option_id'],
-                    'status'   => isset($option['status']) ? (int) $option['status'] : 1,
-                ]);
-
-                $optionValue = $option['values'] ?? [];
-                $prices = $option['prices'] ?? [];
-
-                if(is_array($optionValue)){
-                    foreach($optionValue as $value){
-           
-                        ProductOptionValue::create([
-                            'product_option_id'=> $productOption->id,
-                            'option_value_id'=> (int) $value,
-                            'option_id'=> (int) $option['option_id'],
-                            'product_id'=> (int) $product->id,
-                            // 'image'=> $value['image']
-                            'price' => ($prices[$value] != '' && $prices[$value] != null) ? $prices[$value] : 0,
-                        ]);
+        DB::transaction(function() use ($request, $product) {
+            if($request->options){
+                foreach($request->options as $option){
+                    $productOption = ProductOption::create([
+                        'product_id'=> $product->id,
+                        'option_id'=> (int) $option['option_id'],
+                        'status'   => isset($option['status']) ? (int) $option['status'] : 1,
+                    ]);
+    
+                    $optionValue = $option['values'] ?? [];
+                    $prices = $option['prices'] ?? [];
+    
+                    if(is_array($optionValue)){
+                        foreach($optionValue as $value){
+               
+                            ProductOptionValue::create([
+                                'product_option_id'=> $productOption->id,
+                                'option_value_id'=> (int) $value,
+                                'option_id'=> (int) $option['option_id'],
+                                'product_id'=> (int) $product->id,
+                                // 'image'=> $value['image']
+                                'price' => ($prices[$value] != '' && $prices[$value] != null) ? $prices[$value] : 0,
+                            ]);
+                        }
                     }
                 }
             }
-        }
+            Cache::tags(['product','product_option','product_option_value'])->flush();
+        },5);
+
 
         if($product){
-            Cache::tags(['product','product_option','product_option_value'])->flush();
             return redirect()->route('admin.products.index')->with('success', 'Product created successfully');
         }else{
             return redirect()->back()->with('error', 'Failed to create product');
@@ -177,78 +181,81 @@ class ProductController extends Controller
 
         $submittedOptionIds = [];
 
-        foreach ($request->input('options', []) as $option) {
-
-            if (empty($option['option_id'])) {
-                continue;
-            }
-
-            $optionId = (int) $option['option_id'];
-            $submittedOptionIds[] = $optionId;
-
-            $optionValues = $option['values'] ?? [];
-
-            $prices = $option['prices'] ?? [];
-
-            if (!is_array($optionValues)) {
-                $optionValues = [];
-            }
-
-            $productOption = ProductOption::updateOrCreate(
-                [
-                    'product_id' => $product->id,
-                    'option_id' => $optionId,
-                ],
-                [
-                    'status' => $option['status'] ?? 1,
-                ]
-            );
-
-            if (empty($optionValues)) {
-                ProductOptionValue::where('product_id', $product->id)
-                    ->where('option_id', $optionId)
-                    ->update(['status'=> 0]);
-
-                continue;
-            }
-
-            ProductOptionValue::where('product_id', $product->id)
-                ->where('option_id', $optionId)
-                ->whereNotIn('option_value_id', $optionValues)
-                ->update(['status'=> 0]);
-
-            foreach ($optionValues as $value) {
-
-                $valueId = (int) $value;
-
-                $price = $prices[$value] ?? 0;
-
-                if ($price === '' || $price === null) {
-                    $price = 0;
+        DB::transaction(function () use($request, $product, &$submittedOptionIds) {
+            foreach ($request->input('options', []) as $option) {
+    
+                if (empty($option['option_id'])) {
+                    continue;
                 }
-
-                ProductOptionValue::updateOrCreate(
+    
+                $optionId = (int) $option['option_id'];
+                $submittedOptionIds[] = $optionId;
+    
+                $optionValues = $option['values'] ?? [];
+    
+                $prices = $option['prices'] ?? [];
+    
+                if (!is_array($optionValues)) {
+                    $optionValues = [];
+                }
+    
+                $productOption = ProductOption::updateOrCreate(
                     [
-                        'product_option_id' => $productOption->id,
-                        'option_value_id' => $valueId,
-                        'option_id' => $optionId,
                         'product_id' => $product->id,
+                        'option_id' => $optionId,
                     ],
                     [
-                        'status' => 1,
-                        'price' => $price,
+                        'status' => $option['status'] ?? 1,
                     ]
                 );
+    
+                if (empty($optionValues)) {
+                    ProductOptionValue::where('product_id', $product->id)
+                        ->where('option_id', $optionId)
+                        ->update(['status'=> 0]);
+    
+                    continue;
+                }
+    
+                ProductOptionValue::where('product_id', $product->id)
+                    ->where('option_id', $optionId)
+                    ->whereNotIn('option_value_id', $optionValues)
+                    ->update(['status'=> 0]);
+    
+                foreach ($optionValues as $value) {
+    
+                    $valueId = (int) $value;
+    
+                    $price = $prices[$value] ?? 0;
+    
+                    if ($price === '' || $price === null) {
+                        $price = 0;
+                    }
+    
+                    ProductOptionValue::updateOrCreate(
+                        [
+                            'product_option_id' => $productOption->id,
+                            'option_value_id' => $valueId,
+                            'option_id' => $optionId,
+                            'product_id' => $product->id,
+                        ],
+                        [
+                            'status' => 1,
+                            'price' => $price,
+                        ]
+                    );
+                }
             }
-        }
+    
+            if (!empty($submittedOptionIds)) {
+                ProductOptionValue::where('product_id', $product->id)
+                    ->whereNotIn('option_id', $submittedOptionIds)
+                    ->update(['status' => 0]);
+            }
+    
+            Cache::tags(['product','product_option_value','product_option'])->flush();
+        },5);
 
-        if (!empty($submittedOptionIds)) {
-            ProductOptionValue::where('product_id', $product->id)
-                ->whereNotIn('option_id', $submittedOptionIds)
-                ->update(['status' => 0]);
-        }
-
-        Cache::tags(['product','product_option_value','product_option'])->flush();
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
     }
@@ -278,7 +285,6 @@ class ProductController extends Controller
             ]);
         }
     }
-    
  
     public function optionStatusChange(Request $request) {
         
