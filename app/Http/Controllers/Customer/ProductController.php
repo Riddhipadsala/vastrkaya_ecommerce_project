@@ -26,8 +26,9 @@ class ProductController extends Controller
                     $q->where('status', 1);
                 },
                 'productOptionValues.optionValue'
-            ])->findOrFail($id);
+            ])->where('status',1)->findOrFail($id);
         });
+        
 
         $relatedProducts = Cache::tags(['product','category', 'main_category'])->remember('relatedProducts' , now()->addMinutes(10), function() use ($product) {
             return  Product::with('category.main_category')->whereHas('category', function ($q) { $q->where('status', 1); })

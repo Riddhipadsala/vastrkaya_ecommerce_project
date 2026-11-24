@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CouponRequest;
 use App\Http\Requests\CouponUpdateRequest;
 use App\Models\Coupon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
 {
@@ -125,34 +127,38 @@ class CouponController extends Controller
     public function getCoupon(Request $request) {
 
         $couponCode = trim($request->coupon);
-        $coupon = Coupon::where('code', $couponCode)->first();
 
-        $today = now()->toDateString();
-
-        if($coupon && $coupon->status == 1 && $coupon->end_date >= $today && $coupon->start_date <= $today && $coupon->used_total < $coupon->uses_total) {
-
-            $coupon->used_total += 1;
-            $coupon->save();
-
-            session()->put('applied_coupon', [
-                'id'=> $coupon->id,
-                'type'=> $coupon->type,
-                'discount'=> $coupon->discount,
-                'code'=> $coupon->code
-            ]);
-
-            return response()->json([
-                'success'=> true,
-                'coupon'=> $coupon,
-                'message' => 'Coupon applied successfully'
-            ]);
-        }
-        else {
-            return response()->json([
-                'success'=> false,
-                'message' => 'Invalid or expired coupon'
-            ]);
-        }
+        return DB::transaction(function () use ($couponCode) {
+            $coupon = Coupon::where('code', $couponCode)->lockForUpdate()->first();
+            
+            $today = now()->toDateString();
+    
+            if($coupon && $coupon->status == 1 && $coupon->end_date >= $today && $coupon->start_date <= $today && $coupon->used_total < $coupon->uses_total) {
+    
+                $coupon->increment('used_total',1);
+    
+                session()->put('applied_coupon', [
+                    'id'=> $coupon->id,
+                    'type'=> $coupon->type,
+                    'discount'=> $coupon->discount,
+                    'code'=> $coupon->code
+                ]);
+    
+                return response()->json([
+                    'success'=> true,
+                    'coupon'=> $coupon,
+                    'message' => 'Coupon applied successfully'
+                ]);
+            }
+            else {
+                return response()->json([
+                    'success'=> false,
+                    'message' => 'Invalid or expired coupon'
+                ]);
+            }
+            
+        },5);
+      
     }
 
     public function removeCoupon() {

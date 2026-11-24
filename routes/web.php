@@ -19,7 +19,7 @@ use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [LoginController::class, 'register'])->name('register');
-Route::resource('login',LoginController::class)->only(['store']);
+Route::middleware(['throttle:5,1'])->post('/login',[LoginController::class, 'store'])->name('login.store');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/login', function () {
